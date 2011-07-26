@@ -37,16 +37,16 @@ public class boosCoolDown extends JavaPlugin {
         PluginDescriptionFile pdfFile = this.getDescription();
         log.info("[" + pdfFile.getName() + "]" + " version " + pdfFile.getVersion() + " by " + pdfFile.getAuthors() + " is enabled!");
 
-        boosConfigManager bConfigManager = new boosConfigManager(this);
-        bConfigManager.load();
-        conf = bConfigManager.conf;
-        boosCoolDownManager bCoolDownManager = new boosCoolDownManager(this);
-        bCoolDownManager.load();
-        if (bConfigManager.getClearOnRestart() == true) {
-            bCoolDownManager.clear();
+        boosConfigManager boosConfigManager = new boosConfigManager(this);
+        boosConfigManager.load();
+        conf = boosConfigManager.conf;
+        boosCoolDownManager boosCoolDownManager = new boosCoolDownManager(this);
+        boosCoolDownManager.load();
+        if (boosConfigManager.getClearOnRestart() == true) {
+            boosCoolDownManager.clear();
         } else {
         }
-        confusers = bCoolDownManager.confusers;
+        confusers = boosCoolDownManager.confusers;
 
         if (setupPermissions()) {
         }

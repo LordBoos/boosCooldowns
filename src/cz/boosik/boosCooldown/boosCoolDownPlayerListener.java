@@ -26,7 +26,7 @@ public class boosCoolDownPlayerListener extends PlayerListener {
             on = false;
         }
         if(boosCoolDown.permissions){ 
-            if(cz.boosik.boosCooldown.boosCoolDown.Permissions.permission(player, "bCoolDown.exception") || player.isOp()) {
+            if(cz.boosik.boosCooldown.boosCoolDown.Permissions.permission(player, "boosCoolDown.exception") || player.isOp()) {
                 on = false;
             } else {
                 on = true;
