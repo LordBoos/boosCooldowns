@@ -57,11 +57,14 @@ public class boosWarmUpManager {
     }
     
     public static void cancelWarmUps(Player player) {
-        removeWarmUpProcess(player.getName());
+        for(String key: playercommands.keySet()) {
+            if(key.startsWith(player.getName())) {
+                removeWarmUpProcess(key);
+            }
+         }
     }
     
     public static boolean hasWarmUps(Player player) {
-        boosChat.sendMessageToServer( "haswarmup" );
         for(String key: playercommands.keySet()) {
            if(key.startsWith(player.getName())) {
                return true;

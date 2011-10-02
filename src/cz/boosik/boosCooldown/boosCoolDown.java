@@ -28,7 +28,6 @@ public class boosCoolDown extends JavaPlugin {
     public static boolean permissions = false;
 
     @SuppressWarnings("static-access")
-    @Override
     public void onEnable() {
 
         pdfFile = this.getDescription();
@@ -57,7 +56,6 @@ public class boosCoolDown extends JavaPlugin {
 
     }
 
-    @Override
     public void onDisable() {
         if (boosConfigManager.getClearOnRestart() == true) {
             boosCoolDownManager.clear();
