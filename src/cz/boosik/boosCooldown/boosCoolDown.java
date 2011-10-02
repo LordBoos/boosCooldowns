@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 public class boosCoolDown extends JavaPlugin {
 
     private final boosCoolDownPlayerListener playerListener = new boosCoolDownPlayerListener(this);
+    private final boosCoolDownEntityListener entityListener = new boosCoolDownEntityListener(this);
     public static final Logger log = Logger.getLogger("Minecraft");
     public static PluginDescriptionFile pdfFile;
     public static Configuration conf;
@@ -27,7 +28,6 @@ public class boosCoolDown extends JavaPlugin {
     public static boolean permissions = false;
 
     @SuppressWarnings("static-access")
-    @Override
     public void onEnable() {
 
         pdfFile = this.getDescription();
@@ -42,6 +42,9 @@ public class boosCoolDown extends JavaPlugin {
         conf = boosConfigManager.conf;
         boosCoolDownManager boosCoolDownManager = new boosCoolDownManager(this);
         boosCoolDownManager.load();
+        if(boosConfigManager.getCancelWarmUpOnDamage()) {
+            pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, Event.Priority.Normal, this);
+        }
         if (boosConfigManager.getClearOnRestart() == true) {
             boosCoolDownManager.clear();
         } else {
@@ -53,7 +56,6 @@ public class boosCoolDown extends JavaPlugin {
 
     }
 
-    @Override
     public void onDisable() {
         if (boosConfigManager.getClearOnRestart() == true) {
             boosCoolDownManager.clear();
