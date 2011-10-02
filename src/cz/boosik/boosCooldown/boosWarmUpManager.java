@@ -34,7 +34,7 @@ public class boosWarmUpManager {
             
             scheduler = new Timer();
             boosWarmUpTimer scheduleMe = new boosWarmUpTimer(bCoolDown, scheduler, player, pre, message);
-            playercommands.put(player.getName() + pre, scheduleMe);
+            playercommands.put(player.getName() + "@" + pre, scheduleMe);
             scheduler.schedule(scheduleMe, warmUpSeconds * 1000);
         }
         else {
@@ -46,7 +46,7 @@ public class boosWarmUpManager {
     
     public static boolean isWarmUpProcess(Player player, String pre, String message) {
         pre = pre.toLowerCase();
-        if (playercommands.containsKey(player.getName() + pre)) {
+        if (playercommands.containsKey(player.getName() + "@" + pre)) {
             return true;
         }
         return false;
@@ -58,7 +58,7 @@ public class boosWarmUpManager {
     
     public static void cancelWarmUps(Player player) {
         for(String key: playercommands.keySet()) {
-            if(key.startsWith(player.getName())) {
+            if(key.startsWith(player.getName() + "@")) {
                 removeWarmUpProcess(key);
             }
          }
@@ -66,7 +66,7 @@ public class boosWarmUpManager {
     
     public static boolean hasWarmUps(Player player) {
         for(String key: playercommands.keySet()) {
-           if(key.startsWith(player.getName())) {
+           if(key.startsWith(player.getName() + "@")) {
                return true;
            }
         }
