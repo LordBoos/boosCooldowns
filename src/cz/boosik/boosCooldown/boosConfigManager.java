@@ -34,10 +34,12 @@ public class boosConfigManager {
             conf.setProperty("commands.cooldown./home", 30);
             conf.setProperty("commands.warmup./give", 60);
             conf.setProperty("commands.warmup./home", 20);
+            conf.setProperty("commands.options.cancel_warmup_on_damage", false);
             conf.setProperty("commands.options.clear_on_restart", false);
             conf.setProperty("commands.options.unit_seconds", "seconds");
             conf.setProperty("commands.options.unit_minutes", "minutes");
             conf.setProperty("commands.options.unit_hours", "hours");
+            conf.setProperty("commands.options.message_warmup_cancelled", "&6Warm-ups have been cancelled due to receiving damage.&f");
             conf.setProperty("commands.options.message_cooldown", "&6Wait&e &seconds& &unit&&6 before you can use command&e &command& &6again.&f");
             conf.setProperty("commands.options.message_warmup", "&6Wait&e &seconds& &unit&&6 before command&e &command& &6has warmed up.&f");
             conf.setProperty("commands.options.message_warmup_alreadystarted", "&6Warm-Up process for&e &command& &6has already started.&f");
@@ -70,6 +72,9 @@ public class boosConfigManager {
 	static String getCoolDownMessage() {
 	    return conf.getString("commands.options.message_cooldown", "&6Wait&e &seconds& seconds&6 before you can use command&e &command& &6again.&f");
 	}
+	static String getWarmUpCancelledMessage() {
+	    return conf.getString("commands.options.message_warmup_cancelled", "&6Warm-ups have been cancelled due to receiving damage.&f");
+	}
 	static String getWarmUpMessage() {
         return conf.getString("commands.options.message_warmup", "&6Wait&e &seconds& seconds&6 before command&e &command& &6has warmed up.&f");
     }
@@ -88,4 +93,8 @@ public class boosConfigManager {
         static boolean getClearOnRestart() {
             return conf.getBoolean("commands.options.clear_on_restart", false);
         }
+        static boolean getCancelWarmUpOnDamage() {
+            return conf.getBoolean("commands.options.cancel_warmup_on_damage", false);
+        }
+        
 }
