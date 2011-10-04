@@ -210,7 +210,7 @@ public class boosCoolDownManager {
         String confTime = "";
         confTime = confusers.getString("users." + player.getName() + ".cooldown." + pre, null);
 
-        if (confTime != null && confTime != "") {
+        if (confTime != null && !confTime.equals( "" ) ) {
             SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
             Date lastDate = null;
 
