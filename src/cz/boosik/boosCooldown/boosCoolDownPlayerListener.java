@@ -14,6 +14,7 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 		plugin = instance;
 	}
 
+	@Override
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		if (event.isCancelled()) {
 			return;

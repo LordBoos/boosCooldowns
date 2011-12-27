@@ -14,6 +14,7 @@ public class boosCoolDownEntityListener extends EntityListener {
 		plugin = instance;
 	}
 
+	@Override
 	public void onEntityDamage(EntityDamageEvent event) {
 		if (event.isCancelled()) {
 			return;
