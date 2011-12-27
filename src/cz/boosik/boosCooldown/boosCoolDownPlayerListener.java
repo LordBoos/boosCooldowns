@@ -26,13 +26,12 @@ public class boosCoolDownPlayerListener extends PlayerListener {
         if(player.isOp()) {
             on = false;
         }
-        if(boosCoolDown.permissions){ 
-            if(cz.boosik.boosCooldown.boosCoolDown.Permissions.permission(player, "boosCoolDown.exception") || player.isOp()) {
+            if(player.hasPermission("boosCoolDown.exception") || player.isOp()) {
                 on = false;
             } else {
                 on = true;
             }
-        }
+        
         
         if(on) {
             int i = message.indexOf(' ');

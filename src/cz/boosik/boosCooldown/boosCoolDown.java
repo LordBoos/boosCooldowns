@@ -11,9 +11,6 @@ import org.bukkit.util.config.Configuration;
 
 import util.boosChat;
 
-import com.nijiko.permissions.PermissionHandler;
-import com.nijikokun.bukkit.Permissions.Permissions;
-
 import java.util.logging.Logger;
 
 public class boosCoolDown extends JavaPlugin {
@@ -24,7 +21,6 @@ public class boosCoolDown extends JavaPlugin {
     public static PluginDescriptionFile pdfFile;
     public static Configuration conf;
     public static Configuration confusers;
-    public static PermissionHandler Permissions;
     public static boolean permissions = false;
 
     @SuppressWarnings("static-access")
@@ -51,9 +47,6 @@ public class boosCoolDown extends JavaPlugin {
         }
         confusers = boosCoolDownManager.confusers;
 
-        if (setupPermissions()) {
-        }
-
     }
 
     public void onDisable() {
@@ -75,22 +68,5 @@ public class boosCoolDown extends JavaPlugin {
         return false;
     }
 
-    // setup permissions
-    private boolean setupPermissions() {
-        Plugin plugin = this.getServer().getPluginManager().getPlugin("Permissions");
-        if (boosCoolDown.Permissions == null) {
-            if (plugin != null) {
-                boosCoolDown.Permissions = ((Permissions) plugin).getHandler();
-                log.info("[boosCoolDown] Permission system found");
-                permissions = true;
-                return true;
-            } else {
-                //log.info("[bCoolDown] Permission system not detected, plugin disabled");
-                //this.getServer().getPluginManager().disablePlugin(this);
-                permissions = false;
-                return false;
-            }
-        }
-        return false;
-    }
+
 }

@@ -25,7 +25,7 @@ public class boosWarmUpTimer extends TimerTask {
     public void run() {            
         if(player.isOnline()) {
             boosCoolDownManager.setWarmUpOK(player, pre, message);
-            boosWarmUpManager.removeWarmUpProcess(this.player.getName() + pre);
+            boosWarmUpManager.removeWarmUpProcess(this.player.getName() + "@" + pre);
             player.chat(pre + message);
         }
     }
