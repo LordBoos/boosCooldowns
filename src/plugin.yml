@@ -1,11 +1,11 @@
-name: boosCoolDown
+name: boosCooldown
 main: cz.boosik.boosCooldown.boosCoolDown
-version: 1.4.1
-author: Boosik
+version: 1.5.2
+author: boosik
 description: >
              Shortcuts
 commands:
-  bCoolDown:
-    description: Reload Command for bCoolDown
+  boosCoolDown:
+    description: Reload Command for boosCooldown
     usage: |
            /<command> [reload]
