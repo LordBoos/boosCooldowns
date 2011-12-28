@@ -67,7 +67,7 @@ public class boosConfigManager {
 		return coolDown;
 	}
 
-	static int getWarmUp(Player player, String pre) {
+	public static int getWarmUp(Player player, String pre) {
 		int warmUp = 0;
 		pre = pre.toLowerCase();
 		warmUp = conf.getInt("commands.warmup." + pre, warmUp);
