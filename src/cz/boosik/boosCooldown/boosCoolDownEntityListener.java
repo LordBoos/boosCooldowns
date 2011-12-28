@@ -25,8 +25,8 @@ public class boosCoolDownEntityListener extends EntityListener {
 			Player player = (Player) entity;
 			if (player != null) {
 				if (boosWarmUpManager.hasWarmUps(player)) {
-					boosChat.sendMessageToPlayer(player,
-							boosConfigManager.getWarmUpCancelledByDamageMessage());
+					boosChat.sendMessageToPlayer(player, boosConfigManager
+							.getWarmUpCancelledByDamageMessage());
 					boosWarmUpManager.cancelWarmUps(player);
 				}
 

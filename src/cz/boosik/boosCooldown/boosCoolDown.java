@@ -47,7 +47,8 @@ public class boosCoolDown extends JavaPlugin {
 					Event.Priority.Normal, this);
 		}
 		if (boosConfigManager.getCancelWarmupOnMove()) {
-			pm.registerEvent(Event.Type.PLAYER_MOVE, playerListener, Event.Priority.Normal, this);
+			pm.registerEvent(Event.Type.PLAYER_MOVE, playerListener,
+					Event.Priority.Normal, this);
 		}
 		if (boosConfigManager.getClearOnRestart() == true) {
 			boosCoolDownManager.clear();

@@ -38,9 +38,11 @@ public class boosConfigManager {
 			conf.setProperty("commands.options.unit_seconds", "seconds");
 			conf.setProperty("commands.options.unit_minutes", "minutes");
 			conf.setProperty("commands.options.unit_hours", "hours");
-			conf.setProperty("commands.options.message_warmup_cancelled_by_damage",
+			conf.setProperty(
+					"commands.options.message_warmup_cancelled_by_damage",
 					"&6Warm-ups have been cancelled due to receiving damage.&f");
-			conf.setProperty("commands.options.message_warmup_cancelled_by_move",
+			conf.setProperty(
+					"commands.options.message_warmup_cancelled_by_move",
 					"&6Warm-ups have been cancelled due to moving.&f");
 			conf.setProperty("commands.options.message_cooldown",
 					"&6Wait&e &seconds& &unit&&6 before you can use command&e &command& &6again.&f");
@@ -82,12 +84,14 @@ public class boosConfigManager {
 	}
 
 	static String getWarmUpCancelledByMoveMessage() {
-		return conf.getString("commands.options.message_warmup_cancelled_by_move",
+		return conf.getString(
+				"commands.options.message_warmup_cancelled_by_move",
 				"&6Warm-ups have been cancelled due to moving.&f");
 	}
-	
+
 	static String getWarmUpCancelledByDamageMessage() {
-		return conf.getString("commands.options.message_warmup_cancelled_by_damage",
+		return conf.getString(
+				"commands.options.message_warmup_cancelled_by_damage",
 				"&6Warm-ups have been cancelled due to receiving damage.&f");
 	}
 

@@ -48,8 +48,6 @@ public class boosWarmUpManager {
 		}
 	}
 
-
-
 	public static boolean isWarmUpProcess(Player player, String pre,
 			String message) {
 		pre = pre.toLowerCase();
