@@ -33,12 +33,15 @@ public class boosConfigManager {
 			conf.setProperty("commands.warmup./give", 60);
 			conf.setProperty("commands.warmup./home", 20);
 			conf.setProperty("commands.options.cancel_warmup_on_damage", false);
+			conf.setProperty("commands.options.cancel_warmup_on_move", false);
 			conf.setProperty("commands.options.clear_on_restart", false);
 			conf.setProperty("commands.options.unit_seconds", "seconds");
 			conf.setProperty("commands.options.unit_minutes", "minutes");
 			conf.setProperty("commands.options.unit_hours", "hours");
-			conf.setProperty("commands.options.message_warmup_cancelled",
+			conf.setProperty("commands.options.message_warmup_cancelled_by_damage",
 					"&6Warm-ups have been cancelled due to receiving damage.&f");
+			conf.setProperty("commands.options.message_warmup_cancelled_by_move",
+					"&6Warm-ups have been cancelled due to moving.&f");
 			conf.setProperty("commands.options.message_cooldown",
 					"&6Wait&e &seconds& &unit&&6 before you can use command&e &command& &6again.&f");
 			conf.setProperty("commands.options.message_warmup",
@@ -78,8 +81,13 @@ public class boosConfigManager {
 						"&6Wait&e &seconds& seconds&6 before you can use command&e &command& &6again.&f");
 	}
 
-	static String getWarmUpCancelledMessage() {
-		return conf.getString("commands.options.message_warmup_cancelled",
+	static String getWarmUpCancelledByMoveMessage() {
+		return conf.getString("commands.options.message_warmup_cancelled_by_move",
+				"&6Warm-ups have been cancelled due to moving.&f");
+	}
+	
+	static String getWarmUpCancelledByDamageMessage() {
+		return conf.getString("commands.options.message_warmup_cancelled_by_damage",
 				"&6Warm-ups have been cancelled due to receiving damage.&f");
 	}
 
@@ -113,6 +121,10 @@ public class boosConfigManager {
 	static boolean getCancelWarmUpOnDamage() {
 		return conf.getBoolean("commands.options.cancel_warmup_on_damage",
 				false);
+	}
+
+	public boolean getCancelWarmupOnMove() {
+		return conf.getBoolean("commands.options.cancel_warmup_on_move", false);
 	}
 
 }

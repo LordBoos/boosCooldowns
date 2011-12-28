@@ -48,6 +48,8 @@ public class boosWarmUpManager {
 		}
 	}
 
+
+
 	public static boolean isWarmUpProcess(Player player, String pre,
 			String message) {
 		pre = pre.toLowerCase();
@@ -59,6 +61,7 @@ public class boosWarmUpManager {
 
 	public static void removeWarmUpProcess(String tag) {
 		boosWarmUpManager.playercommands.remove(tag);
+		scheduler.cancel();
 	}
 
 	public static void cancelWarmUps(Player player) {

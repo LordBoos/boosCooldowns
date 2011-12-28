@@ -1,9 +1,12 @@
 package cz.boosik.boosCooldown;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
+
+import util.boosChat;
 
 //import org.bukkit.event.entity.EntityDamageEvent;
 
@@ -93,10 +96,18 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 		return false;
 	}
 
-	public void onPlayerCommandMove(PlayerMoveEvent event) {
+	public void onPlayerMove(PlayerMoveEvent event) {
+		if (event.isCancelled()) {
+			return;
+		}
 		Player player = event.getPlayer();
-		boosWarmUpManager.cancelWarmUps(player);
-		boosCoolDownManager.cancelCoolDowns(player);
+		if (player != null) {
+			if (boosWarmUpManager.hasWarmUps(player)) {
+				boosChat.sendMessageToPlayer(player,
+						boosConfigManager.getWarmUpCancelledByMoveMessage());
+				boosWarmUpManager.cancelWarmUps(player);
+			}
 
+		}
 	}
 }
