@@ -1,5 +1,7 @@
 package cz.boosik.boosCooldown;
 
+import java.util.logging.Logger;
+
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
 
@@ -15,8 +17,7 @@ import org.bukkit.util.config.Configuration;
 
 import util.boosChat;
 
-import java.util.logging.Logger;
-
+@SuppressWarnings("deprecation")
 public class boosCoolDown extends JavaPlugin {
 
 	private final boosCoolDownPlayerListener playerListener = new boosCoolDownPlayerListener(
@@ -51,7 +52,6 @@ public class boosCoolDown extends JavaPlugin {
 
 	@SuppressWarnings("static-access")
 	public void onEnable() {
-
 		pdfFile = this.getDescription();
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, playerListener,

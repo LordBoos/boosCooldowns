@@ -13,6 +13,7 @@ import org.bukkit.util.config.Configuration;
 
 import util.boosChat;
 
+@SuppressWarnings("deprecation")
 public class boosCoolDownManager {
 
 	protected static boosCoolDown bCoolDown;

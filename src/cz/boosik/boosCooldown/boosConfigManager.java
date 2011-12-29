@@ -7,6 +7,7 @@ import java.util.List;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.Configuration;
 
+@SuppressWarnings("deprecation")
 public class boosConfigManager {
 
 	protected static boosCoolDown bCoolDown;

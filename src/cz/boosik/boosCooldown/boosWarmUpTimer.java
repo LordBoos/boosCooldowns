@@ -2,7 +2,6 @@ package cz.boosik.boosCooldown;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
 import org.bukkit.entity.Player;
 
 public class boosWarmUpTimer extends TimerTask {
@@ -22,7 +21,6 @@ public class boosWarmUpTimer extends TimerTask {
 
 	public boosWarmUpTimer() {
 	}
-
 	@Override
 	public void run() {
 		if (player.isOnline() && boosWarmUpManager.hasWarmUps(player) == true) {

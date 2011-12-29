@@ -59,7 +59,6 @@ public class boosWarmUpManager {
 
 	public static void removeWarmUpProcess(String tag) {
 		boosWarmUpManager.playercommands.remove(tag);
-		scheduler.cancel();
 	}
 
 	public static void cancelWarmUps(Player player) {

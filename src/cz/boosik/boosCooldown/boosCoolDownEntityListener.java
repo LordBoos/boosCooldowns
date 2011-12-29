@@ -8,6 +8,7 @@ import org.bukkit.event.entity.EntityListener;
 import util.boosChat;
 
 public class boosCoolDownEntityListener extends EntityListener {
+	@SuppressWarnings("unused")
 	private final boosCoolDown plugin;
 
 	public boosCoolDownEntityListener(boosCoolDown instance) {
