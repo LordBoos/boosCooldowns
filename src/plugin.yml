@@ -9,5 +9,4 @@ commands:
   boosCoolDown:
     description: Reload Command for boosCooldown
     usage: |
-           /<command> [reload]
-	   
+           /<command> [reload]   

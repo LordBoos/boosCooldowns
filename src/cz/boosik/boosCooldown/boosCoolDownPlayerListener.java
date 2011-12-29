@@ -29,7 +29,9 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 		if (player.isOp()) {
 			on = false;
 		}
-		if (player.hasPermission("boosCoolDown.exception") || player.isOp()) {
+		if (player.hasPermission("boosCooldowns.exception")) {
+			on = false;
+		} else if (player.isOp()){
 			on = false;
 		} else {
 			on = true;
