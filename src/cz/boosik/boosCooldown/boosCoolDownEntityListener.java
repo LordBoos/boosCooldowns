@@ -24,13 +24,26 @@ public class boosCoolDownEntityListener extends EntityListener {
 		Entity entity = event.getEntity();
 		if (entity != null && entity instanceof Player) {
 			Player player = (Player) entity;
-			if (player != null && !boosCoolDown.getPermissions().has(player, "boosCooldowns.nocancel.damage")) {
-				if (boosWarmUpManager.hasWarmUps(player)) {
-					boosChat.sendMessageToPlayer(player, boosConfigManager
-							.getWarmUpCancelledByDamageMessage());
-					boosWarmUpManager.cancelWarmUps(player);
-				}
+			if (boosCoolDown.isUsingPermissions()) {
+				if (player != null
+						&& !boosCoolDown.getPermissions().has(player,
+								"boosCooldowns.nocancel.damage")) {
+					if (boosWarmUpManager.hasWarmUps(player)) {
+						boosChat.sendMessageToPlayer(player, boosConfigManager
+								.getWarmUpCancelledByDamageMessage());
+						boosWarmUpManager.cancelWarmUps(player);
+					}
 
+				}
+			} else {
+				if (player != null) {
+					if (boosWarmUpManager.hasWarmUps(player)) {
+						boosChat.sendMessageToPlayer(player, boosConfigManager
+								.getWarmUpCancelledByDamageMessage());
+						boosWarmUpManager.cancelWarmUps(player);
+					}
+
+				}
 			}
 		}
 	}

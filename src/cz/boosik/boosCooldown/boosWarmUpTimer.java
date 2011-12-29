@@ -21,6 +21,7 @@ public class boosWarmUpTimer extends TimerTask {
 
 	public boosWarmUpTimer() {
 	}
+
 	@Override
 	public void run() {
 		if (player.isOnline() && boosWarmUpManager.hasWarmUps(player) == true) {

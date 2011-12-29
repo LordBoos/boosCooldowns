@@ -33,9 +33,9 @@ public class boosCoolDown extends JavaPlugin {
 	private static Economy economy = null;
 	@SuppressWarnings("unused")
 	private static Vault vault = null;
-	private static boolean usingVault;
-	private static boolean usingEconomy;
-	private static boolean usingPermissions;
+	private static boolean usingVault = false;
+	private static boolean usingEconomy = false;
+	private static boolean usingPermissions = false;
 
 	@SuppressWarnings("static-access")
 	public void onEnable() {
@@ -88,11 +88,12 @@ public class boosCoolDown extends JavaPlugin {
 						+ pdfFile.getName()
 						+ "]"
 						+ "] permissions pluging not found, disabling permissions support.");
-			} else if (!setupEconomy() && setupPermissions()){
+			} else if (!setupEconomy() && setupPermissions()) {
 				log.info("["
 						+ pdfFile.getName()
 						+ "]"
 						+ " economy plugin not found, disabling prices support.");
+				usingEconomy = false;
 				log.info("[" + pdfFile.getName() + "]" + " found ["
 						+ permissions.getName()
 						+ "] plugin, enabling permissions support.");
@@ -107,7 +108,9 @@ public class boosCoolDown extends JavaPlugin {
 						+ "] permissions pluging not found, disabling permissions support.");
 			}
 		} else {
-			log.info("[" + pdfFile.getName() + "]"
+			log.info("["
+					+ pdfFile.getName()
+					+ "]"
 					+ " [Vault] not found disabling economy and permissions support.");
 			usingVault = false;
 		}
@@ -140,19 +143,19 @@ public class boosCoolDown extends JavaPlugin {
 	public static Economy getEconomy() {
 		return economy;
 	}
-	
-	public static Permission getPermissions(){
+
+	public static Permission getPermissions() {
 		return permissions;
 	}
 
-	public boolean isUsingVault() {
+	public static boolean isUsingVault() {
 		return usingVault;
 	}
 
 	public static boolean isUsingEconomy() {
 		return usingEconomy;
 	}
-	
+
 	public static boolean isUsingPermissions() {
 		return usingPermissions;
 	}

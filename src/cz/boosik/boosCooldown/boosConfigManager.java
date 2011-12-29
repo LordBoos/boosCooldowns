@@ -53,8 +53,10 @@ public class boosConfigManager {
 					"&6Wait&e &seconds& &unit&&6 before command&e &command& &6has warmed up.&f");
 			conf.setProperty("commands.options.message_warmup_alreadystarted",
 					"&6Warm-Up process for&e &command& &6has already started.&f");
-			conf.setProperty("commands.options.paid_error", "&6An error has occured:&e %s");
-			conf.setProperty("commands.options.paid_for_command_message", "&6Price of&e &command& &6was&e %s &6and you now have&e %s");
+			conf.setProperty("commands.options.paid_error",
+					"&6An error has occured:&e %s");
+			conf.setProperty("commands.options.paid_for_command_message",
+					"&6Price of&e &command& &6was&e %s &6and you now have&e %s");
 			conf.save();
 		}
 	}
@@ -80,7 +82,7 @@ public class boosConfigManager {
 		warmUp = conf.getInt("commands.warmup." + pre, warmUp);
 		return warmUp;
 	}
-	
+
 	public static int getPrice(Player player, String pre) {
 		int price = 0;
 		pre = pre.toLowerCase();
@@ -144,11 +146,13 @@ public class boosConfigManager {
 	}
 
 	public static String getPaidForCommandMessage() {
-		return conf.getString("commands.options.paid_for_command_message", "Price of &command& was %s and you now have %s");
+		return conf.getString("commands.options.paid_for_command_message",
+				"Price of &command& was %s and you now have %s");
 	}
 
 	public static String getPaidErrorMessage() {
-		return conf.getString("commands.options.paid_error", "An error has occured: %s");
+		return conf.getString("commands.options.paid_error",
+				"An error has occured: %s");
 	}
 
 }

@@ -96,44 +96,92 @@ public class boosCoolDownManager {
 	static boolean coolDown(Player player, String pre, String message) {
 		pre = pre.toLowerCase();
 		int coolDownSeconds = boosConfigManager.getCoolDown(player, pre);
-		if (coolDownSeconds > 0 && !boosCoolDown.getPermissions().has(player, "boosCooldowns.nocooldown")) {
-			Date lastTime = getTime(player, pre);
-			if (lastTime == null) {
-				setTime(player, pre);
-				return false;
-			} else {
-				Calendar calcurrTime = Calendar.getInstance();
-				calcurrTime.setTime(getCurrTime());
-				Calendar callastTime = Calendar.getInstance();
-				callastTime.setTime(lastTime);
-				long secondsBetween = secondsBetween(callastTime, calcurrTime);
-				long waitSeconds = coolDownSeconds - secondsBetween;
-				long waitMinutes = Math.round(waitSeconds / 60) + 1;
-				long waitHours = Math.round(waitMinutes / 60) + 1;
-				if (secondsBetween > coolDownSeconds) {
+		if (boosCoolDown.isUsingPermissions()) {
+			if (coolDownSeconds > 0
+					&& !boosCoolDown.getPermissions().has(player,
+							"boosCooldowns.nocooldown")) {
+				Date lastTime = getTime(player, pre);
+				if (lastTime == null) {
 					setTime(player, pre);
 					return false;
 				} else {
-					String msg = boosConfigManager.getCoolDownMessage();
-					msg = msg.replaceAll("&command&", pre);
-					if (waitSeconds >= 60 && 3600 >= waitSeconds) {
-						msg = msg.replaceAll("&seconds&",
-								Long.toString(waitMinutes));
-						msg = msg.replaceAll("&unit&",
-								boosConfigManager.getUnitMinutesMessage());
-					} else if (waitMinutes >= 60) {
-						msg = msg.replaceAll("&seconds&",
-								Long.toString(waitHours));
-						msg = msg.replaceAll("&unit&",
-								boosConfigManager.getUnitHoursMessage());
+					Calendar calcurrTime = Calendar.getInstance();
+					calcurrTime.setTime(getCurrTime());
+					Calendar callastTime = Calendar.getInstance();
+					callastTime.setTime(lastTime);
+					long secondsBetween = secondsBetween(callastTime,
+							calcurrTime);
+					long waitSeconds = coolDownSeconds - secondsBetween;
+					long waitMinutes = Math.round(waitSeconds / 60) + 1;
+					long waitHours = Math.round(waitMinutes / 60) + 1;
+					if (secondsBetween > coolDownSeconds) {
+						setTime(player, pre);
+						return false;
 					} else {
-						msg = msg.replaceAll("&seconds&",
-								Long.toString(waitSeconds));
-						msg = msg.replaceAll("&unit&",
-								boosConfigManager.getUnitSecondsMessage());
+						String msg = boosConfigManager.getCoolDownMessage();
+						msg = msg.replaceAll("&command&", pre);
+						if (waitSeconds >= 60 && 3600 >= waitSeconds) {
+							msg = msg.replaceAll("&seconds&",
+									Long.toString(waitMinutes));
+							msg = msg.replaceAll("&unit&",
+									boosConfigManager.getUnitMinutesMessage());
+						} else if (waitMinutes >= 60) {
+							msg = msg.replaceAll("&seconds&",
+									Long.toString(waitHours));
+							msg = msg.replaceAll("&unit&",
+									boosConfigManager.getUnitHoursMessage());
+						} else {
+							msg = msg.replaceAll("&seconds&",
+									Long.toString(waitSeconds));
+							msg = msg.replaceAll("&unit&",
+									boosConfigManager.getUnitSecondsMessage());
+						}
+						boosChat.sendMessageToPlayer(player, msg);
+						return true;
 					}
-					boosChat.sendMessageToPlayer(player, msg);
-					return true;
+				}
+			}
+		} else {
+			if (coolDownSeconds > 0) {
+				Date lastTime = getTime(player, pre);
+				if (lastTime == null) {
+					setTime(player, pre);
+					return false;
+				} else {
+					Calendar calcurrTime = Calendar.getInstance();
+					calcurrTime.setTime(getCurrTime());
+					Calendar callastTime = Calendar.getInstance();
+					callastTime.setTime(lastTime);
+					long secondsBetween = secondsBetween(callastTime,
+							calcurrTime);
+					long waitSeconds = coolDownSeconds - secondsBetween;
+					long waitMinutes = Math.round(waitSeconds / 60) + 1;
+					long waitHours = Math.round(waitMinutes / 60) + 1;
+					if (secondsBetween > coolDownSeconds) {
+						setTime(player, pre);
+						return false;
+					} else {
+						String msg = boosConfigManager.getCoolDownMessage();
+						msg = msg.replaceAll("&command&", pre);
+						if (waitSeconds >= 60 && 3600 >= waitSeconds) {
+							msg = msg.replaceAll("&seconds&",
+									Long.toString(waitMinutes));
+							msg = msg.replaceAll("&unit&",
+									boosConfigManager.getUnitMinutesMessage());
+						} else if (waitMinutes >= 60) {
+							msg = msg.replaceAll("&seconds&",
+									Long.toString(waitHours));
+							msg = msg.replaceAll("&unit&",
+									boosConfigManager.getUnitHoursMessage());
+						} else {
+							msg = msg.replaceAll("&seconds&",
+									Long.toString(waitSeconds));
+							msg = msg.replaceAll("&unit&",
+									boosConfigManager.getUnitSecondsMessage());
+						}
+						boosChat.sendMessageToPlayer(player, msg);
+						return true;
+					}
 				}
 			}
 		}
