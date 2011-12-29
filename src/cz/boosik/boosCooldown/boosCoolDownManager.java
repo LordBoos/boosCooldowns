@@ -96,7 +96,7 @@ public class boosCoolDownManager {
 	static boolean coolDown(Player player, String pre, String message) {
 		pre = pre.toLowerCase();
 		int coolDownSeconds = boosConfigManager.getCoolDown(player, pre);
-		if (coolDownSeconds > 0) {
+		if (coolDownSeconds > 0 && !boosCoolDown.getPermissions().has(player, "boosCooldowns.nocooldown")) {
 			Date lastTime = getTime(player, pre);
 			if (lastTime == null) {
 				setTime(player, pre);

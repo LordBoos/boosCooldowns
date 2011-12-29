@@ -1,6 +1,6 @@
 name: boosCooldown
 main: cz.boosik.boosCooldown.boosCoolDown
-version: 1.6.1
+version: 1.7.0
 author: boosik
 softdepend: [Vault, iConomy 4 & 5 & 6, BOSEconomy 6 & 7, EssentialsEcon, 3Co, MultiCurrency, MineConomy, eWallet, EconXP]
 description: >

@@ -28,7 +28,7 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 		if (player.isOp()) {
 			on = false;
 		}
-		if (player.hasPermission("boosCooldowns.exception")) {
+		if (boosCoolDown.isUsingPermissions() && boosCoolDown.getPermissions().has(player, "boosCooldowns.exception")) {
 			on = false;
 		} else if (player.isOp()){
 			on = false;
@@ -69,7 +69,7 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 	private boolean checkCooldown(PlayerCommandPreprocessEvent event,
 			Player player, String pre, String message) {
 		int warmUpSeconds = boosConfigManager.getWarmUp(player, pre);
-		if (warmUpSeconds > 0) {
+		if (warmUpSeconds > 0 && !boosCoolDown.getPermissions().has(player, "boosCooldowns.nowarmup")) {
 			if (!boosCoolDownManager.checkWarmUpOK(player, pre, message)) {
 				if (boosCoolDownManager.checkCoolDownOK(player, pre, message)) {
 					boosWarmUpManager.startWarmUp(this.plugin, player, pre,
@@ -95,7 +95,7 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 			}
 		}
 		if (boosConfigManager.getPrice(player, pre) > 0) {
-			if (boosCoolDown.isUsingEconomy()) {
+			if (boosCoolDown.isUsingEconomy() && !boosCoolDown.getPermissions().has(player, "boosCooldowns.noprice")) {
 				if (boosCoolDown.getEconomy().getBalance(player.getName()) >= boosConfigManager
 						.getPrice(player, pre)) {
 					boosPriceManager.payForCommand(player, pre, message);
@@ -114,7 +114,7 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 			return;
 		}
 		Player player = event.getPlayer();
-		if (player != null) {
+		if (player != null && !boosCoolDown.getPermissions().has(player, "boosCooldowns.nocancel.move")) {
 			if (boosWarmUpManager.hasWarmUps(player)) {
 				boosChat.sendMessageToPlayer(player,
 						boosConfigManager.getWarmUpCancelledByMoveMessage());

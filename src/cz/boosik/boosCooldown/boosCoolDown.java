@@ -4,6 +4,7 @@ import java.util.logging.Logger;
 
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -28,27 +29,13 @@ public class boosCoolDown extends JavaPlugin {
 	public static PluginDescriptionFile pdfFile;
 	public static Configuration conf;
 	public static Configuration confusers;
-	public static boolean permissions = false;
+	private static Permission permissions = null;
+	private static Economy economy = null;
+	@SuppressWarnings("unused")
 	private static Vault vault = null;
-	public static Vault getVault() {
-		return vault;
-	}
-
 	private static boolean usingVault;
 	private static boolean usingEconomy;
-	private static Economy economy = null;
-
-	public static Economy getEconomy() {
-		return economy;
-	}
-
-	public boolean isUsingVault() {
-		return usingVault;
-	}
-	
-	public static boolean isUsingEconomy() {
-		return usingEconomy;
-	}
+	private static boolean usingPermissions;
 
 	@SuppressWarnings("static-access")
 	public void onEnable() {
@@ -79,19 +66,51 @@ public class boosCoolDown extends JavaPlugin {
 			boosCoolDownManager.clear();
 		}
 		Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
-        if(x != null & x instanceof Vault) {
-            vault = (Vault) x;
-            log.info("[" + pdfFile.getName() + "]" + " found [Vault] searching for economy plugin.");
-            usingVault = true;
-            if(setupEconomy()){
-            	log.info("[" + pdfFile.getName() + "]" + " found [" + economy.getName() +"] plugin, enabling prices support.");
-            } else {
-            	log.info("[" + pdfFile.getName() + "]" + " economy plugin not found, disabling prices support.");
-            }
-        } else {
-        	log.info("[" + pdfFile.getName() + "]" + " [Vault] not found disabling economy support.");
-        	usingVault = false;
-        }
+		if (x != null & x instanceof Vault) {
+			vault = (Vault) x;
+			log.info("[" + pdfFile.getName() + "]"
+					+ " found [Vault] searching for economy plugin.");
+			log.info("[" + pdfFile.getName() + "]"
+					+ " found [Vault] searching for permissions plugin.");
+			usingVault = true;
+			if (setupEconomy() && setupPermissions()) {
+				log.info("[" + pdfFile.getName() + "]" + " found ["
+						+ economy.getName()
+						+ "] plugin, enabling prices support.");
+				log.info("[" + pdfFile.getName() + "]" + " found ["
+						+ permissions.getName()
+						+ "] plugin, enabling permissions support.");
+			} else if (setupEconomy() && !setupPermissions()) {
+				log.info("[" + pdfFile.getName() + "]" + " found ["
+						+ economy.getName()
+						+ "] plugin, enabling prices support.");
+				log.info("["
+						+ pdfFile.getName()
+						+ "]"
+						+ "] permissions pluging not found, disabling permissions support.");
+			} else if (!setupEconomy() && setupPermissions()){
+				log.info("["
+						+ pdfFile.getName()
+						+ "]"
+						+ " economy plugin not found, disabling prices support.");
+				log.info("[" + pdfFile.getName() + "]" + " found ["
+						+ permissions.getName()
+						+ "] plugin, enabling permissions support.");
+			} else {
+				log.info("["
+						+ pdfFile.getName()
+						+ "]"
+						+ " economy plugin not found, disabling prices support.");
+				log.info("["
+						+ pdfFile.getName()
+						+ "]"
+						+ "] permissions pluging not found, disabling permissions support.");
+			}
+		} else {
+			log.info("[" + pdfFile.getName() + "]"
+					+ " [Vault] not found disabling economy and permissions support.");
+			usingVault = false;
+		}
 		confusers = boosCoolDownManager.confusers;
 
 	}
@@ -118,15 +137,53 @@ public class boosCoolDown extends JavaPlugin {
 		return false;
 	}
 
-	private boolean setupEconomy(){
-		if(usingVault){
-        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-        if (economyProvider != null) {
-            economy  = economyProvider.getProvider();
-        }
-        usingEconomy = true;
-        return (economy != null);
-    } 	usingEconomy = false;
+	public static Economy getEconomy() {
+		return economy;
+	}
+	
+	public static Permission getPermissions(){
+		return permissions;
+	}
+
+	public boolean isUsingVault() {
+		return usingVault;
+	}
+
+	public static boolean isUsingEconomy() {
+		return usingEconomy;
+	}
+	
+	public static boolean isUsingPermissions() {
+		return usingPermissions;
+	}
+
+	private boolean setupEconomy() {
+		if (usingVault) {
+			RegisteredServiceProvider<Economy> economyProvider = getServer()
+					.getServicesManager().getRegistration(
+							net.milkbowl.vault.economy.Economy.class);
+			if (economyProvider != null) {
+				economy = economyProvider.getProvider();
+			}
+			usingEconomy = true;
+			return (economy != null);
+		}
+		usingEconomy = false;
 		return false;
-    }
+	}
+
+	private boolean setupPermissions() {
+		if (usingVault) {
+			RegisteredServiceProvider<Permission> permissionsProvider = getServer()
+					.getServicesManager().getRegistration(
+							net.milkbowl.vault.permission.Permission.class);
+			if (permissionsProvider != null) {
+				permissions = permissionsProvider.getProvider();
+			}
+			usingPermissions = true;
+			return (permissions != null);
+		}
+		usingPermissions = false;
+		return false;
+	}
 }
