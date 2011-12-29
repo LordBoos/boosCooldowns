@@ -32,6 +32,8 @@ public class boosConfigManager {
 			conf.setProperty("commands.cooldown./home", 30);
 			conf.setProperty("commands.warmup./give", 60);
 			conf.setProperty("commands.warmup./home", 20);
+			conf.setProperty("commands.price./spawn", 10);
+			conf.setProperty("commands.price./home", 20);
 			conf.setProperty("commands.options.cancel_warmup_on_damage", false);
 			conf.setProperty("commands.options.cancel_warmup_on_move", false);
 			conf.setProperty("commands.options.clear_on_restart", false);
@@ -50,6 +52,8 @@ public class boosConfigManager {
 					"&6Wait&e &seconds& &unit&&6 before command&e &command& &6has warmed up.&f");
 			conf.setProperty("commands.options.message_warmup_alreadystarted",
 					"&6Warm-Up process for&e &command& &6has already started.&f");
+			conf.setProperty("commands.options.paid_error", "&6An error has occured:&e %s");
+			conf.setProperty("commands.options.paid_for_command_message", "&6Price of&e &command& &6was&e %s &6and you now have&e %s");
 			conf.save();
 		}
 	}
@@ -74,6 +78,13 @@ public class boosConfigManager {
 		pre = pre.toLowerCase();
 		warmUp = conf.getInt("commands.warmup." + pre, warmUp);
 		return warmUp;
+	}
+	
+	public static int getPrice(Player player, String pre) {
+		int price = 0;
+		pre = pre.toLowerCase();
+		price = conf.getInt("commands.price." + pre, price);
+		return price;
 	}
 
 	static String getCoolDownMessage() {
@@ -129,6 +140,14 @@ public class boosConfigManager {
 
 	public boolean getCancelWarmupOnMove() {
 		return conf.getBoolean("commands.options.cancel_warmup_on_move", false);
+	}
+
+	public static String getPaidForCommandMessage() {
+		return conf.getString("commands.options.paid_for_command_message", "Price of &command& was %s and you now have %s");
+	}
+
+	public static String getPaidErrorMessage() {
+		return conf.getString("commands.options.paid_error", "An error has occured: %s");
 	}
 
 }

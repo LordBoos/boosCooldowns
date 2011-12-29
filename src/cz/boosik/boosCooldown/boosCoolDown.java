@@ -1,10 +1,15 @@
 package cz.boosik.boosCooldown;
 
+import net.milkbowl.vault.Vault;
+import net.milkbowl.vault.economy.Economy;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Event;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 
@@ -23,6 +28,26 @@ public class boosCoolDown extends JavaPlugin {
 	public static Configuration conf;
 	public static Configuration confusers;
 	public static boolean permissions = false;
+	private static Vault vault = null;
+	public static Vault getVault() {
+		return vault;
+	}
+
+	private static boolean usingVault;
+	private static boolean usingEconomy;
+	private static Economy economy = null;
+
+	public static Economy getEconomy() {
+		return economy;
+	}
+
+	public boolean isUsingVault() {
+		return usingVault;
+	}
+	
+	public static boolean isUsingEconomy() {
+		return usingEconomy;
+	}
 
 	@SuppressWarnings("static-access")
 	public void onEnable() {
@@ -50,10 +75,23 @@ public class boosCoolDown extends JavaPlugin {
 			pm.registerEvent(Event.Type.PLAYER_MOVE, playerListener,
 					Event.Priority.Normal, this);
 		}
-		if (boosConfigManager.getClearOnRestart() == true) {
+		if (boosConfigManager.getClearOnRestart()) {
 			boosCoolDownManager.clear();
-		} else {
 		}
+		Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
+        if(x != null & x instanceof Vault) {
+            vault = (Vault) x;
+            log.info("[" + pdfFile.getName() + "]" + " found [Vault] searching for economy plugin.");
+            usingVault = true;
+            if(setupEconomy()){
+            	log.info("[" + pdfFile.getName() + "]" + " found [" + economy.getName() +"] plugin, enabling prices support.");
+            } else {
+            	log.info("[" + pdfFile.getName() + "]" + " economy plugin not found, disabling prices support.");
+            }
+        } else {
+        	log.info("[" + pdfFile.getName() + "]" + " [Vault] not found disabling economy support.");
+        	usingVault = false;
+        }
 		confusers = boosCoolDownManager.confusers;
 
 	}
@@ -80,4 +118,15 @@ public class boosCoolDown extends JavaPlugin {
 		return false;
 	}
 
+	private boolean setupEconomy(){
+		if(usingVault){
+        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+        if (economyProvider != null) {
+            economy  = economyProvider.getProvider();
+        }
+        usingEconomy = true;
+        return (economy != null);
+    } 	usingEconomy = false;
+		return false;
+    }
 }

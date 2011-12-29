@@ -93,6 +93,18 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 				return true;
 			}
 		}
+		if (boosConfigManager.getPrice(player, pre) > 0) {
+			if (boosCoolDown.isUsingEconomy()) {
+				if (boosCoolDown.getEconomy().getBalance(player.getName()) >= boosConfigManager
+						.getPrice(player, pre)) {
+					boosPriceManager.payForCommand(player, pre, message);
+				} else {
+					boosPriceManager.payForCommand(player, pre, message);
+					event.setCancelled(true);
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 
