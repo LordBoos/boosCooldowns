@@ -1,6 +1,6 @@
 name: boosCooldown
 main: cz.boosik.boosCooldown.boosCoolDown
-version: 1.7.2
+version: 1.7.3
 author: boosik
 softdepend: [Vault, iConomy 4 & 5 & 6, BOSEconomy 6 & 7, EssentialsEcon, 3Co, MultiCurrency, MineConomy, eWallet, EconXP]
 description: >
@@ -9,4 +9,4 @@ commands:
   boosCoolDown:
     description: Reload Command for boosCooldown
     usage: |
-           /<command> [reload]   
+           /<command> [reload]
