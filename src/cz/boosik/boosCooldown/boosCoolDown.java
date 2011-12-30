@@ -131,11 +131,21 @@ public class boosCoolDown extends JavaPlugin {
 	public boolean onCommand(CommandSender sender, Command c,
 			String commandLabel, String[] args) {
 		String command = c.getName().toLowerCase();
-		if (command.equalsIgnoreCase("boosCooldowns")) {
-			boosConfigManager.reload();
-			boosChat.sendMessageToCommandSender(sender,
-					"&6[" + pdfFile.getName() + "]" + " config reloaded");
-			return true;
+		if (usingPermissions) {
+			if (permissions.has(sender, "booscooldowns.reload")
+					&& command.equalsIgnoreCase("boosCooldowns")) {
+				boosConfigManager.reload();
+				boosChat.sendMessageToCommandSender(sender,
+						"&6[" + pdfFile.getName() + "]" + " config reloaded");
+				return true;
+			}
+		} else {
+			if (sender.isOp() && command.equalsIgnoreCase("boosCooldowns")) {
+				boosConfigManager.reload();
+				boosChat.sendMessageToCommandSender(sender,
+						"&6[" + pdfFile.getName() + "]" + " config reloaded");
+				return true;
+			}
 		}
 		return false;
 	}
