@@ -27,7 +27,7 @@ public class boosCoolDownEntityListener extends EntityListener {
 			if (boosCoolDown.isUsingPermissions()) {
 				if (player != null
 						&& !boosCoolDown.getPermissions().has(player,
-								"boosCooldowns.nocancel.damage")) {
+								"booscooldowns.nocancel.damage")) {
 					if (boosWarmUpManager.hasWarmUps(player)) {
 						boosChat.sendMessageToPlayer(player, boosConfigManager
 								.getWarmUpCancelledByDamageMessage());

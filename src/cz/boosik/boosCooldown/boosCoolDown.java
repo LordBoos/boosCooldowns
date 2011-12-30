@@ -131,7 +131,7 @@ public class boosCoolDown extends JavaPlugin {
 	public boolean onCommand(CommandSender sender, Command c,
 			String commandLabel, String[] args) {
 		String command = c.getName().toLowerCase();
-		if (command.equalsIgnoreCase("boosCoolDown")) {
+		if (command.equalsIgnoreCase("boosCooldowns")) {
 			boosConfigManager.reload();
 			boosChat.sendMessageToCommandSender(sender,
 					"&6[" + pdfFile.getName() + "]" + " config reloaded");
