@@ -1,5 +1,8 @@
 package cz.boosik.boosCooldown;
 
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerListener;
@@ -11,6 +14,7 @@ import util.boosChat;
 
 public class boosCoolDownPlayerListener extends PlayerListener {
 	private final boosCoolDown plugin;
+	private static ConcurrentHashMap<String, Location> playerloc = new ConcurrentHashMap<String, Location>();
 
 	public boosCoolDownPlayerListener(boosCoolDown instance) {
 		plugin = instance;
@@ -39,6 +43,7 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 		}
 
 		if (on) {
+			playerloc.put(player.getName() + "@", player.getLocation());
 			int i = message.indexOf(' ');
 			if (i < 0) {
 				i = message.length();
@@ -60,7 +65,6 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 				String messageSub = messageCommand.substring(j,
 						messageCommand.length());
 				preSub = preCommand + ' ' + preSub;
-
 				onCooldown = this.checkCooldown(event, player, preSub,
 						messageSub);
 			}
@@ -156,8 +160,13 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 		if (boosCoolDown.isUsingPermissions()) {
 			if (player != null
 					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.nocancel.move")) {
-				if (boosWarmUpManager.hasWarmUps(player)) {
+							"booscooldowns.nocancel.move") ) {
+				if (boosWarmUpManager.hasWarmUps(player) && hasMoved(player)) {
+					for (String key : playerloc.keySet()){
+						if (key.startsWith(player.getName() + "@")){
+							playerloc.remove(key);
+						}
+					}
 					boosChat.sendMessageToPlayer(player,
 							boosConfigManager.getWarmUpCancelledByMoveMessage());
 					boosWarmUpManager.cancelWarmUps(player);
@@ -166,7 +175,12 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 			}
 		} else {
 			if (player != null) {
-				if (boosWarmUpManager.hasWarmUps(player)) {
+				if (boosWarmUpManager.hasWarmUps(player) && hasMoved(player)) {
+					for (String key : playerloc.keySet()){
+						if (key.startsWith(player.getName() + "@")){
+							playerloc.remove(key);
+						}
+					}
 					boosChat.sendMessageToPlayer(player,
 							boosConfigManager.getWarmUpCancelledByMoveMessage());
 					boosWarmUpManager.cancelWarmUps(player);
@@ -175,4 +189,13 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 			}
 		}
 	}
+	
+	public static boolean hasMoved(Player player) {
+    	Location curloc = player.getLocation();
+    	Location cmdloc = playerloc.get(player.getName());
+    	if(cmdloc.distanceSquared(curloc) > 2 ) {
+    		return true;
+    	}
+    	return false;
+    }
 }

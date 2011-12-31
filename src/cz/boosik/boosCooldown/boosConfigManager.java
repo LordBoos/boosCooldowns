@@ -141,7 +141,7 @@ public class boosConfigManager {
 				false);
 	}
 
-	public boolean getCancelWarmupOnMove() {
+	public static boolean getCancelWarmupOnMove() {
 		return conf.getBoolean("commands.options.cancel_warmup_on_move", false);
 	}
 
