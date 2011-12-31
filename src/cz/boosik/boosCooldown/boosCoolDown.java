@@ -36,8 +36,7 @@ public class boosCoolDown extends JavaPlugin {
 	private static boolean usingVault = false;
 	private static boolean usingEconomy = false;
 	private static boolean usingPermissions = false;
-	private PluginManager pm = getServer().getPluginManager();
-
+	private PluginManager pm;
 	@SuppressWarnings("static-access")
 	public void onEnable() {
 		pdfFile = this.getDescription();
@@ -45,14 +44,15 @@ public class boosCoolDown extends JavaPlugin {
 		log.info("[" + pdfFile.getName() + "]" + " version "
 				+ pdfFile.getVersion() + " by " + pdfFile.getAuthors()
 				+ " is enabled!");
-		registerEvents();
-		initializeVault();
+		
 		boosConfigManager boosConfigManager = new boosConfigManager(this);
 		boosConfigManager.load();
 		conf = boosConfigManager.conf;
 		boosCoolDownManager boosCoolDownManager = new boosCoolDownManager(this);
 		boosCoolDownManager.load();
-		
+		pm = getServer().getPluginManager();
+		registerEvents();
+		initializeVault();
 		if (boosConfigManager.getClearOnRestart()) {
 			boosCoolDownManager.clear();
 		}
