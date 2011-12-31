@@ -36,83 +36,25 @@ public class boosCoolDown extends JavaPlugin {
 	private static boolean usingVault = false;
 	private static boolean usingEconomy = false;
 	private static boolean usingPermissions = false;
+	private PluginManager pm = getServer().getPluginManager();
 
 	@SuppressWarnings("static-access")
 	public void onEnable() {
 		pdfFile = this.getDescription();
-		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, playerListener,
-				Event.Priority.Lowest, this);
-
 		PluginDescriptionFile pdfFile = this.getDescription();
 		log.info("[" + pdfFile.getName() + "]" + " version "
 				+ pdfFile.getVersion() + " by " + pdfFile.getAuthors()
 				+ " is enabled!");
-
+		registerEvents();
+		initializeVault();
 		boosConfigManager boosConfigManager = new boosConfigManager(this);
 		boosConfigManager.load();
 		conf = boosConfigManager.conf;
 		boosCoolDownManager boosCoolDownManager = new boosCoolDownManager(this);
 		boosCoolDownManager.load();
-		if (boosConfigManager.getCancelWarmUpOnDamage()) {
-			pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener,
-					Event.Priority.Normal, this);
-		}
-		if (boosConfigManager.getCancelWarmupOnMove()) {
-			pm.registerEvent(Event.Type.PLAYER_MOVE, playerListener,
-					Event.Priority.Normal, this);
-		}
+		
 		if (boosConfigManager.getClearOnRestart()) {
 			boosCoolDownManager.clear();
-		}
-		Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
-		if (x != null & x instanceof Vault) {
-			vault = (Vault) x;
-			log.info("[" + pdfFile.getName() + "]"
-					+ " found [Vault] searching for economy plugin.");
-			log.info("[" + pdfFile.getName() + "]"
-					+ " found [Vault] searching for permissions plugin.");
-			usingVault = true;
-			if (setupEconomy() && setupPermissions()) {
-				log.info("[" + pdfFile.getName() + "]" + " found ["
-						+ economy.getName()
-						+ "] plugin, enabling prices support.");
-				log.info("[" + pdfFile.getName() + "]" + " found ["
-						+ permissions.getName()
-						+ "] plugin, enabling permissions support.");
-			} else if (setupEconomy() && !setupPermissions()) {
-				log.info("[" + pdfFile.getName() + "]" + " found ["
-						+ economy.getName()
-						+ "] plugin, enabling prices support.");
-				log.info("["
-						+ pdfFile.getName()
-						+ "]"
-						+ "] permissions pluging not found, disabling permissions support.");
-			} else if (!setupEconomy() && setupPermissions()) {
-				log.info("["
-						+ pdfFile.getName()
-						+ "]"
-						+ " economy plugin not found, disabling prices support.");
-				usingEconomy = false;
-				log.info("[" + pdfFile.getName() + "]" + " found ["
-						+ permissions.getName()
-						+ "] plugin, enabling permissions support.");
-			} else {
-				log.info("["
-						+ pdfFile.getName()
-						+ "]"
-						+ " economy plugin not found, disabling prices support.");
-				log.info("["
-						+ pdfFile.getName()
-						+ "]"
-						+ "] permissions pluging not found, disabling permissions support.");
-			}
-		} else {
-			log.info("["
-					+ pdfFile.getName()
-					+ "]"
-					+ " [Vault] not found disabling economy and permissions support.");
-			usingVault = false;
 		}
 		confusers = boosCoolDownManager.confusers;
 
@@ -198,5 +140,77 @@ public class boosCoolDown extends JavaPlugin {
 		}
 		usingPermissions = false;
 		return false;
+	}
+	
+	private void registerEvents(){
+		pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, playerListener,
+				Event.Priority.Lowest, this);
+		if (boosConfigManager.getCancelWarmUpOnDamage()) {
+			pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener,
+					Event.Priority.Normal, this);
+		}
+		if (boosConfigManager.getCancelWarmupOnMove()) {
+			pm.registerEvent(Event.Type.PLAYER_MOVE, playerListener,
+					Event.Priority.Normal, this);
+		}
+		if (boosConfigManager.getCancelWarmupOnSprint()){
+			pm.registerEvent(Event.Type.PLAYER_TOGGLE_SPRINT, playerListener, Event.Priority.Normal, this);
+		}
+		if(boosConfigManager.getCancelWarmupOnSneak()){
+			pm.registerEvent(Event.Type.PLAYER_TOGGLE_SNEAK, playerListener, Event.Priority.Normal, this);
+		}
+	}
+	
+	private void initializeVault() {
+		Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
+		if (x != null & x instanceof Vault) {
+			vault = (Vault) x;
+			log.info("[" + pdfFile.getName() + "]"
+					+ " found [Vault] searching for economy plugin.");
+			log.info("[" + pdfFile.getName() + "]"
+					+ " found [Vault] searching for permissions plugin.");
+			usingVault = true;
+			if (setupEconomy() && setupPermissions()) {
+				log.info("[" + pdfFile.getName() + "]" + " found ["
+						+ economy.getName()
+						+ "] plugin, enabling prices support.");
+				log.info("[" + pdfFile.getName() + "]" + " found ["
+						+ permissions.getName()
+						+ "] plugin, enabling permissions support.");
+			} else if (setupEconomy() && !setupPermissions()) {
+				log.info("[" + pdfFile.getName() + "]" + " found ["
+						+ economy.getName()
+						+ "] plugin, enabling prices support.");
+				log.info("["
+						+ pdfFile.getName()
+						+ "]"
+						+ "] permissions pluging not found, disabling permissions support.");
+			} else if (!setupEconomy() && setupPermissions()) {
+				log.info("["
+						+ pdfFile.getName()
+						+ "]"
+						+ " economy plugin not found, disabling prices support.");
+				usingEconomy = false;
+				log.info("[" + pdfFile.getName() + "]" + " found ["
+						+ permissions.getName()
+						+ "] plugin, enabling permissions support.");
+			} else {
+				log.info("["
+						+ pdfFile.getName()
+						+ "]"
+						+ " economy plugin not found, disabling prices support.");
+				log.info("["
+						+ pdfFile.getName()
+						+ "]"
+						+ "] permissions pluging not found, disabling permissions support.");
+			}
+		} else {
+			log.info("["
+					+ pdfFile.getName()
+					+ "]"
+					+ " [Vault] not found disabling economy and permissions support.");
+			usingVault = false;
+		}
+		
 	}
 }

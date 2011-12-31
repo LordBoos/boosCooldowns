@@ -37,6 +37,8 @@ public class boosConfigManager {
 			conf.setProperty("commands.price./home", 20);
 			conf.setProperty("commands.options.cancel_warmup_on_damage", false);
 			conf.setProperty("commands.options.cancel_warmup_on_move", false);
+			conf.setProperty("commands.options.cancel_warmup_on_sneak", false);
+			conf.setProperty("commands.options.cancel_warmup_on_sprint", false);
 			conf.setProperty("commands.options.clear_on_restart", false);
 			conf.setProperty("commands.options.unit_seconds", "seconds");
 			conf.setProperty("commands.options.unit_minutes", "minutes");
@@ -47,6 +49,12 @@ public class boosConfigManager {
 			conf.setProperty(
 					"commands.options.message_warmup_cancelled_by_move",
 					"&6Warm-ups have been cancelled due to moving.&f");
+			conf.setProperty(
+					"commands.options.message_warmup_cancelled_by_sprint",
+					"&6Warm-ups have been cancelled due to sprinting.&f");
+			conf.setProperty(
+					"commands.options.message_warmup_cancelled_by_sneak",
+					"&6Warm-ups have been cancelled due to sneaking.&f");
 			conf.setProperty("commands.options.message_cooldown",
 					"&6Wait&e &seconds& &unit&&6 before you can use command&e &command& &6again.&f");
 			conf.setProperty("commands.options.message_warmup",
@@ -136,7 +144,7 @@ public class boosConfigManager {
 		return conf.getBoolean("commands.options.clear_on_restart", false);
 	}
 
-	static boolean getCancelWarmUpOnDamage() {
+	public static boolean getCancelWarmUpOnDamage() {
 		return conf.getBoolean("commands.options.cancel_warmup_on_damage",
 				false);
 	}
@@ -153,6 +161,28 @@ public class boosConfigManager {
 	public static String getPaidErrorMessage() {
 		return conf.getString("commands.options.paid_error",
 				"An error has occured: %s");
+	}
+
+	public static boolean getCancelWarmupOnSprint() {
+		return conf.getBoolean("commands.options.cancel_warmup_on_sprint",
+				false);
+	}
+
+	public static boolean getCancelWarmupOnSneak() {
+		return conf
+				.getBoolean("commands.options.cancel_warmup_on_sneak", false);
+	}
+
+	public static String getCancelWarmupOnSneakMessage() {
+		return conf.getString(
+				"commands.options.message_warmup_cancelled_by_sneak",
+				"&6Warm-ups have been cancelled due to sneaking.&f");
+	}
+
+	public static String getCancelWarmupOnSprintMessage() {
+		return conf.getString(
+				"commands.options.message_warmup_cancelled_by_sprint",
+				"&6Warm-ups have been cancelled due to sprinting.&f");
 	}
 
 }

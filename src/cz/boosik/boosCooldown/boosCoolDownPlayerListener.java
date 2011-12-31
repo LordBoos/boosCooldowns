@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.event.player.PlayerToggleSprintEvent;
 
 import util.boosChat;
 
@@ -198,4 +200,60 @@ public class boosCoolDownPlayerListener extends PlayerListener {
     	}
     	return false;
     }
+	
+	public void onPlayerToggleSneak(PlayerToggleSneakEvent event){
+		if (event.isCancelled()) {
+			return;
+		}
+		Player player = event.getPlayer();
+		if (boosCoolDown.isUsingPermissions()) {
+			if (player != null
+					&& !boosCoolDown.getPermissions().has(player,
+							"booscooldowns.nocancel.sneak") ) {
+				if (boosWarmUpManager.hasWarmUps(player)) {
+					boosChat.sendMessageToPlayer(player,
+							boosConfigManager.getCancelWarmupOnSneakMessage());
+					boosWarmUpManager.cancelWarmUps(player);
+				}
+
+			}
+		} else {
+			if (player != null) {
+				if (boosWarmUpManager.hasWarmUps(player)) {
+					boosChat.sendMessageToPlayer(player,
+							boosConfigManager.getCancelWarmupOnSneakMessage());
+					boosWarmUpManager.cancelWarmUps(player);
+				}
+
+			}
+		}
+	}
+	
+	public void onPlayerToggleSprint(PlayerToggleSprintEvent event){
+		if (event.isCancelled()) {
+			return;
+		}
+		Player player = event.getPlayer();
+		if (boosCoolDown.isUsingPermissions()) {
+			if (player != null
+					&& !boosCoolDown.getPermissions().has(player,
+							"booscooldowns.nocancel.sprint") ) {
+				if (boosWarmUpManager.hasWarmUps(player)) {
+					boosChat.sendMessageToPlayer(player,
+							boosConfigManager.getCancelWarmupOnSprintMessage());
+					boosWarmUpManager.cancelWarmUps(player);
+				}
+
+			}
+		} else {
+			if (player != null) {
+				if (boosWarmUpManager.hasWarmUps(player)) {
+					boosChat.sendMessageToPlayer(player,
+							boosConfigManager.getCancelWarmupOnSprintMessage());
+					boosWarmUpManager.cancelWarmUps(player);
+				}
+
+			}
+		}
+	}
 }
