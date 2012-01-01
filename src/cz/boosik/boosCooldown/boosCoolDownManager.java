@@ -327,4 +327,20 @@ public class boosCoolDownManager {
 				.removeProperty("users." + player.getName() + ".warmup." + pre);
 		confusers.save();
 	}
+
+	static void removeWarmUp(Player player, String pre, String message) {
+		pre = pre.toLowerCase();
+		confusers
+				.removeProperty("users." + player.getName() + ".warmup." + pre);
+		confusers.save();
+	}
+
+	static void removeWarmUps(Player player) {
+		for (String key : confusers.getKeys()) {
+			if (key.startsWith("users." + player.getName() + ".warmup.")) {
+				confusers.removeProperty(key);
+				confusers.save();
+			}
+		}
+	}
 }

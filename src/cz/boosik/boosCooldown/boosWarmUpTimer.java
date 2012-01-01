@@ -4,8 +4,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import org.bukkit.entity.Player;
 
-import util.boosChat;
-
 public class boosWarmUpTimer extends TimerTask {
 
 	boosCoolDown bCoolDown;
@@ -26,15 +24,19 @@ public class boosWarmUpTimer extends TimerTask {
 
 	@Override
 	public void run() {
-		if (player.isOnline() && boosWarmUpManager.hasWarmUps(player)) {
+		if (player.isOnline() && !player.isDead() && boosWarmUpManager.hasWarmUps(player)) {
 			boosCoolDownManager.setWarmUpOK(player, pre, message);
 			boosWarmUpManager.removeWarmUpProcess(this.player.getName() + "@"
 					+ pre);
 			player.chat(pre + message);
+		} else if (player.isOnline() && player.isDead() && boosWarmUpManager.hasWarmUps(player)){
+			boosCoolDownManager.removeWarmUp(player, pre, message);
+			boosWarmUpManager.removeWarmUpProcess(this.player.getName() + "@"
+					+ pre);
 		} else if (!player.isOnline() && boosWarmUpManager.hasWarmUps(player)){
-			boosChat.sendMessageToPlayer(player,
-					boosConfigManager.getCancelWarmupOnSprintMessage());
-			boosWarmUpManager.cancelWarmUps(player);
-		}
+			boosCoolDownManager.removeWarmUp(player, pre, message);
+			boosWarmUpManager.removeWarmUpProcess(this.player.getName() + "@"
+					+ pre);
 	}
+}
 }

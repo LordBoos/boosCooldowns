@@ -55,9 +55,9 @@ public class boosConfigManager {
 			conf.setProperty(
 					"commands.options.message_warmup_cancelled_by_sneak",
 					"&6Warm-ups have been cancelled due to sneaking.&f");
-			conf.setProperty(
-					"commands.options.message_warmup_cancelled_by_death",
-					"&6Warm-ups have been cancelled due to death.&f");
+//			conf.setProperty(
+//					"commands.options.message_warmup_cancelled_by_death",
+//					"&6Warm-ups have been cancelled due to death.&f");
 			conf.setProperty("commands.options.message_cooldown",
 					"&6Wait&e &seconds& &unit&&6 before you can use command&e &command& &6again.&f");
 			conf.setProperty("commands.options.message_warmup",
@@ -188,10 +188,10 @@ public class boosConfigManager {
 				"&6Warm-ups have been cancelled due to sprinting.&f");
 	}
 
-	public static String getWarmUpCancelledByDeathMessage() {
-		return conf.getString(
-				"commands.options.message_warmup_cancelled_by_death",
-				"&6Warm-ups have been cancelled due to death.&f");
-	}
+//	public static String getWarmUpCancelledByDeathMessage() {
+//		return conf.getString(
+//				"commands.options.message_warmup_cancelled_by_death",
+//				"&6Warm-ups have been cancelled due to death.&f");
+//	}
 
 }
