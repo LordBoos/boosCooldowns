@@ -4,6 +4,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import org.bukkit.entity.Player;
 
+import util.boosChat;
+
 public class boosWarmUpTimer extends TimerTask {
 
 	boosCoolDown bCoolDown;
@@ -29,6 +31,10 @@ public class boosWarmUpTimer extends TimerTask {
 			boosWarmUpManager.removeWarmUpProcess(this.player.getName() + "@"
 					+ pre);
 			player.chat(pre + message);
+		} else if (!player.isOnline() && boosWarmUpManager.hasWarmUps(player)){
+			boosChat.sendMessageToPlayer(player,
+					boosConfigManager.getCancelWarmupOnSprintMessage());
+			boosWarmUpManager.cancelWarmUps(player);
 		}
 	}
 }
