@@ -3,6 +3,7 @@ package cz.boosik.boosCooldown;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityListener;
 
 import util.boosChat;
@@ -15,7 +16,7 @@ public class boosCoolDownEntityListener extends EntityListener {
 		plugin = instance;
 	}
 
-	@Override
+
 	public void onEntityDamage(EntityDamageEvent event) {
 		if (event.isCancelled()) {
 			return;
@@ -47,4 +48,20 @@ public class boosCoolDownEntityListener extends EntityListener {
 			}
 		}
 	}
-}
+	
+	public void onEntityDeath(EntityDeathEvent event) {
+		Entity entity = event.getEntity();
+		if (entity != null && entity instanceof Player) {
+			Player player = (Player) entity;
+				if (player != null) {
+					if (boosWarmUpManager.hasWarmUps(player)) {
+						boosChat.sendMessageToPlayer(player, boosConfigManager
+								.getWarmUpCancelledByDeathMessage());
+						boosWarmUpManager.cancelWarmUps(player);
+					}
+
+				}
+			}
+		}
+	}
+
