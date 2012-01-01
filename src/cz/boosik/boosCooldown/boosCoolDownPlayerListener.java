@@ -257,9 +257,4 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 			}
 		}
 	}
-	
-	public void onPlayerQuit(PlayerQuitEvent event){
-		// TODO COde onPlayerQuit
-	}
-
 }
