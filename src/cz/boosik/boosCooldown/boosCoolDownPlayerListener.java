@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
 
@@ -256,4 +257,9 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 			}
 		}
 	}
+	
+	public void onPlayerQuit(PlayerQuitEvent event){
+		// TODO COde onPlayerQuit
+	}
+
 }
