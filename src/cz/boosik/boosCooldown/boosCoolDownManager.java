@@ -99,7 +99,8 @@ public class boosCoolDownManager {
 		if (boosCoolDown.isUsingPermissions()) {
 			if (coolDownSeconds > 0
 					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.nocooldown")) {
+							"booscooldowns.nocooldown") && !boosCoolDown.getPermissions().has(player,
+									"booscooldowns.nocooldown."+pre)) {
 				Date lastTime = getTime(player, pre);
 				if (lastTime == null) {
 					setTime(player, pre);

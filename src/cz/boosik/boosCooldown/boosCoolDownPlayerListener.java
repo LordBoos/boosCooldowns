@@ -80,7 +80,8 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 		if (boosCoolDown.isUsingPermissions()) {
 			if (warmUpSeconds > 0
 					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.nowarmup")) {
+							"booscooldowns.nowarmup") && !boosCoolDown.getPermissions().has(player,
+									"booscooldowns.nowarmup."+pre)) {
 				if (!boosCoolDownManager.checkWarmUpOK(player, pre, message)) {
 					if (boosCoolDownManager.checkCoolDownOK(player, pre,
 							message)) {
@@ -139,7 +140,8 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 		if (boosCoolDown.isUsingEconomy()) {
 			if (boosConfigManager.getPrice(player, pre) > 0) {
 				if (!boosCoolDown.getPermissions().has(player,
-						"booscooldowns.noprice")) {
+						"booscooldowns.noprice") && !boosCoolDown.getPermissions().has(player,
+								"booscooldowns.noprice."+pre)) {
 					if (boosCoolDown.getEconomy().getBalance(player.getName()) >= boosConfigManager
 							.getPrice(player, pre)) {
 						boosPriceManager.payForCommand(player, pre, message);
