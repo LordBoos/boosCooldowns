@@ -144,7 +144,7 @@ public class boosCoolDown extends JavaPlugin {
 	
 	private void registerEvents(){
 		pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, playerListener,
-				Event.Priority.High, this);
+				Event.Priority.Lowest, this);
 		if (boosConfigManager.getCancelWarmUpOnDamage()) {
 			pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener,
 					Event.Priority.Normal, this);

@@ -29,12 +29,24 @@ public class boosConfigManager {
 		} else {
 			this.confFile = new File(boosCoolDown.getDataFolder(), "config.yml");
 			this.conf = new Configuration(confFile);
-			conf.setProperty("commands.cooldown./spawn", 60);
-			conf.setProperty("commands.cooldown./home", 30);
-			conf.setProperty("commands.warmup./give", 60);
-			conf.setProperty("commands.warmup./home", 20);
-			conf.setProperty("commands.price./spawn", 10);
-			conf.setProperty("commands.price./home", 20);
+			conf.setProperty("commands.cooldowns.cooldown./spawn", 60);
+			conf.setProperty("commands.cooldowns.cooldown./home", 30);
+			conf.setProperty("commands.cooldowns.cooldown2./home", 40);
+			conf.setProperty("commands.cooldowns.cooldown3./home", 90);
+			conf.setProperty("commands.cooldowns.cooldown4./home", 99);
+			conf.setProperty("commands.cooldowns.cooldown5./home", 542);
+			conf.setProperty("commands.warmups.warmup./give", 60);
+			conf.setProperty("commands.warmups.warmup./home", 20);
+			conf.setProperty("commands.warmups.warmup2./home", 40);
+			conf.setProperty("commands.warmups.warmup3./home", 90);
+			conf.setProperty("commands.warmups.warmup4./home", 99);
+			conf.setProperty("commands.warmups.warmup5./home", 542);
+			conf.setProperty("commands.prices.price./spawn", 10);
+			conf.setProperty("commands.prices.price./home", 20);
+			conf.setProperty("commands.prices.price2./home", 40);
+			conf.setProperty("commands.prices.price3./home", 90);
+			conf.setProperty("commands.prices.price4./home", 99);
+			conf.setProperty("commands.prices.price5./home", 542);
 			conf.setProperty("commands.options.cancel_warmup_on_damage", false);
 			conf.setProperty("commands.options.cancel_warmup_on_move", false);
 			conf.setProperty("commands.options.cancel_warmup_on_sneak", false);
@@ -83,21 +95,105 @@ public class boosConfigManager {
 	static int getCoolDown(Player player, String pre) {
 		int coolDown = 0;
 		pre = pre.toLowerCase();
-		coolDown = conf.getInt("commands.cooldown." + pre, coolDown);
+		coolDown = conf.getInt("commands.cooldowns.cooldown." + pre, coolDown);
+		return coolDown;
+	}
+	
+	public static int getCoolDown2(Player player, String pre) {
+		int coolDown = 0;
+		pre = pre.toLowerCase();
+		coolDown = conf.getInt("commands.cooldowns.cooldown2." + pre, coolDown);
+		return coolDown;
+	}
+
+	public static int getCoolDown3(Player player, String pre) {
+		int coolDown = 0;
+		pre = pre.toLowerCase();
+		coolDown = conf.getInt("commands.cooldowns.cooldown3." + pre, coolDown);
+		return coolDown;
+	}
+
+	public static int getCoolDown4(Player player, String pre) {
+		int coolDown = 0;
+		pre = pre.toLowerCase();
+		coolDown = conf.getInt("commands.cooldowns.cooldown4." + pre, coolDown);
+		return coolDown;
+	}
+
+	public static int getCoolDown5(Player player, String pre) {
+		int coolDown = 0;
+		pre = pre.toLowerCase();
+		coolDown = conf.getInt("commands.cooldowns.cooldown5." + pre, coolDown);
 		return coolDown;
 	}
 
 	public static int getWarmUp(Player player, String pre) {
 		int warmUp = 0;
 		pre = pre.toLowerCase();
-		warmUp = conf.getInt("commands.warmup." + pre, warmUp);
+		warmUp = conf.getInt("commands.warmups.warmup." + pre, warmUp);
+		return warmUp;
+	}
+	
+	public static int getWarmUp2(Player player, String pre) {
+		int warmUp = 0;
+		pre = pre.toLowerCase();
+		warmUp = conf.getInt("commands.warmups.warmup2." + pre, warmUp);
+		return warmUp;
+	}
+
+	public static int getWarmUp3(Player player, String pre) {
+		int warmUp = 0;
+		pre = pre.toLowerCase();
+		warmUp = conf.getInt("commands.warmups.warmup3." + pre, warmUp);
+		return warmUp;
+	}
+
+	public static int getWarmUp4(Player player, String pre) {
+		int warmUp = 0;
+		pre = pre.toLowerCase();
+		warmUp = conf.getInt("commands.warmups.warmup4." + pre, warmUp);
+		return warmUp;
+	}
+
+	public static int getWarmUp5(Player player, String pre) {
+		int warmUp = 0;
+		pre = pre.toLowerCase();
+		warmUp = conf.getInt("commands.warmups.warmup5." + pre, warmUp);
 		return warmUp;
 	}
 
 	public static int getPrice(Player player, String pre) {
 		int price = 0;
 		pre = pre.toLowerCase();
-		price = conf.getInt("commands.price." + pre, price);
+		price = conf.getInt("commands.prices.price." + pre, price);
+		return price;
+	}
+	
+	public static int getPrice2(Player player, String pre) {
+		int price = 0;
+		pre = pre.toLowerCase();
+		price = conf.getInt("commands.prices.price2." + pre, price);
+		return price;
+	}
+	
+	public static int getPrice3(Player player, String pre) {
+		int price = 0;
+		pre = pre.toLowerCase();
+		price = conf.getInt("commands.prices.price3." + pre, price);
+		return price;
+	}
+	
+	public static int getPrice4(Player player, String pre) {
+		int price = 0;
+		pre = pre.toLowerCase();
+		price = conf.getInt("commands.prices.price4." + pre, price);
+		return price;
+	}
+	
+	public static int getPrice5(Player player, String pre) {
+		int price = 0;
+		pre = pre.toLowerCase();
+		price = conf.getInt("commands.prices.price5." + pre, price);
 		return price;
 	}
 
@@ -187,6 +283,8 @@ public class boosConfigManager {
 				"commands.options.message_warmup_cancelled_by_sprint",
 				"&6Warm-ups have been cancelled due to sprinting.&f");
 	}
+
+
 
 //	public static String getWarmUpCancelledByDeathMessage() {
 //		return conf.getString(

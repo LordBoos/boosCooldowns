@@ -76,7 +76,37 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 	// Returns true if the command is on cooldown, false otherwise
 	private boolean checkCooldown(PlayerCommandPreprocessEvent event,
 			Player player, String pre, String message) {
-		int warmUpSeconds = boosConfigManager.getWarmUp(player, pre);
+		int warmUpSeconds = 0;
+		if (boosCoolDown.isUsingPermissions()) {
+			if (!boosCoolDown.getPermissions().has(player,
+					"booscooldowns.warmup2")
+					&& !boosCoolDown.getPermissions().has(player,
+							"booscooldowns.warmup3")
+					&& !boosCoolDown.getPermissions().has(player,
+							"booscooldowns.warmup4")
+					&& !boosCoolDown.getPermissions().has(player,
+							"booscooldowns.warmup5")) {
+				warmUpSeconds = boosConfigManager.getWarmUp(player, pre);
+			}
+			if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.warmup2")) {
+				warmUpSeconds = boosConfigManager.getWarmUp2(player, pre);
+			}
+			if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.warmup3")) {
+				warmUpSeconds = boosConfigManager.getWarmUp3(player, pre);
+			}
+			if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.warmup4")) {
+				warmUpSeconds = boosConfigManager.getWarmUp4(player, pre);
+			}
+			if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.warmup5")) {
+				warmUpSeconds = boosConfigManager.getWarmUp5(player, pre);
+			}
+		} else {
+			warmUpSeconds = boosConfigManager.getWarmUp(player, pre);
+		}
 		if (boosCoolDown.isUsingPermissions()) {
 			if (warmUpSeconds > 0
 					&& !boosCoolDown.getPermissions().has(player,
