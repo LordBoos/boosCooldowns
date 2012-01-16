@@ -14,6 +14,7 @@ public class boosConfigManager {
 	protected static Configuration conf;
 	protected File confFile;
 	static List<String> players = new LinkedList<String>();
+	
 
 	@SuppressWarnings("static-access")
 	public boosConfigManager(boosCoolDown boosCoolDown) {

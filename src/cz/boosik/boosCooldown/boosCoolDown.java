@@ -78,14 +78,14 @@ public class boosCoolDown extends JavaPlugin {
 					&& command.equalsIgnoreCase("boosCooldowns")) {
 				boosConfigManager.reload();
 				boosChat.sendMessageToCommandSender(sender,
-						"&6[" + pdfFile.getName() + "]" + " config reloaded");
+						"&6[" + pdfFile.getName() + "]" + " config reloaded !DOES NOT WORK NOW!");
 				return true;
 			}
 		} else {
 			if (sender.isOp() && command.equalsIgnoreCase("boosCooldowns")) {
 				boosConfigManager.reload();
 				boosChat.sendMessageToCommandSender(sender,
-						"&6[" + pdfFile.getName() + "]" + " config reloaded");
+						"&6[" + pdfFile.getName() + "]" + " config reloaded !DOES NOT WORK NOW!");
 				return true;
 			}
 		}

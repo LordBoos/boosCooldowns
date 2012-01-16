@@ -232,6 +232,11 @@ public class boosCoolDownManager {
 		}
 		confusers.removeProperty("users." + player.getName() + ".cooldown");
 	}
+	
+	static void cancelCooldown(Player player, String pre){
+		confusers.removeProperty("users." + player.getName() + ".cooldown." + pre);
+		confusers.save();
+	}
 
 	static boolean checkCoolDownOK(Player player, String pre, String message) {
 		pre = pre.toLowerCase();

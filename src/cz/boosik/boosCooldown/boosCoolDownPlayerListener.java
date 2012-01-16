@@ -17,6 +17,7 @@ import util.boosChat;
 public class boosCoolDownPlayerListener extends PlayerListener {
 	private final boosCoolDown plugin;
 	private static ConcurrentHashMap<String, Location> playerloc = new ConcurrentHashMap<String, Location>();
+	private static ConcurrentHashMap<String, String> playerworld = new ConcurrentHashMap<String, String>();
 
 	public boosCoolDownPlayerListener(boosCoolDown instance) {
 		plugin = instance;
@@ -46,6 +47,7 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 
 		if (on) {
 			playerloc.put(player.getName() + "@", player.getLocation());
+			playerworld.put(player.getName() + "@", player.getWorld().getName());
 			int i = message.indexOf(' ');
 			if (i < 0) {
 				i = message.length();
@@ -110,8 +112,9 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 		if (boosCoolDown.isUsingPermissions()) {
 			if (warmUpSeconds > 0
 					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.nowarmup") && !boosCoolDown.getPermissions().has(player,
-									"booscooldowns.nowarmup."+pre)) {
+							"booscooldowns.nowarmup")
+					&& !boosCoolDown.getPermissions().has(player,
+							"booscooldowns.nowarmup." + pre)) {
 				if (!boosCoolDownManager.checkWarmUpOK(player, pre, message)) {
 					if (boosCoolDownManager.checkCoolDownOK(player, pre,
 							message)) {
@@ -170,13 +173,15 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 		if (boosCoolDown.isUsingEconomy()) {
 			if (boosConfigManager.getPrice(player, pre) > 0) {
 				if (!boosCoolDown.getPermissions().has(player,
-						"booscooldowns.noprice") && !boosCoolDown.getPermissions().has(player,
-								"booscooldowns.noprice."+pre)) {
+						"booscooldowns.noprice")
+						&& !boosCoolDown.getPermissions().has(player,
+								"booscooldowns.noprice." + pre)) {
 					if (boosCoolDown.getEconomy().getBalance(player.getName()) >= boosConfigManager
 							.getPrice(player, pre)) {
 						boosPriceManager.payForCommand(player, pre, message);
 					} else {
 						boosPriceManager.payForCommand(player, pre, message);
+						boosCoolDownManager.cancelCooldown(player, pre);
 						event.setCancelled(true);
 						return true;
 					}
@@ -194,13 +199,9 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 		if (boosCoolDown.isUsingPermissions()) {
 			if (player != null
 					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.nocancel.move") ) {
+							"booscooldowns.nocancel.move")) {
 				if (boosWarmUpManager.hasWarmUps(player) && hasMoved(player)) {
-					for (String key : playerloc.keySet()){
-						if (key.startsWith(player.getName() + "@")){
-							playerloc.remove(key);
-						}
-					}
+					clearLocWorld(player);
 					boosChat.sendMessageToPlayer(player,
 							boosConfigManager.getWarmUpCancelledByMoveMessage());
 					boosWarmUpManager.cancelWarmUps(player);
@@ -210,11 +211,7 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 		} else {
 			if (player != null) {
 				if (boosWarmUpManager.hasWarmUps(player) && hasMoved(player)) {
-					for (String key : playerloc.keySet()){
-						if (key.startsWith(player.getName() + "@")){
-							playerloc.remove(key);
-						}
-					}
+					clearLocWorld(player);
 					boosChat.sendMessageToPlayer(player,
 							boosConfigManager.getWarmUpCancelledByMoveMessage());
 					boosWarmUpManager.cancelWarmUps(player);
@@ -223,17 +220,35 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 			}
 		}
 	}
-	
+
 	public static boolean hasMoved(Player player) {
-    	Location curloc = player.getLocation();
-    	Location cmdloc = playerloc.get(player.getName() + "@");
-    	if(cmdloc.distanceSquared(curloc) > 2 ) {
-    		return true;
-    	}
-    	return false;
-    }
+		String curworld = player.getWorld().getName();
+		String cmdworld = playerworld.get(player.getName() + "@");
+		Location curloc = player.getLocation();
+		Location cmdloc = playerloc.get(player.getName() + "@");
+		if (curworld != cmdworld) {
+			return true;
+		} else if (cmdloc.distanceSquared(curloc) > 2) {
+			return true;
+		}
+
+		return false;
+	}
 	
-	public void onPlayerToggleSneak(PlayerToggleSneakEvent event){
+	public static void clearLocWorld(Player player){
+		for (String key : playerloc.keySet()) {
+			if (key.startsWith(player.getName() + "@")) {
+				playerloc.remove(key);
+			}
+		}
+		for (String key : playerworld.keySet()){
+			if (key.startsWith(player.getName() + "@")){
+				playerworld.remove(key);
+			}
+		}
+	}
+
+	public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
 		if (event.isCancelled()) {
 			return;
 		}
@@ -241,7 +256,7 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 		if (boosCoolDown.isUsingPermissions()) {
 			if (player != null
 					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.nocancel.sneak") ) {
+							"booscooldowns.nocancel.sneak")) {
 				if (boosWarmUpManager.hasWarmUps(player)) {
 					boosChat.sendMessageToPlayer(player,
 							boosConfigManager.getCancelWarmupOnSneakMessage());
@@ -260,8 +275,8 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 			}
 		}
 	}
-	
-	public void onPlayerToggleSprint(PlayerToggleSprintEvent event){
+
+	public void onPlayerToggleSprint(PlayerToggleSprintEvent event) {
 		if (event.isCancelled()) {
 			return;
 		}
@@ -269,7 +284,7 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 		if (boosCoolDown.isUsingPermissions()) {
 			if (player != null
 					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.nocancel.sprint") ) {
+							"booscooldowns.nocancel.sprint")) {
 				if (boosWarmUpManager.hasWarmUps(player)) {
 					boosChat.sendMessageToPlayer(player,
 							boosConfigManager.getCancelWarmupOnSprintMessage());
