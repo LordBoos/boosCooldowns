@@ -14,6 +14,7 @@ import util.boosChat;
 
 //import org.bukkit.event.entity.EntityDamageEvent;
 
+@SuppressWarnings("deprecation")
 public class boosCoolDownPlayerListener extends PlayerListener {
 	private final boosCoolDown plugin;
 	private static ConcurrentHashMap<String, Location> playerloc = new ConcurrentHashMap<String, Location>();
