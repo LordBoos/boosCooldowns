@@ -5,11 +5,11 @@ import java.util.TimerTask;
 import org.bukkit.entity.Player;
 
 public class boosWarmUpTimer extends TimerTask {
-
-	boosCoolDown bCoolDown;
-	Player player;
-	String pre;
-	String message;
+	
+	private boosCoolDown bCoolDown;
+	private Player player;
+	private String pre;
+	private String message;
 
 	public boosWarmUpTimer(boosCoolDown bCoolDown, Timer timer, Player player,
 			String pre, String message) {
@@ -24,22 +24,29 @@ public class boosWarmUpTimer extends TimerTask {
 
 	@Override
 	public void run() {
-		if (player.isOnline() && !player.isDead() && boosWarmUpManager.hasWarmUps(player)) {
-			boosCoolDownManager.setWarmUpOK(player, pre, message);
-			boosWarmUpManager.removeWarmUpProcess(this.player.getName() + "@"
-					+ pre);
-			boosCoolDownPlayerListener.clearLocWorld(player);
-			player.chat(pre + message);
-		} else if (player.isOnline() && player.isDead() && boosWarmUpManager.hasWarmUps(player)){
-			boosCoolDownManager.removeWarmUp(player, pre, message);
-			boosWarmUpManager.removeWarmUpProcess(this.player.getName() + "@"
-					+ pre);
-			boosCoolDownPlayerListener.clearLocWorld(player);
-		} else if (!player.isOnline() && boosWarmUpManager.hasWarmUps(player)){
-			boosCoolDownManager.removeWarmUp(player, pre, message);
-			boosWarmUpManager.removeWarmUpProcess(this.player.getName() + "@"
-					+ pre);
-			boosCoolDownPlayerListener.clearLocWorld(player);
+		bCoolDown.getServer().getScheduler().scheduleSyncDelayedTask(bCoolDown, new boosWarmUpRunnable());
 	}
-}
+	
+	public class boosWarmUpRunnable implements Runnable {
+		@Override
+		public void run() {
+			if (player.isOnline() && !player.isDead() && boosWarmUpManager.hasWarmUps(player)) {
+				boosCoolDownManager.setWarmUpOK(player, pre, message);
+				boosWarmUpManager.removeWarmUpProcess(player.getName() + "@"
+						+ pre);
+				boosCoolDownPlayerListener.clearLocWorld(player);
+				player.chat(pre + message);
+			} else if (player.isOnline() && player.isDead() && boosWarmUpManager.hasWarmUps(player)){
+				boosCoolDownManager.removeWarmUp(player, pre, message);
+				boosWarmUpManager.removeWarmUpProcess(player.getName() + "@"
+						+ pre);
+				boosCoolDownPlayerListener.clearLocWorld(player);
+			} else if (!player.isOnline() && boosWarmUpManager.hasWarmUps(player)){
+				boosCoolDownManager.removeWarmUp(player, pre, message);
+				boosWarmUpManager.removeWarmUpProcess(player.getName() + "@"
+						+ pre);
+				boosCoolDownPlayerListener.clearLocWorld(player);
+			}
+		}
+	}
 }
