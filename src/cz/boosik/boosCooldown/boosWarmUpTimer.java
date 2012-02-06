@@ -28,7 +28,6 @@ public class boosWarmUpTimer extends TimerTask {
 	}
 	
 	public class boosWarmUpRunnable implements Runnable {
-		@Override
 		public void run() {
 			if (player.isOnline() && !player.isDead() && boosWarmUpManager.hasWarmUps(player)) {
 				boosCoolDownManager.setWarmUpOK(player, pre, message);
