@@ -1,7 +1,7 @@
 package cz.boosik.boosCooldown;
 
+import java.util.HashMap;
 import java.util.Timer;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.entity.Player;
 
@@ -9,7 +9,7 @@ import util.boosChat;
 
 public class boosWarmUpManager {
 
-	private static ConcurrentHashMap<String, boosWarmUpTimer> playercommands = new ConcurrentHashMap<String, boosWarmUpTimer>();
+	private static HashMap<String, boosWarmUpTimer> playercommands = new HashMap<String, boosWarmUpTimer>();
 
 	static Timer scheduler;
 
