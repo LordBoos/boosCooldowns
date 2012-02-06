@@ -1,6 +1,6 @@
 package cz.boosik.boosCooldown;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -17,8 +17,8 @@ import util.boosChat;
 @SuppressWarnings("deprecation")
 public class boosCoolDownPlayerListener extends PlayerListener {
 	private final boosCoolDown plugin;
-	private static HashMap<String, Location> playerloc = new HashMap<String, Location>();
-	private static HashMap<String, String> playerworld = new HashMap<String, String>();
+	private static ConcurrentHashMap<String, Location> playerloc = new ConcurrentHashMap<String, Location>();
+	private static ConcurrentHashMap<String, String> playerworld = new ConcurrentHashMap<String, String>();
 
 	public boosCoolDownPlayerListener(boosCoolDown instance) {
 		plugin = instance;
