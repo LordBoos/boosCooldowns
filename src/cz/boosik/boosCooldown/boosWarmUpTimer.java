@@ -33,18 +33,18 @@ public class boosWarmUpTimer extends TimerTask {
 				boosCoolDownManager.setWarmUpOK(player, pre, message);
 				boosWarmUpManager.removeWarmUpProcess(player.getName() + "@"
 						+ pre);
-				boosCoolDownPlayerListener.clearLocWorld(player);
+				boosCoolDownListener.clearLocWorld(player);
 				player.chat(pre + message);
 			} else if (player.isOnline() && player.isDead() && boosWarmUpManager.hasWarmUps(player)){
 				boosCoolDownManager.removeWarmUp(player, pre, message);
 				boosWarmUpManager.removeWarmUpProcess(player.getName() + "@"
 						+ pre);
-				boosCoolDownPlayerListener.clearLocWorld(player);
+				boosCoolDownListener.clearLocWorld(player);
 			} else if (!player.isOnline() && boosWarmUpManager.hasWarmUps(player)){
 				boosCoolDownManager.removeWarmUp(player, pre, message);
 				boosWarmUpManager.removeWarmUpProcess(player.getName() + "@"
 						+ pre);
-				boosCoolDownPlayerListener.clearLocWorld(player);
+				boosCoolDownListener.clearLocWorld(player);
 			}
 		}
 	}

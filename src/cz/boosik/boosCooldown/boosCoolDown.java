@@ -8,36 +8,23 @@ import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.config.Configuration;
 
 import util.boosChat;
 
-@SuppressWarnings("deprecation")
 public class boosCoolDown extends JavaPlugin {
-
-	private final boosCoolDownPlayerListener playerListener = new boosCoolDownPlayerListener(
-			this);
-	private final boosCoolDownEntityListener entityListener = new boosCoolDownEntityListener(
-			this);
 	public static final Logger log = Logger.getLogger("Minecraft");
 	public static PluginDescriptionFile pdfFile;
-	public static Configuration conf;
-	public static Configuration confusers;
 	private static Permission permissions = null;
 	private static Economy economy = null;
-	@SuppressWarnings("unused")
-	private static Vault vault = null;
 	private static boolean usingVault = false;
 	private static boolean usingEconomy = false;
 	private static boolean usingPermissions = false;
 	private PluginManager pm;
-	@SuppressWarnings("static-access")
 	public void onEnable() {
 		pdfFile = this.getDescription();
 		PluginDescriptionFile pdfFile = this.getDescription();
@@ -45,18 +32,16 @@ public class boosCoolDown extends JavaPlugin {
 				+ pdfFile.getVersion() + " by " + pdfFile.getAuthors()
 				+ " is enabled!");
 		
-		boosConfigManager boosConfigManager = new boosConfigManager(this);
+		new boosConfigManager(this);
 		boosConfigManager.load();
-		conf = boosConfigManager.conf;
-		boosCoolDownManager boosCoolDownManager = new boosCoolDownManager(this);
+		new boosCoolDownManager(this);
 		boosCoolDownManager.load();
 		pm = getServer().getPluginManager();
-		registerEvents();
+		pm.registerEvents(new boosCoolDownListener(this), this);
 		initializeVault();
 		if (boosConfigManager.getClearOnRestart()) {
 			boosCoolDownManager.clear();
 		}
-		confusers = boosCoolDownManager.confusers;
 
 	}
 
@@ -142,29 +127,9 @@ public class boosCoolDown extends JavaPlugin {
 		return false;
 	}
 	
-	private void registerEvents(){
-		pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, playerListener,
-				Event.Priority.Lowest, this);
-		if (boosConfigManager.getCancelWarmUpOnDamage()) {
-			pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener,
-					Event.Priority.Normal, this);
-		}
-		if (boosConfigManager.getCancelWarmupOnMove()) {
-			pm.registerEvent(Event.Type.PLAYER_MOVE, playerListener,
-					Event.Priority.Normal, this);
-		}
-		if (boosConfigManager.getCancelWarmupOnSprint()){
-			pm.registerEvent(Event.Type.PLAYER_TOGGLE_SPRINT, playerListener, Event.Priority.Normal, this);
-		}
-		if(boosConfigManager.getCancelWarmupOnSneak()){
-			pm.registerEvent(Event.Type.PLAYER_TOGGLE_SNEAK, playerListener, Event.Priority.Normal, this);
-		}
-	}
-	
 	private void initializeVault() {
 		Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
 		if (x != null & x instanceof Vault) {
-			vault = (Vault) x;
 			log.info("[" + pdfFile.getName() + "]"
 					+ " found [Vault] searching for economy plugin.");
 			log.info("[" + pdfFile.getName() + "]"

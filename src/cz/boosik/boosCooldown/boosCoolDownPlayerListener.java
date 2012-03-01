@@ -2,10 +2,11 @@ package cz.boosik.boosCooldown;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.xml.bind.Marshaller.Listener;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
@@ -14,8 +15,7 @@ import util.boosChat;
 
 //import org.bukkit.event.entity.EntityDamageEvent;
 
-@SuppressWarnings("deprecation")
-public class boosCoolDownPlayerListener extends PlayerListener {
+public class boosCoolDownPlayerListener extends Listener {
 	private final boosCoolDown plugin;
 	private static ConcurrentHashMap<String, Location> playerloc = new ConcurrentHashMap<String, Location>();
 	private static ConcurrentHashMap<String, String> playerworld = new ConcurrentHashMap<String, String>();
@@ -24,7 +24,6 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 		plugin = instance;
 	}
 
-	@Override
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		if (event.isCancelled()) {
 			return;

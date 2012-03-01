@@ -1,14 +1,14 @@
 package cz.boosik.boosCooldown;
 
+import javax.xml.bind.Marshaller.Listener;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityListener;
 
 import util.boosChat;
 
-@SuppressWarnings("deprecation")
-public class boosCoolDownEntityListener extends EntityListener {
+public class boosCoolDownEntityListener extends Listener {
 	@SuppressWarnings("unused")
 	private final boosCoolDown plugin;
 
