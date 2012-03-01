@@ -1,93 +1,93 @@
 package cz.boosik.boosCooldown;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.util.config.Configuration;
 
 import util.boosChat;
 
-@SuppressWarnings("deprecation")
 public class boosCoolDownManager {
 
-	protected static boosCoolDown bCoolDown;
-	protected static Configuration confusers;
-	protected File usersConfigFile;
+	private static YamlConfiguration confusers;
+	private static File confFile;
 
 	public boosCoolDownManager(boosCoolDown bCoolDown) {
-		boosCoolDownManager.bCoolDown = bCoolDown;
-		File confFile = new File(bCoolDown.getDataFolder(), "users.yml");
+		confFile = new File(bCoolDown.getDataFolder(), "users.yml");
 
-		confusers = null;
+		confusers = new YamlConfiguration();
 
 		if (confFile.exists()) {
-			confusers = new Configuration(confFile);
-			confusers.load();
+			try {
+				confusers.load(confFile);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (InvalidConfigurationException e) {
+				e.printStackTrace();
+			}
 		} else {
-			confFile = new File(bCoolDown.getDataFolder(), "users.yml");
-			confusers = new Configuration(confFile);
-			confusers.save();
+			try {
+				confFile.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	static void load() {
-		confusers.load();
-	}
-
-	static void reload() {
-		load();
+		try {
+			confusers.load(confFile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
 	}
 
 	static void save() {
-		confusers.save();
+		try {
+			confFile.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	static void clear() {
-		List<String> players = new LinkedList<String>();
-		List<String> cooldown = new LinkedList<String>();
-		List<String> warmup = new LinkedList<String>();
-		try {
-			players.addAll(confusers.getKeys("users."));
-		} catch (Exception e) {
+		ConfigurationSection userSection = confusers.getConfigurationSection("users");
+		if (userSection == null)
 			return;
-		}
-		int i = 0;
-		while (i < players.size()) {
+		for (String user : userSection.getKeys(false)) {
 			// clear cooldown
-			cooldown.clear();
-			if (confusers.getKeys("users." + players.get(i) + ".cooldown") != null) {
-				cooldown.addAll(confusers.getKeys("users." + players.get(i)
-						+ ".cooldown"));
+			ConfigurationSection cooldown = confusers.getConfigurationSection("users."+user+".cooldown");
+			if (cooldown != null) {
+				for (String key : cooldown.getKeys(false)) {
+					confusers.set("users."+user+".cooldown."+key, null);
+				}
 			}
-			int j = 0;
-			while (j < cooldown.size()) {
-				confusers.removeProperty("users." + players.get(i)
-						+ ".cooldown." + cooldown.get(j));
-				j++;
-			}
-			confusers.removeProperty("users." + players.get(i) + ".cooldown");
+			confusers.set("users."+user+".cooldown", null);
+			
 			// clear warmup
-			warmup.clear();
-			if (confusers.getKeys("users." + players.get(i) + ".warmup") != null) {
-				warmup.addAll(confusers.getKeys("users." + players.get(i)
-						+ ".warmup"));
+			ConfigurationSection warmup = confusers.getConfigurationSection("users."+user+".warmup");
+			if (warmup != null) {
+				for (String key : warmup.getKeys(false)) {
+					confusers.set("users."+user+".warmup."+key, null);
+				}
 			}
-			int k = 0;
-			while (k < warmup.size()) {
-				confusers.removeProperty("users." + players.get(i) + ".warmup."
-						+ warmup.get(k));
-				k++;
-			}
-			confusers.removeProperty("users." + players.get(i) + ".warmup");
+			confusers.set("users." + user + ".warmup", null);
 
-			confusers.removeProperty("users." + players.get(i));
-			i++;
+			confusers.set("users." + user, null);
 		}
 		save();
 		load();
@@ -218,24 +218,9 @@ public class boosCoolDownManager {
 		}
 		return false;
 	}
-
-	static void cancelCoolDowns(Player player) {
-		List<String> cooldown = new LinkedList<String>();
-		cooldown.clear();
-		cooldown.addAll(confusers.getKeys("users." + player.getName()
-				+ ".cooldown"));
-		int j = 0;
-		while (j < cooldown.size()) {
-			confusers.removeProperty("users." + player.getName() + ".cooldown."
-					+ cooldown.get(j));
-			j++;
-		}
-		confusers.removeProperty("users." + player.getName() + ".cooldown");
-	}
 	
 	static void cancelCooldown(Player player, String pre){
-		confusers.removeProperty("users." + player.getName() + ".cooldown." + pre);
-		confusers.save();
+		confusers.set("users." + player.getName() + ".cooldown." + pre, null);
 	}
 
 	static boolean checkCoolDownOK(Player player, String pre, String message) {
@@ -319,9 +304,9 @@ public class boosCoolDownManager {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 		currTime = sdf.format(cal.getTime());
-		confusers.setProperty("users." + player.getName() + ".cooldown." + pre,
+		confusers.set("users." + player.getName() + ".cooldown." + pre,
 				currTime);
-		confusers.save();
+		save();
 	}
 
 	static Date getCurrTime() {
@@ -371,9 +356,8 @@ public class boosCoolDownManager {
 
 	static void setWarmUpOK(Player player, String pre, String message) {
 		pre = pre.toLowerCase();
-		confusers
-				.setProperty("users." + player.getName() + ".warmup." + pre, 1);
-		confusers.save();
+		confusers.set("users." + player.getName() + ".warmup." + pre, 1);
+		save();
 	}
 
 	static boolean checkWarmUpOK(Player player, String pre, String message) {
@@ -389,24 +373,13 @@ public class boosCoolDownManager {
 
 	static void removeWarmUpOK(Player player, String pre, String message) {
 		pre = pre.toLowerCase();
-		confusers
-				.removeProperty("users." + player.getName() + ".warmup." + pre);
-		confusers.save();
+		confusers.set("users." + player.getName() + ".warmup." + pre, null);
+		save();
 	}
 
 	static void removeWarmUp(Player player, String pre, String message) {
 		pre = pre.toLowerCase();
-		confusers
-				.removeProperty("users." + player.getName() + ".warmup." + pre);
-		confusers.save();
-	}
-
-	static void removeWarmUps(Player player) {
-		for (String key : confusers.getKeys()) {
-			if (key.startsWith("users." + player.getName() + ".warmup.")) {
-				confusers.removeProperty(key);
-				confusers.save();
-			}
-		}
+		confusers.set("users." + player.getName() + ".warmup." + pre, null);
+		save();
 	}
 }
