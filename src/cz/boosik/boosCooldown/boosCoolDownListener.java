@@ -1,30 +1,31 @@
 package cz.boosik.boosCooldown;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.WeakHashMap;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
 
 import util.boosChat;
 
-//import org.bukkit.event.entity.EntityDamageEvent;
-
-@SuppressWarnings("deprecation")
-public class boosCoolDownPlayerListener extends PlayerListener {
+public class boosCoolDownListener implements Listener {
 	private final boosCoolDown plugin;
-	private static ConcurrentHashMap<String, Location> playerloc = new ConcurrentHashMap<String, Location>();
-	private static ConcurrentHashMap<String, String> playerworld = new ConcurrentHashMap<String, String>();
+	private static WeakHashMap<Player, Location> playerloc = new WeakHashMap<Player, Location>();
+	private static WeakHashMap<Player, String> playerworld = new WeakHashMap<Player, String>();
 
-	public boosCoolDownPlayerListener(boosCoolDown instance) {
+	public boosCoolDownListener(boosCoolDown instance) {
 		plugin = instance;
 	}
 
-	@Override
+	@EventHandler(priority=EventPriority.LOWEST)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		if (event.isCancelled()) {
 			return;
@@ -47,8 +48,8 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 		}
 
 		if (on) {
-			playerloc.put(player.getName() + "@", player.getLocation());
-			playerworld.put(player.getName() + "@", player.getWorld().getName());
+			playerloc.put(player, player.getLocation());
+			playerworld.put(player, player.getWorld().getName());
 			int i = message.indexOf(' ');
 			if (i < 0) {
 				i = message.length();
@@ -192,10 +193,14 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 		return false;
 	}
 
+	@EventHandler(priority=EventPriority.NORMAL)
 	public void onPlayerMove(PlayerMoveEvent event) {
-		if (event.isCancelled()) {
+		if (!boosConfigManager.getCancelWarmupOnMove())
 			return;
-		}
+		
+		if (event.isCancelled())
+			return;
+		
 		Player player = event.getPlayer();
 		if (boosCoolDown.isUsingPermissions()) {
 			if (player != null
@@ -224,10 +229,10 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 
 	public static boolean hasMoved(Player player) {
 		String curworld = player.getWorld().getName();
-		String cmdworld = playerworld.get(player.getName() + "@");
+		String cmdworld = playerworld.get(player);
 		Location curloc = player.getLocation();
-		Location cmdloc = playerloc.get(player.getName() + "@");
-		if (curworld != cmdworld) {
+		Location cmdloc = playerloc.get(player);
+		if (!curworld.equals(cmdworld)) {
 			return true;
 		} else if (cmdloc.distanceSquared(curloc) > 2) {
 			return true;
@@ -237,22 +242,18 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 	}
 	
 	public static void clearLocWorld(Player player){
-		for (String key : playerloc.keySet()) {
-			if (key.startsWith(player.getName() + "@")) {
-				playerloc.remove(key);
-			}
-		}
-		for (String key : playerworld.keySet()){
-			if (key.startsWith(player.getName() + "@")){
-				playerworld.remove(key);
-			}
-		}
+		playerloc.remove(player);
+		playerworld.remove(player);
 	}
 
+	@EventHandler(priority=EventPriority.NORMAL)
 	public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
-		if (event.isCancelled()) {
+		if (!boosConfigManager.getCancelWarmupOnSneak())
 			return;
-		}
+		
+		if (event.isCancelled())
+			return;
+		
 		Player player = event.getPlayer();
 		if (boosCoolDown.isUsingPermissions()) {
 			if (player != null
@@ -277,10 +278,14 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 		}
 	}
 
+	@EventHandler(priority=EventPriority.NORMAL)
 	public void onPlayerToggleSprint(PlayerToggleSprintEvent event) {
-		if (event.isCancelled()) {
+		if (!boosConfigManager.getCancelWarmupOnSprint())
 			return;
-		}
+		
+		if (event.isCancelled())
+			return;
+		
 		Player player = event.getPlayer();
 		if (boosCoolDown.isUsingPermissions()) {
 			if (player != null
@@ -301,6 +306,41 @@ public class boosCoolDownPlayerListener extends PlayerListener {
 					boosWarmUpManager.cancelWarmUps(player);
 				}
 
+			}
+		}
+	}
+	
+	@EventHandler(priority=EventPriority.NORMAL)
+	public void onEntityDamage(EntityDamageEvent event) {
+		if (!boosConfigManager.getCancelWarmUpOnDamage())
+			return;
+		
+		if (event.isCancelled())
+			return;
+
+		Entity entity = event.getEntity();
+		if (entity != null && entity instanceof Player) {
+			Player player = (Player) entity;
+			if (boosCoolDown.isUsingPermissions()) {
+				if (player != null
+						&& !boosCoolDown.getPermissions().has(player,
+								"booscooldowns.nocancel.damage")) {
+					if (boosWarmUpManager.hasWarmUps(player)) {
+						boosChat.sendMessageToPlayer(player, boosConfigManager
+								.getWarmUpCancelledByDamageMessage());
+						boosWarmUpManager.cancelWarmUps(player);
+					}
+
+				}
+			} else {
+				if (player != null) {
+					if (boosWarmUpManager.hasWarmUps(player)) {
+						boosChat.sendMessageToPlayer(player, boosConfigManager
+								.getWarmUpCancelledByDamageMessage());
+						boosWarmUpManager.cancelWarmUps(player);
+					}
+
+				}
 			}
 		}
 	}

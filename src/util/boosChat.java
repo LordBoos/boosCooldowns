@@ -14,7 +14,6 @@ public class boosChat {
     static List<String> Colors = new LinkedList<String>();
     static Server server;
     
-    @SuppressWarnings("static-access")
     public boosChat(Server server) {
         Colors.add("&black&");      Colors.add("&darkblue&");   Colors.add("&darkgreen&");
         Colors.add("&darkaqua&");   Colors.add("&darkred&");    Colors.add("&purple&");
@@ -26,7 +25,7 @@ public class boosChat {
         Colors.add("&5");   Colors.add("&6");   Colors.add("&7");   Colors.add("&8");   Colors.add("&9");
         Colors.add("&a");   Colors.add("&b");   Colors.add("&c");   Colors.add("&d");   Colors.add("&e");
         Colors.add("&f");
-        this.server = server;
+        boosChat.server = server;
     }
     
     static String replaceColorCodes(String line) {

@@ -1,92 +1,105 @@
 package cz.boosik.boosCooldown;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.util.config.Configuration;
 
-@SuppressWarnings("deprecation")
 public class boosConfigManager {
 
-	protected static boosCoolDown bCoolDown;
-	protected static Configuration conf;
-	protected File confFile;
+	private static YamlConfiguration conf;
+	private static File confFile;
 	static List<String> players = new LinkedList<String>();
 	
-
-	@SuppressWarnings("static-access")
 	public boosConfigManager(boosCoolDown boosCoolDown) {
-		this.bCoolDown = boosCoolDown;
+		confFile = new File(boosCoolDown.getDataFolder(), "config.yml");
+		conf = new YamlConfiguration();
+		conf.options().copyDefaults(true);
+		conf.addDefault("commands.cooldowns.cooldown./spawn", 60);
+		conf.addDefault("commands.cooldowns.cooldown./home", 30);
+		conf.addDefault("commands.cooldowns.cooldown2./home", 40);
+		conf.addDefault("commands.cooldowns.cooldown3./home", 90);
+		conf.addDefault("commands.cooldowns.cooldown4./home", 99);
+		conf.addDefault("commands.cooldowns.cooldown5./home", 542);
+		conf.addDefault("commands.warmups.warmup./give", 60);
+		conf.addDefault("commands.warmups.warmup./home", 20);
+		conf.addDefault("commands.warmups.warmup2./home", 40);
+		conf.addDefault("commands.warmups.warmup3./home", 90);
+		conf.addDefault("commands.warmups.warmup4./home", 99);
+		conf.addDefault("commands.warmups.warmup5./home", 542);
+		conf.addDefault("commands.prices.price./spawn", 10);
+		conf.addDefault("commands.prices.price./home", 20);
+		conf.addDefault("commands.prices.price2./home", 40);
+		conf.addDefault("commands.prices.price3./home", 90);
+		conf.addDefault("commands.prices.price4./home", 99);
+		conf.addDefault("commands.prices.price5./home", 542);
+		conf.addDefault("commands.options.cancel_warmup_on_damage", false);
+		conf.addDefault("commands.options.cancel_warmup_on_move", false);
+		conf.addDefault("commands.options.cancel_warmup_on_sneak", false);
+		conf.addDefault("commands.options.cancel_warmup_on_sprint", false);
+		conf.addDefault("commands.options.clear_on_restart", false);
+		conf.addDefault("commands.options.unit_seconds", "seconds");
+		conf.addDefault("commands.options.unit_minutes", "minutes");
+		conf.addDefault("commands.options.unit_hours", "hours");
+		conf.addDefault(
+				"commands.options.message_warmup_cancelled_by_damage",
+				"&6Warm-ups have been cancelled due to receiving damage.&f");
+		conf.addDefault(
+				"commands.options.message_warmup_cancelled_by_move",
+				"&6Warm-ups have been cancelled due to moving.&f");
+		conf.addDefault(
+				"commands.options.message_warmup_cancelled_by_sprint",
+				"&6Warm-ups have been cancelled due to sprinting.&f");
+		conf.addDefault(
+				"commands.options.message_warmup_cancelled_by_sneak",
+				"&6Warm-ups have been cancelled due to sneaking.&f");
+//		conf.addDefault(
+//				"commands.options.message_warmup_cancelled_by_death",
+//				"&6Warm-ups have been cancelled due to death.&f");
+		conf.addDefault("commands.options.message_cooldown",
+				"&6Wait&e &seconds& &unit&&6 before you can use command&e &command& &6again.&f");
+		conf.addDefault("commands.options.message_warmup",
+				"&6Wait&e &seconds& &unit&&6 before command&e &command& &6has warmed up.&f");
+		conf.addDefault("commands.options.message_warmup_alreadystarted",
+				"&6Warm-Up process for&e &command& &6has already started.&f");
+		conf.addDefault("commands.options.paid_error",
+				"&6An error has occured:&e %s");
+		conf.addDefault("commands.options.paid_for_command_message",
+				"&6Price of&e &command& &6was&e %s &6and you now have&e %s");
 
-		File f = new File(boosCoolDown.getDataFolder(), "config.yml");
-		conf = null;
-
-		if (f.exists()) {
-			conf = new Configuration(f);
-			conf.load();
-
-		} else {
-			this.confFile = new File(boosCoolDown.getDataFolder(), "config.yml");
-			this.conf = new Configuration(confFile);
-			conf.setProperty("commands.cooldowns.cooldown./spawn", 60);
-			conf.setProperty("commands.cooldowns.cooldown./home", 30);
-			conf.setProperty("commands.cooldowns.cooldown2./home", 40);
-			conf.setProperty("commands.cooldowns.cooldown3./home", 90);
-			conf.setProperty("commands.cooldowns.cooldown4./home", 99);
-			conf.setProperty("commands.cooldowns.cooldown5./home", 542);
-			conf.setProperty("commands.warmups.warmup./give", 60);
-			conf.setProperty("commands.warmups.warmup./home", 20);
-			conf.setProperty("commands.warmups.warmup2./home", 40);
-			conf.setProperty("commands.warmups.warmup3./home", 90);
-			conf.setProperty("commands.warmups.warmup4./home", 99);
-			conf.setProperty("commands.warmups.warmup5./home", 542);
-			conf.setProperty("commands.prices.price./spawn", 10);
-			conf.setProperty("commands.prices.price./home", 20);
-			conf.setProperty("commands.prices.price2./home", 40);
-			conf.setProperty("commands.prices.price3./home", 90);
-			conf.setProperty("commands.prices.price4./home", 99);
-			conf.setProperty("commands.prices.price5./home", 542);
-			conf.setProperty("commands.options.cancel_warmup_on_damage", false);
-			conf.setProperty("commands.options.cancel_warmup_on_move", false);
-			conf.setProperty("commands.options.cancel_warmup_on_sneak", false);
-			conf.setProperty("commands.options.cancel_warmup_on_sprint", false);
-			conf.setProperty("commands.options.clear_on_restart", false);
-			conf.setProperty("commands.options.unit_seconds", "seconds");
-			conf.setProperty("commands.options.unit_minutes", "minutes");
-			conf.setProperty("commands.options.unit_hours", "hours");
-			conf.setProperty(
-					"commands.options.message_warmup_cancelled_by_damage",
-					"&6Warm-ups have been cancelled due to receiving damage.&f");
-			conf.setProperty(
-					"commands.options.message_warmup_cancelled_by_move",
-					"&6Warm-ups have been cancelled due to moving.&f");
-			conf.setProperty(
-					"commands.options.message_warmup_cancelled_by_sprint",
-					"&6Warm-ups have been cancelled due to sprinting.&f");
-			conf.setProperty(
-					"commands.options.message_warmup_cancelled_by_sneak",
-					"&6Warm-ups have been cancelled due to sneaking.&f");
-//			conf.setProperty(
-//					"commands.options.message_warmup_cancelled_by_death",
-//					"&6Warm-ups have been cancelled due to death.&f");
-			conf.setProperty("commands.options.message_cooldown",
-					"&6Wait&e &seconds& &unit&&6 before you can use command&e &command& &6again.&f");
-			conf.setProperty("commands.options.message_warmup",
-					"&6Wait&e &seconds& &unit&&6 before command&e &command& &6has warmed up.&f");
-			conf.setProperty("commands.options.message_warmup_alreadystarted",
-					"&6Warm-Up process for&e &command& &6has already started.&f");
-			conf.setProperty("commands.options.paid_error",
-					"&6An error has occured:&e %s");
-			conf.setProperty("commands.options.paid_for_command_message",
-					"&6Price of&e &command& &6was&e %s &6and you now have&e %s");
-			conf.save();
+		if (confFile.exists()) {
+			try {
+				conf.load(confFile);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (InvalidConfigurationException e) {
+				e.printStackTrace();
+			}
+		}
+		try {
+			conf.save(confFile);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
 	static void load() {
-		conf.load();
+		try {
+			conf.load(confFile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
 	}
 
 	static void reload() {
