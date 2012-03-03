@@ -20,24 +20,6 @@ public class boosConfigManager {
 		confFile = new File(boosCoolDown.getDataFolder(), "config.yml");
 		conf = new YamlConfiguration();
 		conf.options().copyDefaults(true);
-		conf.addDefault("commands.cooldowns.cooldown./spawn", 60);
-		conf.addDefault("commands.cooldowns.cooldown./home", 30);
-		conf.addDefault("commands.cooldowns.cooldown2./home", 40);
-		conf.addDefault("commands.cooldowns.cooldown3./home", 90);
-		conf.addDefault("commands.cooldowns.cooldown4./home", 99);
-		conf.addDefault("commands.cooldowns.cooldown5./home", 542);
-		conf.addDefault("commands.warmups.warmup./give", 60);
-		conf.addDefault("commands.warmups.warmup./home", 20);
-		conf.addDefault("commands.warmups.warmup2./home", 40);
-		conf.addDefault("commands.warmups.warmup3./home", 90);
-		conf.addDefault("commands.warmups.warmup4./home", 99);
-		conf.addDefault("commands.warmups.warmup5./home", 542);
-		conf.addDefault("commands.prices.price./spawn", 10);
-		conf.addDefault("commands.prices.price./home", 20);
-		conf.addDefault("commands.prices.price2./home", 40);
-		conf.addDefault("commands.prices.price3./home", 90);
-		conf.addDefault("commands.prices.price4./home", 99);
-		conf.addDefault("commands.prices.price5./home", 542);
 		conf.addDefault("commands.options.cancel_warmup_on_damage", false);
 		conf.addDefault("commands.options.cancel_warmup_on_move", false);
 		conf.addDefault("commands.options.cancel_warmup_on_sneak", false);
@@ -84,6 +66,24 @@ public class boosConfigManager {
 			}
 		}
 		try {
+			conf.addDefault("commands.cooldowns.cooldown./spawn", 60);
+			conf.addDefault("commands.cooldowns.cooldown./home", 30);
+			conf.addDefault("commands.cooldowns.cooldown2./home", 40);
+			conf.addDefault("commands.cooldowns.cooldown3./home", 90);
+			conf.addDefault("commands.cooldowns.cooldown4./home", 99);
+			conf.addDefault("commands.cooldowns.cooldown5./home", 542);
+			conf.addDefault("commands.warmups.warmup./give", 60);
+			conf.addDefault("commands.warmups.warmup./home", 20);
+			conf.addDefault("commands.warmups.warmup2./home", 40);
+			conf.addDefault("commands.warmups.warmup3./home", 90);
+			conf.addDefault("commands.warmups.warmup4./home", 99);
+			conf.addDefault("commands.warmups.warmup5./home", 542);
+			conf.addDefault("commands.prices.price./spawn", 10);
+			conf.addDefault("commands.prices.price./home", 20);
+			conf.addDefault("commands.prices.price2./home", 40);
+			conf.addDefault("commands.prices.price3./home", 90);
+			conf.addDefault("commands.prices.price4./home", 99);
+			conf.addDefault("commands.prices.price5./home", 542);
 			conf.save(confFile);
 		} catch (IOException e) {
 			e.printStackTrace();
