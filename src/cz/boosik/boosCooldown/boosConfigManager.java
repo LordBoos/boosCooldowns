@@ -118,6 +118,7 @@ public class boosConfigManager {
 	}
 
 	static void reload() {
+		conf = new YamlConfiguration();
 		load();
 	}
 

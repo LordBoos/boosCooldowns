@@ -63,17 +63,18 @@ public class boosCoolDown extends JavaPlugin {
 					&& command.equalsIgnoreCase("boosCooldowns")) {
 				boosConfigManager.reload();
 				boosChat.sendMessageToCommandSender(sender,
-						"&6[" + pdfFile.getName() + "]" + " config reloaded !DOES NOT WORK NOW!");
+						"&6[" + pdfFile.getName() + "]" + " config reloaded");
 				return true;
 			}
-		} else {
-			if (sender.isOp() && command.equalsIgnoreCase("boosCooldowns")) {
+		} else if(sender.isOp() && command.equalsIgnoreCase("boosCooldowns")) {
 				boosConfigManager.reload();
 				boosChat.sendMessageToCommandSender(sender,
-						"&6[" + pdfFile.getName() + "]" + " config reloaded !DOES NOT WORK NOW!");
+						"&6[" + pdfFile.getName() + "]" + " config reloaded");
 				return true;
+		} else {
+			boosChat.sendMessageToCommandSender(sender,
+					"&6[" + pdfFile.getName() + "]" + " access denied, you lack required permission to do this!");
 			}
-		}
 		return false;
 	}
 
