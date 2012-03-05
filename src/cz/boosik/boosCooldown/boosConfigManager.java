@@ -16,9 +16,23 @@ public class boosConfigManager {
 	private static File confFile;
 	static List<String> players = new LinkedList<String>();
 	
+	@SuppressWarnings("static-access")
 	public boosConfigManager(boosCoolDown boosCoolDown) {
 		confFile = new File(boosCoolDown.getDataFolder(), "config.yml");
+		if (confFile.exists()) {
 		conf = new YamlConfiguration();
+		try {
+			conf.load(confFile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+		}else{
+		this.confFile = new File(boosCoolDown.getDataFolder(), "config.yml");	
+		this.conf = new YamlConfiguration();
 		conf.options().copyDefaults(true);
 		conf.addDefault("commands.options.cancel_warmup_on_damage", false);
 		conf.addDefault("commands.options.cancel_warmup_on_move", false);
@@ -88,6 +102,7 @@ public class boosConfigManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
 	}
 
 	static void load() {
