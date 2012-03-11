@@ -25,7 +25,7 @@ public class boosCoolDownListener implements Listener {
 		plugin = instance;
 	}
 
-	@EventHandler(priority=EventPriority.LOWEST)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		if (event.isCancelled()) {
 			return;
@@ -57,11 +57,10 @@ public class boosCoolDownListener implements Listener {
 
 			String preCommand = message.substring(0, i);
 			String messageCommand = message.substring(i, message.length());
+			boolean used = false;
+			int preSubCheck = 0;
 
-			boolean onCooldown = this.checkCooldown(event, player, preCommand,
-					messageCommand);
-
-			if (!onCooldown && messageCommand.length() > 1) {
+			if (!used && messageCommand.length() > 1) {
 				int j = messageCommand.indexOf(' ', 1);
 				if (j < 0) {
 					j = messageCommand.length();
@@ -71,8 +70,44 @@ public class boosCoolDownListener implements Listener {
 				String messageSub = messageCommand.substring(j,
 						messageCommand.length());
 				preSub = preCommand + ' ' + preSub;
-				onCooldown = this.checkCooldown(event, player, preSub,
-						messageSub);
+				if (boosCoolDown.isUsingPermissions()) {
+					if (boosCoolDown.getPermissions().has(player,
+							"booscooldowns.warmup2")) {
+						preSubCheck = boosConfigManager.getWarmUp2(player,
+								preSub);
+					} else if (boosCoolDown.getPermissions().has(player,
+							"booscooldowns.warmup3")) {
+						preSubCheck = boosConfigManager.getWarmUp3(player,
+								preSub);
+					} else if (boosCoolDown.getPermissions().has(player,
+							"booscooldowns.warmup4")) {
+						preSubCheck = boosConfigManager.getWarmUp4(player,
+								preSub);
+					} else if (boosCoolDown.getPermissions().has(player,
+							"booscooldowns.warmup5")) {
+						preSubCheck = boosConfigManager.getWarmUp5(player,
+								preSub);
+					} else {
+						preSubCheck = boosConfigManager.getWarmUp(player,
+								preSub);
+					}
+				} else {
+					preSubCheck = boosConfigManager.getWarmUp(player, preSub);
+				}
+				if (preSubCheck > 0) {
+					this.checkCooldown(event, player, preSub,
+							messageSub);
+					used = true;
+				} else {
+					this.checkCooldown(event, player, preCommand,
+							messageCommand);
+					used = true;
+				}
+			}
+			if (!used) {
+				this.checkCooldown(event, player, preCommand,
+						messageCommand);
+				used = false;
 			}
 		}
 	}
@@ -193,14 +228,14 @@ public class boosCoolDownListener implements Listener {
 		return false;
 	}
 
-	@EventHandler(priority=EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerMove(PlayerMoveEvent event) {
 		if (!boosConfigManager.getCancelWarmupOnMove())
 			return;
-		
+
 		if (event.isCancelled())
 			return;
-		
+
 		Player player = event.getPlayer();
 		if (boosCoolDown.isUsingPermissions()) {
 			if (player != null
@@ -240,20 +275,20 @@ public class boosCoolDownListener implements Listener {
 
 		return false;
 	}
-	
-	public static void clearLocWorld(Player player){
+
+	public static void clearLocWorld(Player player) {
 		playerloc.remove(player);
 		playerworld.remove(player);
 	}
 
-	@EventHandler(priority=EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
 		if (!boosConfigManager.getCancelWarmupOnSneak())
 			return;
-		
+
 		if (event.isCancelled())
 			return;
-		
+
 		Player player = event.getPlayer();
 		if (boosCoolDown.isUsingPermissions()) {
 			if (player != null
@@ -278,14 +313,14 @@ public class boosCoolDownListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority=EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerToggleSprint(PlayerToggleSprintEvent event) {
 		if (!boosConfigManager.getCancelWarmupOnSprint())
 			return;
-		
+
 		if (event.isCancelled())
 			return;
-		
+
 		Player player = event.getPlayer();
 		if (boosCoolDown.isUsingPermissions()) {
 			if (player != null
@@ -309,12 +344,12 @@ public class boosCoolDownListener implements Listener {
 			}
 		}
 	}
-	
-	@EventHandler(priority=EventPriority.NORMAL)
+
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityDamage(EntityDamageEvent event) {
 		if (!boosConfigManager.getCancelWarmUpOnDamage())
 			return;
-		
+
 		if (event.isCancelled())
 			return;
 
