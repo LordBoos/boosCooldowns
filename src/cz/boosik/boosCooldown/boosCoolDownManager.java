@@ -59,6 +59,7 @@ public class boosCoolDownManager {
 	static void save() {
 		try {
 			confFile.createNewFile();
+			confusers.save(confFile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

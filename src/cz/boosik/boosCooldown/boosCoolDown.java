@@ -48,7 +48,10 @@ public class boosCoolDown extends JavaPlugin {
 	public void onDisable() {
 		if (boosConfigManager.getClearOnRestart() == true) {
 			boosCoolDownManager.clear();
+			log.info("[" + pdfFile.getName() + "]" + " cooldowns cleared!");
 		} else {
+			boosCoolDownManager.save();
+			log.info("[" + pdfFile.getName() + "]" + " cooldowns saved!");
 		}
 		log.info("[" + pdfFile.getName() + "]" + " version "
 				+ pdfFile.getVersion() + " disabled!");
