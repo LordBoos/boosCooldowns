@@ -97,36 +97,7 @@ public class boosCoolDownManager {
 	static boolean coolDown(Player player, String pre, String message) {
 		pre = pre.toLowerCase();
 		int coolDownSeconds = 0;
-		if (boosCoolDown.isUsingPermissions()) {
-			if (!boosCoolDown.getPermissions().has(player,
-					"booscooldowns.cooldown2")
-					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.cooldown3")
-					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.cooldown4")
-					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.cooldown5")) {
-				coolDownSeconds = boosConfigManager.getCoolDown(player, pre);
-			}
-			if (boosCoolDown.getPermissions().has(player,
-					"booscooldowns.cooldown2")) {
-				coolDownSeconds = boosConfigManager.getCoolDown2(player, pre);
-			}
-			if (boosCoolDown.getPermissions().has(player,
-					"booscooldowns.cooldown3")) {
-				coolDownSeconds = boosConfigManager.getCoolDown3(player, pre);
-			}
-			if (boosCoolDown.getPermissions().has(player,
-					"booscooldowns.cooldown4")) {
-				coolDownSeconds = boosConfigManager.getCoolDown4(player, pre);
-			}
-			if (boosCoolDown.getPermissions().has(player,
-					"booscooldowns.cooldown5")) {
-				coolDownSeconds = boosConfigManager.getCoolDown5(player, pre);
-			}
-		} else {
-			coolDownSeconds = boosConfigManager.getCoolDown(player, pre);
-		}
+		coolDownSeconds = getCooldownGroup(player, pre, coolDownSeconds);
 		if (boosCoolDown.isUsingPermissions()) {
 			if (coolDownSeconds > 0
 					&& !boosCoolDown.getPermissions().has(player,
@@ -227,36 +198,7 @@ public class boosCoolDownManager {
 	static boolean checkCoolDownOK(Player player, String pre, String message) {
 		pre = pre.toLowerCase();
 		int coolDownSeconds = 0;
-		if (boosCoolDown.isUsingPermissions()) {
-			if (!boosCoolDown.getPermissions().has(player,
-					"booscooldowns.cooldown2")
-					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.cooldown3")
-					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.cooldown4")
-					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.cooldown5")) {
-				coolDownSeconds = boosConfigManager.getCoolDown(player, pre);
-			}
-			if (boosCoolDown.getPermissions().has(player,
-					"booscooldowns.cooldown2")) {
-				coolDownSeconds = boosConfigManager.getCoolDown2(player, pre);
-			}
-			if (boosCoolDown.getPermissions().has(player,
-					"booscooldowns.cooldown3")) {
-				coolDownSeconds = boosConfigManager.getCoolDown3(player, pre);
-			}
-			if (boosCoolDown.getPermissions().has(player,
-					"booscooldowns.cooldown4")) {
-				coolDownSeconds = boosConfigManager.getCoolDown4(player, pre);
-			}
-			if (boosCoolDown.getPermissions().has(player,
-					"booscooldowns.cooldown5")) {
-				coolDownSeconds = boosConfigManager.getCoolDown5(player, pre);
-			}
-		} else {
-			coolDownSeconds = boosConfigManager.getCoolDown(player, pre);
-		}
+		coolDownSeconds = getCooldownGroup(player, pre, coolDownSeconds);
 		if (coolDownSeconds > 0) {
 			Date lastTime = getTime(player, pre);
 			if (lastTime == null) {
@@ -297,6 +239,41 @@ public class boosCoolDownManager {
 			}
 		}
 		return true;
+	}
+
+	private static int getCooldownGroup(Player player, String pre,
+			int coolDownSeconds) {
+		if (boosCoolDown.isUsingPermissions()) {
+			if (!boosCoolDown.getPermissions().has(player,
+					"booscooldowns.cooldown2")
+					&& !boosCoolDown.getPermissions().has(player,
+							"booscooldowns.cooldown3")
+					&& !boosCoolDown.getPermissions().has(player,
+							"booscooldowns.cooldown4")
+					&& !boosCoolDown.getPermissions().has(player,
+							"booscooldowns.cooldown5")) {
+				coolDownSeconds = boosConfigManager.getCoolDown(player, pre);
+			}
+			if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.cooldown2")) {
+				coolDownSeconds = boosConfigManager.getCoolDown2(player, pre);
+			}
+			if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.cooldown3")) {
+				coolDownSeconds = boosConfigManager.getCoolDown3(player, pre);
+			}
+			if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.cooldown4")) {
+				coolDownSeconds = boosConfigManager.getCoolDown4(player, pre);
+			}
+			if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.cooldown5")) {
+				coolDownSeconds = boosConfigManager.getCoolDown5(player, pre);
+			}
+		} else {
+			coolDownSeconds = boosConfigManager.getCoolDown(player, pre);
+		}
+		return coolDownSeconds;
 	}
 
 	static void setTime(Player player, String pre) {

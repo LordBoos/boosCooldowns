@@ -47,8 +47,7 @@ public class boosCoolDownListener implements Listener {
 			String preCommand = message.substring(0, i);
 			String messageCommand = message.substring(i, message.length());
 			boolean used = false;
-			int preSubCheck = 0;
-
+			int preSubCheck = -1;
 			if (!used && messageCommand.length() > 1) {
 				int j = messageCommand.indexOf(' ', 1);
 				if (j < 0) {
@@ -60,7 +59,7 @@ public class boosCoolDownListener implements Listener {
 						messageCommand.length());
 				preSub = preCommand + ' ' + preSub;
 				preSubCheck = preSubCheck(player, preSub);
-				if (preSubCheck > 0) {
+				if (preSubCheck >= 0) {
 					this.checkCooldown(event, player, preSub, messageSub);
 					used = true;
 				} else {
@@ -100,6 +99,30 @@ public class boosCoolDownListener implements Listener {
 		return preSubCheck;
 	}
 
+	private boolean blocked(Player player, String pre) {
+		boolean blockSubCheck;
+		if (boosCoolDown.isUsingPermissions()) {
+			if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.blocked2")) {
+				blockSubCheck = boosConfigManager.getBlocked2(player, pre);
+			} else if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.blocked3")) {
+				blockSubCheck = boosConfigManager.getBlocked3(player, pre);
+			} else if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.blocked4")) {
+				blockSubCheck = boosConfigManager.getBlocked4(player, pre);
+			} else if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.blocked5")) {
+				blockSubCheck = boosConfigManager.getBlocked5(player, pre);
+			} else {
+				blockSubCheck = boosConfigManager.getBlocked(player, pre);
+			}
+		} else {
+			blockSubCheck = boosConfigManager.getBlocked(player, pre);
+		}
+		return blockSubCheck;
+	}
+
 	private boolean isPluginOnForPlayer(Player player) {
 		boolean on;
 		if (player.isOp()) {
@@ -120,86 +143,98 @@ public class boosCoolDownListener implements Listener {
 	// Returns true if the command is on cooldown, false otherwise
 	private boolean checkCooldown(PlayerCommandPreprocessEvent event,
 			Player player, String pre, String message) {
-		int warmUpSeconds = 0;
-		warmUpSeconds = getWarmupGroup(player, pre, warmUpSeconds);
-		if (boosCoolDown.isUsingPermissions()) {
-			if (warmUpSeconds > 0
-					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.nowarmup")
-					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.nowarmup." + pre)) {
-				if (!boosCoolDownManager.checkWarmUpOK(player, pre, message)) {
-					if (boosCoolDownManager.checkCoolDownOK(player, pre,
-							message)) {
-						boosWarmUpManager.startWarmUp(this.plugin, player, pre,
-								message, warmUpSeconds);
-						event.setCancelled(true);
-						return true;
+		if (!blocked(player, pre)) {
+			int warmUpSeconds = 0;
+			warmUpSeconds = getWarmupGroup(player, pre, warmUpSeconds);
+			if (boosCoolDown.isUsingPermissions()) {
+				if (warmUpSeconds > 0
+						&& !boosCoolDown.getPermissions().has(player,
+								"booscooldowns.nowarmup")
+						&& !boosCoolDown.getPermissions().has(player,
+								"booscooldowns.nowarmup." + pre)) {
+					if (!boosCoolDownManager
+							.checkWarmUpOK(player, pre, message)) {
+						if (boosCoolDownManager.checkCoolDownOK(player, pre,
+								message)) {
+							boosWarmUpManager.startWarmUp(this.plugin, player,
+									pre, message, warmUpSeconds);
+							event.setCancelled(true);
+							return true;
+						} else {
+							event.setCancelled(true);
+							return true;
+						}
 					} else {
-						event.setCancelled(true);
-						return true;
+						if (boosCoolDownManager.coolDown(player, pre, message)) {
+							event.setCancelled(true);
+							return true;
+						} else {
+							boosCoolDownManager.removeWarmUpOK(player, pre,
+									message);
+						}
 					}
 				} else {
 					if (boosCoolDownManager.coolDown(player, pre, message)) {
 						event.setCancelled(true);
 						return true;
-					} else {
-						boosCoolDownManager
-								.removeWarmUpOK(player, pre, message);
 					}
 				}
 			} else {
-				if (boosCoolDownManager.coolDown(player, pre, message)) {
-					event.setCancelled(true);
-					return true;
+				if (warmUpSeconds > 0) {
+					if (!boosCoolDownManager
+							.checkWarmUpOK(player, pre, message)) {
+						if (boosCoolDownManager.checkCoolDownOK(player, pre,
+								message)) {
+							boosWarmUpManager.startWarmUp(this.plugin, player,
+									pre, message, warmUpSeconds);
+							event.setCancelled(true);
+							return true;
+						} else {
+							event.setCancelled(true);
+							return true;
+						}
+					} else {
+						if (boosCoolDownManager.coolDown(player, pre, message)) {
+							event.setCancelled(true);
+							return true;
+						} else {
+							boosCoolDownManager.removeWarmUpOK(player, pre,
+									message);
+						}
+					}
+				} else {
+					if (boosCoolDownManager.coolDown(player, pre, message)) {
+						event.setCancelled(true);
+						return true;
+					}
+				}
+			}
+			if (boosCoolDown.isUsingEconomy()) {
+				if (boosConfigManager.getPrice(player, pre) > 0) {
+					if (!boosCoolDown.getPermissions().has(player,
+							"booscooldowns.noprice")
+							&& !boosCoolDown.getPermissions().has(player,
+									"booscooldowns.noprice." + pre)) {
+						if (boosCoolDown.getEconomy().getBalance(
+								player.getName()) >= boosConfigManager
+								.getPrice(player, pre)) {
+							boosPriceManager
+									.payForCommand(player, pre, message);
+						} else {
+							boosPriceManager
+									.payForCommand(player, pre, message);
+							boosCoolDownManager.cancelCooldown(player, pre);
+							event.setCancelled(true);
+							return true;
+						}
+					}
 				}
 			}
 		} else {
-			if (warmUpSeconds > 0) {
-				if (!boosCoolDownManager.checkWarmUpOK(player, pre, message)) {
-					if (boosCoolDownManager.checkCoolDownOK(player, pre,
-							message)) {
-						boosWarmUpManager.startWarmUp(this.plugin, player, pre,
-								message, warmUpSeconds);
-						event.setCancelled(true);
-						return true;
-					} else {
-						event.setCancelled(true);
-						return true;
-					}
-				} else {
-					if (boosCoolDownManager.coolDown(player, pre, message)) {
-						event.setCancelled(true);
-						return true;
-					} else {
-						boosCoolDownManager
-								.removeWarmUpOK(player, pre, message);
-					}
-				}
-			} else {
-				if (boosCoolDownManager.coolDown(player, pre, message)) {
-					event.setCancelled(true);
-					return true;
-				}
-			}
-		}
-		if (boosCoolDown.isUsingEconomy()) {
-			if (boosConfigManager.getPrice(player, pre) > 0) {
-				if (!boosCoolDown.getPermissions().has(player,
-						"booscooldowns.noprice")
-						&& !boosCoolDown.getPermissions().has(player,
-								"booscooldowns.noprice." + pre)) {
-					if (boosCoolDown.getEconomy().getBalance(player.getName()) >= boosConfigManager
-							.getPrice(player, pre)) {
-						boosPriceManager.payForCommand(player, pre, message);
-					} else {
-						boosPriceManager.payForCommand(player, pre, message);
-						boosCoolDownManager.cancelCooldown(player, pre);
-						event.setCancelled(true);
-						return true;
-					}
-				}
-			}
+			event.setCancelled(true);
+			String msg = String.format(boosConfigManager.getCommandBlockedMessage());
+			boosChat.sendMessageToPlayer(player, msg);
+			return false;
 		}
 		return false;
 	}

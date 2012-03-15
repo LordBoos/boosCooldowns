@@ -12,6 +12,22 @@ public class boosPriceManager {
 
 	public static void payForCommand(Player player, String pre, String message) {
 		EconomyResponse r = null;
+		r = getPriceGroup(player, pre, r);
+		if (r.transactionSuccess()) {
+			String msg = String.format(
+					boosConfigManager.getPaidForCommandMessage(),
+					economy.format(r.amount), economy.format(r.balance));
+			msg = msg.replaceAll("&command&", pre);
+			boosChat.sendMessageToPlayer(player, msg);
+		} else {
+			String msg = String.format(boosConfigManager.getPaidErrorMessage(),
+					r.errorMessage);
+			boosChat.sendMessageToPlayer(player, msg);
+		}
+	}
+
+	private static EconomyResponse getPriceGroup(Player player, String pre,
+			EconomyResponse r) {
 		if (boosCoolDown.isUsingPermissions()) {
 			if (!boosCoolDown.getPermissions().has(player,
 					"booscooldowns.price2")
@@ -48,16 +64,6 @@ public class boosPriceManager {
 			r = economy.withdrawPlayer(player.getName(),
 					boosConfigManager.getPrice(player, pre));
 		}
-		if (r.transactionSuccess()) {
-			String msg = String.format(
-					boosConfigManager.getPaidForCommandMessage(),
-					economy.format(r.amount), economy.format(r.balance));
-			msg = msg.replaceAll("&command&", pre);
-			boosChat.sendMessageToPlayer(player, msg);
-		} else {
-			String msg = String.format(boosConfigManager.getPaidErrorMessage(),
-					r.errorMessage);
-			boosChat.sendMessageToPlayer(player, msg);
-		}
+		return r;
 	}
 }
