@@ -100,27 +100,34 @@ public class boosCoolDownListener implements Listener {
 	}
 
 	private boolean blocked(Player player, String pre) {
-		boolean blockSubCheck;
+		boolean blocked;
 		if (boosCoolDown.isUsingPermissions()) {
 			if (boosCoolDown.getPermissions().has(player,
-					"booscooldowns.blocked2")) {
-				blockSubCheck = boosConfigManager.getBlocked2(player, pre);
-			} else if (boosCoolDown.getPermissions().has(player,
-					"booscooldowns.blocked3")) {
-				blockSubCheck = boosConfigManager.getBlocked3(player, pre);
-			} else if (boosCoolDown.getPermissions().has(player,
-					"booscooldowns.blocked4")) {
-				blockSubCheck = boosConfigManager.getBlocked4(player, pre);
-			} else if (boosCoolDown.getPermissions().has(player,
-					"booscooldowns.blocked5")) {
-				blockSubCheck = boosConfigManager.getBlocked5(player, pre);
+					"booscooldowns.noblocked")
+					|| boosCoolDown.getPermissions().has(player,
+							"booscooldowns.noblocked." + pre)) {
+				blocked = false;
 			} else {
-				blockSubCheck = boosConfigManager.getBlocked(player, pre);
+				if (boosCoolDown.getPermissions().has(player,
+						"booscooldowns.blocked2")) {
+					blocked = boosConfigManager.getBlocked2(player, pre);
+				} else if (boosCoolDown.getPermissions().has(player,
+						"booscooldowns.blocked3")) {
+					blocked = boosConfigManager.getBlocked3(player, pre);
+				} else if (boosCoolDown.getPermissions().has(player,
+						"booscooldowns.blocked4")) {
+					blocked = boosConfigManager.getBlocked4(player, pre);
+				} else if (boosCoolDown.getPermissions().has(player,
+						"booscooldowns.blocked5")) {
+					blocked = boosConfigManager.getBlocked5(player, pre);
+				} else {
+					blocked = boosConfigManager.getBlocked(player, pre);
+				}
 			}
 		} else {
-			blockSubCheck = boosConfigManager.getBlocked(player, pre);
+			blocked = boosConfigManager.getBlocked(player, pre);
 		}
-		return blockSubCheck;
+		return blocked;
 	}
 
 	private boolean isPluginOnForPlayer(Player player) {
@@ -232,7 +239,8 @@ public class boosCoolDownListener implements Listener {
 			}
 		} else {
 			event.setCancelled(true);
-			String msg = String.format(boosConfigManager.getCommandBlockedMessage());
+			String msg = String.format(boosConfigManager
+					.getCommandBlockedMessage());
 			boosChat.sendMessageToPlayer(player, msg);
 			return false;
 		}
