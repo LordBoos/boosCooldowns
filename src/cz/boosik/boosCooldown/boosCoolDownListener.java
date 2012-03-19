@@ -18,6 +18,7 @@ import util.boosChat;
 
 public class boosCoolDownListener implements Listener {
 	private final boosCoolDown plugin;
+	private boolean blocked = false;
 	private static WeakHashMap<Player, Location> playerloc = new WeakHashMap<Player, Location>();
 	private static WeakHashMap<Player, String> playerworld = new WeakHashMap<Player, String>();
 
@@ -60,15 +61,18 @@ public class boosCoolDownListener implements Listener {
 				preSub = preCommand + ' ' + preSub;
 				preSubCheck = preSubCheck(player, preSub);
 				if (preSubCheck >= 0) {
+					blocked = blocked(player, preSub);
 					this.checkCooldown(event, player, preSub, messageSub);
 					used = true;
 				} else {
+					blocked = blocked(player, preSub);
 					this.checkCooldown(event, player, preCommand,
 							messageCommand);
 					used = true;
 				}
 			}
 			if (!used) {
+				blocked = blocked(player, preCommand);
 				this.checkCooldown(event, player, preCommand, messageCommand);
 				used = false;
 			}
@@ -150,7 +154,7 @@ public class boosCoolDownListener implements Listener {
 	// Returns true if the command is on cooldown, false otherwise
 	private boolean checkCooldown(PlayerCommandPreprocessEvent event,
 			Player player, String pre, String message) {
-		if (!blocked(player, pre)) {
+		if (!blocked) {
 			int warmUpSeconds = 0;
 			warmUpSeconds = getWarmupGroup(player, pre, warmUpSeconds);
 			if (boosCoolDown.isUsingPermissions()) {
