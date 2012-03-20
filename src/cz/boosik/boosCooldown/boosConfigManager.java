@@ -43,6 +43,7 @@ public class boosConfigManager {
 			conf.addDefault("options.options.cancel_warmup_on_sprint",
 					false);
 			conf.addDefault("options.options.clear_on_restart", false);
+			conf.addDefault("options.options.command_logging", false);
 			conf.addDefault("options.units.seconds", "seconds");
 			conf.addDefault("options.units.minutes", "minutes");
 			conf.addDefault("options.units.hours", "hours");
@@ -331,6 +332,11 @@ public class boosConfigManager {
 	public static boolean getCancelWarmupOnSneak() {
 		return conf.getBoolean(
 				"options.options.cancel_warmup_on_sneak", false);
+	}
+	
+	public static boolean getCommandLogging() {
+		return conf.getBoolean(
+				"options.options.command_logging", false);
 	}
 
 	public static boolean getBlocked2(Player player, String pre) {

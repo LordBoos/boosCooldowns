@@ -34,7 +34,6 @@ public class boosCoolDownListener implements Listener {
 		String message = event.getMessage();
 		Player player = event.getPlayer();
 		boolean on = true;
-
 		on = isPluginOnForPlayer(player);
 
 		if (on) {
@@ -52,7 +51,7 @@ public class boosCoolDownListener implements Listener {
 			if (!used && messageCommand.length() > 1) {
 				int j = messageCommand.indexOf(' ', 1);
 				if (j < 0) {
-					j = messageCommand.length();	
+					j = messageCommand.length();
 				}
 
 				String preSub = messageCommand.substring(1, j);
@@ -60,10 +59,12 @@ public class boosCoolDownListener implements Listener {
 						messageCommand.length());
 				preSub = preCommand + ' ' + preSub;
 				preSubCheck = preSubCheck(player, preSub);
-				if (preCDCheck(player, preSub) > 0){
-					preSubCheck = 0;}
-				if (prePriceCheck(player, preSub) > 0){
-					preSubCheck = 0;}
+				if (preCDCheck(player, preSub) > 0) {
+					preSubCheck = 0;
+				}
+				if (prePriceCheck(player, preSub) > 0) {
+					preSubCheck = 0;
+				}
 				if (preSubCheck >= 0) {
 					blocked = blocked(player, preSub);
 					this.checkCooldown(event, player, preSub, messageSub);
@@ -106,7 +107,7 @@ public class boosCoolDownListener implements Listener {
 		}
 		return preSubCheck;
 	}
-	
+
 	private int preCDCheck(Player player, String preSub) {
 		int preCDCheck;
 		if (boosCoolDown.isUsingPermissions()) {
@@ -130,7 +131,7 @@ public class boosCoolDownListener implements Listener {
 		}
 		return preCDCheck;
 	}
-	
+
 	private int prePriceCheck(Player player, String preSub) {
 		int prePriceCheck;
 		if (boosCoolDown.isUsingPermissions()) {
@@ -283,6 +284,9 @@ public class boosCoolDownListener implements Listener {
 								.getPrice(player, pre)) {
 							boosPriceManager
 									.payForCommand(player, pre, message);
+							if (boosConfigManager.getCommandLogging()) {
+								boosCoolDown.commandLogger(player.getName(), message);
+							}
 						} else {
 							boosPriceManager
 									.payForCommand(player, pre, message);
@@ -299,6 +303,9 @@ public class boosCoolDownListener implements Listener {
 					.getCommandBlockedMessage());
 			boosChat.sendMessageToPlayer(player, msg);
 			return false;
+		}
+		if(!event.isCancelled()){
+				boosCoolDown.commandLogger(player.getName(), pre);
 		}
 		return false;
 	}

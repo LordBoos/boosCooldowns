@@ -106,6 +106,11 @@ public class boosCoolDown extends JavaPlugin {
 		return usingPermissions;
 	}
 
+	public static void commandLogger(String player, String command) {
+		log.info("[" + "boosLogger" + "] " + player + " used command "
+				+ command);
+	}
+
 	private boolean setupEconomy() {
 		if (usingVault) {
 			RegisteredServiceProvider<Economy> economyProvider = getServer()
