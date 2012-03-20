@@ -60,9 +60,9 @@ public class boosCoolDownListener implements Listener {
 						messageCommand.length());
 				preSub = preCommand + ' ' + preSub;
 				preSubCheck = preSubCheck(player, preSub);
-				if (preCDCheck(player, preSub) >= 0){
+				if (preCDCheck(player, preSub) > 0){
 					preSubCheck = 0;}
-				if (prePriceCheck(player, preSub) >= 0){
+				if (prePriceCheck(player, preSub) > 0){
 					preSubCheck = 0;}
 				if (preSubCheck >= 0) {
 					blocked = blocked(player, preSub);
