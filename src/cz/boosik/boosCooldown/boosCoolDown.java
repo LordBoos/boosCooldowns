@@ -25,13 +25,14 @@ public class boosCoolDown extends JavaPlugin {
 	private static boolean usingEconomy = false;
 	private static boolean usingPermissions = false;
 	private PluginManager pm;
+
 	public void onEnable() {
 		pdfFile = this.getDescription();
 		PluginDescriptionFile pdfFile = this.getDescription();
 		log.info("[" + pdfFile.getName() + "]" + " version "
 				+ pdfFile.getVersion() + " by " + pdfFile.getAuthors()
 				+ " is enabled!");
-		
+
 		new boosConfigManager(this);
 		boosConfigManager.load();
 		new boosCoolDownManager(this);
@@ -69,15 +70,19 @@ public class boosCoolDown extends JavaPlugin {
 						"&6[" + pdfFile.getName() + "]" + " config reloaded");
 				return true;
 			}
-		} else if(sender.isOp() && command.equalsIgnoreCase("boosCooldowns")) {
-				boosConfigManager.reload();
-				boosChat.sendMessageToCommandSender(sender,
-						"&6[" + pdfFile.getName() + "]" + " config reloaded");
-				return true;
-		} else {
+		} else if (sender.isOp() && command.equalsIgnoreCase("boosCooldowns")) {
+			boosConfigManager.reload();
 			boosChat.sendMessageToCommandSender(sender,
-					"&6[" + pdfFile.getName() + "]" + " access denied, you lack required permission to do this!");
-			}
+					"&6[" + pdfFile.getName() + "]" + " config reloaded");
+			return true;
+		} else {
+			boosChat.sendMessageToCommandSender(
+					sender,
+					"&6["
+							+ pdfFile.getName()
+							+ "]"
+							+ " access denied, you lack required permission to do this!");
+		}
 		return false;
 	}
 
@@ -130,7 +135,7 @@ public class boosCoolDown extends JavaPlugin {
 		usingPermissions = false;
 		return false;
 	}
-	
+
 	private void initializeVault() {
 		Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
 		if (x != null & x instanceof Vault) {
@@ -180,6 +185,5 @@ public class boosCoolDown extends JavaPlugin {
 					+ " [Vault] not found disabling economy and permissions support.");
 			usingVault = false;
 		}
-		
 	}
 }

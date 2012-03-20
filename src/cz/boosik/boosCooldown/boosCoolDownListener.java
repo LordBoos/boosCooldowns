@@ -40,7 +40,7 @@ public class boosCoolDownListener implements Listener {
 		if (on) {
 			playerloc.put(player, player.getLocation());
 			playerworld.put(player, player.getWorld().getName());
-			int i = message.indexOf(' ');
+			int i = message.lastIndexOf(' ');
 			if (i < 0) {
 				i = message.length();
 			}
@@ -52,7 +52,7 @@ public class boosCoolDownListener implements Listener {
 			if (!used && messageCommand.length() > 1) {
 				int j = messageCommand.indexOf(' ', 1);
 				if (j < 0) {
-					j = messageCommand.length();
+					j = messageCommand.length();	
 				}
 
 				String preSub = messageCommand.substring(1, j);
