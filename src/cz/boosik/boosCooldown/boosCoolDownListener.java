@@ -60,6 +60,10 @@ public class boosCoolDownListener implements Listener {
 						messageCommand.length());
 				preSub = preCommand + ' ' + preSub;
 				preSubCheck = preSubCheck(player, preSub);
+				if (preCDCheck(player, preSub) >= 0){
+					preSubCheck = 0;}
+				if (prePriceCheck(player, preSub) >= 0){
+					preSubCheck = 0;}
 				if (preSubCheck >= 0) {
 					blocked = blocked(player, preSub);
 					this.checkCooldown(event, player, preSub, messageSub);
@@ -101,6 +105,54 @@ public class boosCoolDownListener implements Listener {
 			preSubCheck = boosConfigManager.getWarmUp(player, preSub);
 		}
 		return preSubCheck;
+	}
+	
+	private int preCDCheck(Player player, String preSub) {
+		int preCDCheck;
+		if (boosCoolDown.isUsingPermissions()) {
+			if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.cooldown2")) {
+				preCDCheck = boosConfigManager.getCoolDown2(player, preSub);
+			} else if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.cooldown3")) {
+				preCDCheck = boosConfigManager.getCoolDown3(player, preSub);
+			} else if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.cooldown4")) {
+				preCDCheck = boosConfigManager.getCoolDown4(player, preSub);
+			} else if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.cooldown5")) {
+				preCDCheck = boosConfigManager.getCoolDown5(player, preSub);
+			} else {
+				preCDCheck = boosConfigManager.getCoolDown(player, preSub);
+			}
+		} else {
+			preCDCheck = boosConfigManager.getCoolDown(player, preSub);
+		}
+		return preCDCheck;
+	}
+	
+	private int prePriceCheck(Player player, String preSub) {
+		int prePriceCheck;
+		if (boosCoolDown.isUsingPermissions()) {
+			if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.cooldown2")) {
+				prePriceCheck = boosConfigManager.getPrice2(player, preSub);
+			} else if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.cooldown3")) {
+				prePriceCheck = boosConfigManager.getPrice3(player, preSub);
+			} else if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.cooldown4")) {
+				prePriceCheck = boosConfigManager.getPrice4(player, preSub);
+			} else if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.cooldown5")) {
+				prePriceCheck = boosConfigManager.getPrice5(player, preSub);
+			} else {
+				prePriceCheck = boosConfigManager.getPrice(player, preSub);
+			}
+		} else {
+			prePriceCheck = boosConfigManager.getPrice(player, preSub);
+		}
+		return prePriceCheck;
 	}
 
 	private boolean blocked(Player player, String pre) {
