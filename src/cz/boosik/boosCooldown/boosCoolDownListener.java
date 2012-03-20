@@ -304,7 +304,7 @@ public class boosCoolDownListener implements Listener {
 			boosChat.sendMessageToPlayer(player, msg);
 			return false;
 		}
-		if(!event.isCancelled()){
+		if(!event.isCancelled() && boosConfigManager.getCommandLogging()){
 				boosCoolDown.commandLogger(player.getName(), pre);
 		}
 		return false;
