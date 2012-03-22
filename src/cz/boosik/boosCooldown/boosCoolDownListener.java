@@ -72,7 +72,7 @@ public class boosCoolDownListener implements Listener {
 					this.checkCooldown(event, player, preSub, messageSub);
 					used = true;
 				} else {
-					blocked = blocked(player, preSub, messageSub);
+					blocked = blocked(player, preCommand, messageCommand);
 					this.checkCooldown(event, player, preCommand,
 							messageCommand);
 					used = true;
