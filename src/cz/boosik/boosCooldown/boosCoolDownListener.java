@@ -10,6 +10,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
@@ -66,18 +68,18 @@ public class boosCoolDownListener implements Listener {
 					preSubCheck = 0;
 				}
 				if (preSubCheck >= 0) {
-					blocked = blocked(player, preSub);
+					blocked = blocked(player, preSub, messageSub);
 					this.checkCooldown(event, player, preSub, messageSub);
 					used = true;
 				} else {
-					blocked = blocked(player, preSub);
+					blocked = blocked(player, preSub, messageSub);
 					this.checkCooldown(event, player, preCommand,
 							messageCommand);
 					used = true;
 				}
 			}
 			if (!used) {
-				blocked = blocked(player, preCommand);
+				blocked = blocked(player, preCommand, messageCommand);
 				this.checkCooldown(event, player, preCommand, messageCommand);
 				used = false;
 			}
@@ -156,7 +158,7 @@ public class boosCoolDownListener implements Listener {
 		return prePriceCheck;
 	}
 
-	private boolean blocked(Player player, String pre) {
+	private boolean blocked(Player player, String pre, String msg) {
 		boolean blocked;
 		if (boosCoolDown.isUsingPermissions()) {
 			if (boosCoolDown.getPermissions().has(player,
@@ -488,6 +490,76 @@ public class boosCoolDownListener implements Listener {
 					if (boosWarmUpManager.hasWarmUps(player)) {
 						boosChat.sendMessageToPlayer(player, boosConfigManager
 								.getWarmUpCancelledByDamageMessage());
+						boosWarmUpManager.cancelWarmUps(player);
+					}
+
+				}
+			}
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		if (!boosConfigManager.getBlockInteractDuringWarmup())
+			return;
+		
+		if (event.isCancelled())
+			return;
+		
+		Entity entity = event.getPlayer();
+		if (entity != null && entity instanceof Player) {
+			Player player = (Player) entity;
+			if (boosCoolDown.isUsingPermissions()) {
+				if (player != null
+						&& !boosCoolDown.getPermissions().has(player,
+								"booscooldowns.dontblock.interact")) {
+					if (boosWarmUpManager.hasWarmUps(player)) {
+						boosChat.sendMessageToPlayer(player, boosConfigManager
+								.getInteractBlockedMessage());
+						event.setCancelled(true);
+					}
+
+				}
+			} else {
+				if (player != null) {
+					if (boosWarmUpManager.hasWarmUps(player)) {
+						boosChat.sendMessageToPlayer(player, boosConfigManager
+								.getInteractBlockedMessage());
+						event.setCancelled(true);
+					}
+
+				}
+			}
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
+		if (!boosConfigManager.getCancelWarmUpOnGameModeChange())
+			return;
+
+		if (event.isCancelled())
+			return;
+
+		Entity entity = event.getPlayer();
+		if (entity != null && entity instanceof Player) {
+			Player player = (Player) entity;
+			if (boosCoolDown.isUsingPermissions()) {
+				if (player != null
+						&& !boosCoolDown.getPermissions().has(player,
+								"booscooldowns.nocancel.gamemodechange")) {
+					if (boosWarmUpManager.hasWarmUps(player)) {
+						boosChat.sendMessageToPlayer(player, boosConfigManager
+								.getCancelWarmupByGameModeChangeMessage());
+						boosWarmUpManager.cancelWarmUps(player);
+					}
+
+				}
+			} else {
+				if (player != null) {
+					if (boosWarmUpManager.hasWarmUps(player)) {
+						boosChat.sendMessageToPlayer(player, boosConfigManager
+								.getCancelWarmupByGameModeChangeMessage());
 						boosWarmUpManager.cancelWarmUps(player);
 					}
 

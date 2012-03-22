@@ -42,6 +42,8 @@ public class boosConfigManager {
 					false);
 			conf.addDefault("options.options.cancel_warmup_on_sprint",
 					false);
+			conf.addDefault("options.options.cancel_warmup_on_gamemode_change", false);
+			conf.addDefault("options.options.block_interact_during_warmup", false);
 			conf.addDefault("options.options.clear_on_restart", false);
 			conf.addDefault("options.options.command_logging", false);
 			conf.addDefault("options.units.seconds", "seconds");
@@ -59,6 +61,9 @@ public class boosConfigManager {
 			conf.addDefault(
 					"options.messages.warmup_cancelled_by_sneak",
 					"&6Warm-ups have been cancelled due to sneaking.&f");
+			conf.addDefault(
+					"options.messages.warmup_cancelled_by_gamemode_change",
+					"&6Warm-ups have been cancelled due to changing gamemode.&f");
 			// conf.addDefault(
 			// "commands.options.message_warmup_cancelled_by_death",
 			// "&6Warm-ups have been cancelled due to death.&f");
@@ -74,6 +79,9 @@ public class boosConfigManager {
 					"&6Price of&e &command& &6was&e %s &6and you now have&e %s");
 			conf.addDefault("options.messages.command_blocked",
 					"&6You cannot use this command, it's blocked!&f");
+			conf.addDefault(
+					"options.messages.interact_blocked_during_warmup",
+					"&6You can't do this when command is warming-up!&f");
 		}
 		if (confFile.exists()) {
 			try {
@@ -372,6 +380,28 @@ public class boosConfigManager {
 		pre = pre.toLowerCase();
 		blocked = conf.getBoolean("commands.blocked.blocked." + pre, blocked);
 		return blocked;
+	}
+
+	public static boolean getCancelWarmUpOnGameModeChange() {
+		return conf.getBoolean(
+				"options.options.cancel_warmup_on_gamemode_change", false);
+	}
+
+	public static String getCancelWarmupByGameModeChangeMessage() {
+		return conf.getString(
+				"options.messages.warmup_cancelled_by_gamemode_change",
+				"&6Warm-ups have been cancelled due to changing gamemode.&f");
+	}
+
+	public static boolean getBlockInteractDuringWarmup() {
+		return conf.getBoolean(
+				"options.options.block_interact_during_warmup", false);
+	}
+
+	public static String getInteractBlockedMessage() {
+		return conf.getString(
+				"options.messages.interact_blocked_during_warmup",
+				"&6You can't do this when command is warming-up!&f");
 	}
 
 	// public static String getWarmUpCancelledByDeathMessage() {
