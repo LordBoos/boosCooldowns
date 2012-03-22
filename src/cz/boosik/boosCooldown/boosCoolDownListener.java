@@ -287,7 +287,8 @@ public class boosCoolDownListener implements Listener {
 							boosPriceManager
 									.payForCommand(player, pre, message);
 							if (boosConfigManager.getCommandLogging()) {
-								boosCoolDown.commandLogger(player.getName(), message);
+								boosCoolDown.commandLogger(player.getName(),
+										message);
 							}
 						} else {
 							boosPriceManager
@@ -306,8 +307,8 @@ public class boosCoolDownListener implements Listener {
 			boosChat.sendMessageToPlayer(player, msg);
 			return false;
 		}
-		if(!event.isCancelled() && boosConfigManager.getCommandLogging()){
-				boosCoolDown.commandLogger(player.getName(), pre);
+		if (!event.isCancelled() && boosConfigManager.getCommandLogging()) {
+			boosCoolDown.commandLogger(player.getName(), pre);
 		}
 		return false;
 	}
@@ -497,15 +498,15 @@ public class boosCoolDownListener implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if (!boosConfigManager.getBlockInteractDuringWarmup())
 			return;
-		
+
 		if (event.isCancelled())
 			return;
-		
+
 		Entity entity = event.getPlayer();
 		if (entity != null && entity instanceof Player) {
 			Player player = (Player) entity;
@@ -514,25 +515,69 @@ public class boosCoolDownListener implements Listener {
 						&& !boosCoolDown.getPermissions().has(player,
 								"booscooldowns.dontblock.interact")) {
 					if (boosWarmUpManager.hasWarmUps(player)) {
-						boosChat.sendMessageToPlayer(player, boosConfigManager
-								.getInteractBlockedMessage());
-						event.setCancelled(true);
+						if (event.getClickedBlock().getType().equals("CHEST")
+								|| event.getClickedBlock().getType()
+										.equals("FURNACE")
+								|| event.getClickedBlock().getType()
+										.equals("BURNING_FURNACE")
+								|| event.getClickedBlock().getType()
+										.equals("WORKBENCH")
+								|| event.getClickedBlock().getType()
+										.equals("DISPENSER")
+								|| event.getClickedBlock().getType()
+										.equals("JUKEBOX")
+								|| event.getClickedBlock().getType()
+										.equals("LOCKED_CHEST")
+								|| event.getClickedBlock().getType()
+										.equals("ENCHANTMENT_TABLE")
+								|| event.getClickedBlock().getType()
+										.equals("BREWING_STAND")
+								|| event.getClickedBlock().getType()
+										.equals("CAULDRON")
+								|| event.getClickedBlock().getType()
+										.equals("STORAGE_MINECART")){
+							event.setCancelled(true);
+							boosChat.sendMessageToPlayer(player,
+									boosConfigManager.getInteractBlockedMessage());
+							}
 					}
 
 				}
 			} else {
 				if (player != null) {
 					if (boosWarmUpManager.hasWarmUps(player)) {
-						boosChat.sendMessageToPlayer(player, boosConfigManager
-								.getInteractBlockedMessage());
-						event.setCancelled(true);
+						if (event.getClickedBlock().getType().equals("CHEST")
+								|| event.getClickedBlock().getType()
+										.equals("FURNACE")
+								|| event.getClickedBlock().getType()
+										.equals("BURNING_FURNACE")
+								|| event.getClickedBlock().getType()
+										.equals("WORKBENCH")
+								|| event.getClickedBlock().getType()
+										.equals("DISPENSER")
+								|| event.getClickedBlock().getType()
+										.equals("JUKEBOX")
+								|| event.getClickedBlock().getType()
+										.equals("LOCKED_CHEST")
+								|| event.getClickedBlock().getType()
+										.equals("ENCHANTMENT_TABLE")
+								|| event.getClickedBlock().getType()
+										.equals("BREWING_STAND")
+								|| event.getClickedBlock().getType()
+										.equals("CAULDRON")
+								|| event.getClickedBlock().getType()
+										.equals("STORAGE_MINECART")){
+							event.setCancelled(true);
+							boosChat.sendMessageToPlayer(player,
+									boosConfigManager.getInteractBlockedMessage());
+							}
 					}
 
 				}
 			}
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
 		if (!boosConfigManager.getCancelWarmUpOnGameModeChange())
