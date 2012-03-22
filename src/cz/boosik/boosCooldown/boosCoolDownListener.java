@@ -67,6 +67,9 @@ public class boosCoolDownListener implements Listener {
 				if (prePriceCheck(player, preSub) > 0) {
 					preSubCheck = 0;
 				}
+				if (preLimitCheck(player, preSub) > 0) {
+					preSubCheck = 0;
+				}
 				if (preSubCheck >= 0) {
 					blocked = blocked(player, preSub, messageSub);
 					this.checkCooldown(event, player, preSub, messageSub);
@@ -108,6 +111,30 @@ public class boosCoolDownListener implements Listener {
 			preSubCheck = boosConfigManager.getWarmUp(player, preSub);
 		}
 		return preSubCheck;
+	}
+	
+	private int preLimitCheck(Player player, String preSub) {
+		int preLimitCheck;
+		if (boosCoolDown.isUsingPermissions()) {
+			if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.limit2")) {
+				preLimitCheck = boosConfigManager.getLimit2(player, preSub);
+			} else if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.limit3")) {
+				preLimitCheck = boosConfigManager.getLimit3(player, preSub);
+			} else if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.limit4")) {
+				preLimitCheck = boosConfigManager.getLimit4(player, preSub);
+			} else if (boosCoolDown.getPermissions().has(player,
+					"booscooldowns.limit5")) {
+				preLimitCheck = boosConfigManager.getLimit5(player, preSub);
+			} else {
+				preLimitCheck = boosConfigManager.getLimit(player, preSub);
+			}
+		} else {
+			preLimitCheck = boosConfigManager.getLimit(player, preSub);
+		}
+		return preLimitCheck;
 	}
 
 	private int preCDCheck(Player player, String preSub) {
@@ -159,32 +186,63 @@ public class boosCoolDownListener implements Listener {
 	}
 
 	private boolean blocked(Player player, String pre, String msg) {
-		boolean blocked;
+		boolean blocked = false;
+		int limit = -1;
+		int uses = boosCoolDownManager.getUses(player, pre);
 		if (boosCoolDown.isUsingPermissions()) {
 			if (boosCoolDown.getPermissions().has(player,
-					"booscooldowns.noblocked")
+					"booscooldowns.nolimit")
 					|| boosCoolDown.getPermissions().has(player,
-							"booscooldowns.noblocked." + pre)) {
-				blocked = false;
+							"booscooldowns.nolimit." + pre)) {
 			} else {
 				if (boosCoolDown.getPermissions().has(player,
-						"booscooldowns.blocked2")) {
-					blocked = boosConfigManager.getBlocked2(player, pre);
+						"booscooldowns.limit2")) {
+					limit = boosConfigManager.getLimit2(player, pre);
+					if (limit == -1) {
+						blocked = false;
+					} else if (limit <= uses) {
+						blocked = true;
+					}
 				} else if (boosCoolDown.getPermissions().has(player,
-						"booscooldowns.blocked3")) {
-					blocked = boosConfigManager.getBlocked3(player, pre);
+						"booscooldowns.limit3")) {
+					limit = boosConfigManager.getLimit3(player, pre);
+					if (limit == -1) {
+						blocked = false;
+					} else if (limit <= uses) {
+						blocked = true;
+					}
 				} else if (boosCoolDown.getPermissions().has(player,
-						"booscooldowns.blocked4")) {
-					blocked = boosConfigManager.getBlocked4(player, pre);
+						"booscooldowns.limit4")) {
+					limit = boosConfigManager.getLimit4(player, pre);
+					if (limit == -1) {
+						blocked = false;
+					} else if (limit <= uses) {
+						blocked = true;
+					}
 				} else if (boosCoolDown.getPermissions().has(player,
-						"booscooldowns.blocked5")) {
-					blocked = boosConfigManager.getBlocked5(player, pre);
+						"booscooldowns.limit5")) {
+					limit = boosConfigManager.getLimit5(player, pre);
+					if (limit == -1) {
+						blocked = false;
+					} else if (limit <= uses) {
+						blocked = true;
+					}
 				} else {
-					blocked = boosConfigManager.getBlocked(player, pre);
+					limit = boosConfigManager.getLimit(player, pre);
+					if (limit == -1) {
+						blocked = false;
+					} else if (limit <= uses) {
+						blocked = true;
+					}
 				}
 			}
 		} else {
-			blocked = boosConfigManager.getBlocked(player, pre);
+			limit = boosConfigManager.getLimit(player, pre);
+			if (limit == -1) {
+				blocked = false;
+			} else if (limit <= uses) {
+				blocked = true;
+			}
 		}
 		return blocked;
 	}
@@ -307,8 +365,11 @@ public class boosCoolDownListener implements Listener {
 			boosChat.sendMessageToPlayer(player, msg);
 			return false;
 		}
-		if (!event.isCancelled() && boosConfigManager.getCommandLogging()) {
-			boosCoolDown.commandLogger(player.getName(), pre);
+		if (!event.isCancelled()) {
+			boosCoolDownManager.setUses(player, pre, message);
+			if (boosConfigManager.getCommandLogging()) {
+				boosCoolDown.commandLogger(player.getName(), pre + message);
+			}
 		}
 		return false;
 	}
@@ -535,11 +596,12 @@ public class boosCoolDownListener implements Listener {
 								|| event.getClickedBlock().getType()
 										.equals("CAULDRON")
 								|| event.getClickedBlock().getType()
-										.equals("STORAGE_MINECART")){
+										.equals("STORAGE_MINECART")) {
 							event.setCancelled(true);
 							boosChat.sendMessageToPlayer(player,
-									boosConfigManager.getInteractBlockedMessage());
-							}
+									boosConfigManager
+											.getInteractBlockedMessage());
+						}
 					}
 
 				}
@@ -566,11 +628,12 @@ public class boosCoolDownListener implements Listener {
 								|| event.getClickedBlock().getType()
 										.equals("CAULDRON")
 								|| event.getClickedBlock().getType()
-										.equals("STORAGE_MINECART")){
+										.equals("STORAGE_MINECART")) {
 							event.setCancelled(true);
 							boosChat.sendMessageToPlayer(player,
-									boosConfigManager.getInteractBlockedMessage());
-							}
+									boosConfigManager
+											.getInteractBlockedMessage());
+						}
 					}
 
 				}

@@ -34,32 +34,26 @@ public class boosConfigManager {
 			this.confFile = new File(boosCoolDown.getDataFolder(), "config.yml");
 			this.conf = new YamlConfiguration();
 			conf.options().copyDefaults(true);
-			conf.addDefault("options.options.cancel_warmup_on_damage",
+			conf.addDefault("options.options.cancel_warmup_on_damage", false);
+			conf.addDefault("options.options.cancel_warmup_on_move", false);
+			conf.addDefault("options.options.cancel_warmup_on_sneak", false);
+			conf.addDefault("options.options.cancel_warmup_on_sprint", false);
+			conf.addDefault("options.options.cancel_warmup_on_gamemode_change",
 					false);
-			conf.addDefault("options.options.cancel_warmup_on_move",
+			conf.addDefault("options.options.block_interact_during_warmup",
 					false);
-			conf.addDefault("options.options.cancel_warmup_on_sneak",
-					false);
-			conf.addDefault("options.options.cancel_warmup_on_sprint",
-					false);
-			conf.addDefault("options.options.cancel_warmup_on_gamemode_change", false);
-			conf.addDefault("options.options.block_interact_during_warmup", false);
 			conf.addDefault("options.options.clear_on_restart", false);
 			conf.addDefault("options.options.command_logging", false);
 			conf.addDefault("options.units.seconds", "seconds");
 			conf.addDefault("options.units.minutes", "minutes");
 			conf.addDefault("options.units.hours", "hours");
-			conf.addDefault(
-					"options.messages.warmup_cancelled_by_damage",
+			conf.addDefault("options.messages.warmup_cancelled_by_damage",
 					"&6Warm-ups have been cancelled due to receiving damage.&f");
-			conf.addDefault(
-					"options.messages.warmup_cancelled_by_move",
+			conf.addDefault("options.messages.warmup_cancelled_by_move",
 					"&6Warm-ups have been cancelled due to moving.&f");
-			conf.addDefault(
-					"options.messages.warmup_cancelled_by_sprint",
+			conf.addDefault("options.messages.warmup_cancelled_by_sprint",
 					"&6Warm-ups have been cancelled due to sprinting.&f");
-			conf.addDefault(
-					"options.messages.warmup_cancelled_by_sneak",
+			conf.addDefault("options.messages.warmup_cancelled_by_sneak",
 					"&6Warm-ups have been cancelled due to sneaking.&f");
 			conf.addDefault(
 					"options.messages.warmup_cancelled_by_gamemode_change",
@@ -77,10 +71,9 @@ public class boosConfigManager {
 					"&6An error has occured:&e %s");
 			conf.addDefault("options.messages.paid_for_command",
 					"&6Price of&e &command& &6was&e %s &6and you now have&e %s");
-			conf.addDefault("options.messages.command_blocked",
-					"&6You cannot use this command, it's blocked!&f");
-			conf.addDefault(
-					"options.messages.interact_blocked_during_warmup",
+			conf.addDefault("options.messages.limit_achieved",
+					"&6You cannot use this command anymore!&f");
+			conf.addDefault("options.messages.interact_blocked_during_warmup",
 					"&6You can't do this when command is warming-up!&f");
 		}
 		if (confFile.exists()) {
@@ -114,11 +107,11 @@ public class boosConfigManager {
 			conf.addDefault("commands.prices.price3./home", 90);
 			conf.addDefault("commands.prices.price4./home", 99);
 			conf.addDefault("commands.prices.price5./home", 542);
-			conf.addDefault("commands.blocked.blocked./example", true);
-			conf.addDefault("commands.blocked.blocked2./example", false);
-			conf.addDefault("commands.blocked.blocked3./command", true);
-			conf.addDefault("commands.blocked.blocked4./command", false);
-			conf.addDefault("commands.blocked.blocked5./lol", true);
+			conf.addDefault("commands.limits.limit./example", 0);
+			conf.addDefault("commands.limits.limit2./example", 100);
+			conf.addDefault("commands.limits.limit3./command", 50);
+			conf.addDefault("commands.limits.limit4./command", 11);
+			conf.addDefault("commands.limits.limit5./lol", 1);
 			conf.save(confFile);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -255,14 +248,12 @@ public class boosConfigManager {
 	}
 
 	static String getWarmUpCancelledByMoveMessage() {
-		return conf.getString(
-				"options.messages.warmup_cancelled_by_move",
+		return conf.getString("options.messages.warmup_cancelled_by_move",
 				"&6Warm-ups have been cancelled due to moving.&f");
 	}
 
 	static String getWarmUpCancelledByDamageMessage() {
-		return conf.getString(
-				"options.messages.warmup_cancelled_by_damage",
+		return conf.getString("options.messages.warmup_cancelled_by_damage",
 				"&6Warm-ups have been cancelled due to receiving damage.&f");
 	}
 
@@ -273,8 +264,7 @@ public class boosConfigManager {
 	}
 
 	static String getWarmUpAlreadyStartedMessage() {
-		return conf.getString(
-				"options.messages.warmup_already_started",
+		return conf.getString("options.messages.warmup_already_started",
 				"&6Warm-Up process for&e &command& &6has already started.&f");
 	}
 
@@ -289,20 +279,18 @@ public class boosConfigManager {
 	}
 
 	public static String getCancelWarmupOnSneakMessage() {
-		return conf.getString(
-				"options.messages.warmup_cancelled_by_sneak",
+		return conf.getString("options.messages.warmup_cancelled_by_sneak",
 				"&6Warm-ups have been cancelled due to sneaking.&f");
 	}
 
 	public static String getCancelWarmupOnSprintMessage() {
-		return conf.getString(
-				"options.messages.warmup_cancelled_by_sprint",
+		return conf.getString("options.messages.warmup_cancelled_by_sprint",
 				"&6Warm-ups have been cancelled due to sprinting.&f");
 	}
 
 	public static String getCommandBlockedMessage() {
-		return conf.getString("options.messages.command_blocked",
-				"&6You cannot use this command, it's blocked!&f");
+		return conf.getString("options.messages.limit_achieved",
+				"&6You cannot use this command anymore!&f");
 	}
 
 	static String getUnitSecondsMessage() {
@@ -318,68 +306,64 @@ public class boosConfigManager {
 	}
 
 	static boolean getClearOnRestart() {
-		return conf.getBoolean("options.options.clear_on_restart",
-				false);
+		return conf.getBoolean("options.options.clear_on_restart", false);
 	}
 
 	public static boolean getCancelWarmUpOnDamage() {
-		return conf.getBoolean(
-				"options.options.cancel_warmup_on_damage", false);
+		return conf
+				.getBoolean("options.options.cancel_warmup_on_damage", false);
 	}
 
 	public static boolean getCancelWarmupOnMove() {
-		return conf.getBoolean(
-				"options.options.cancel_warmup_on_move", false);
+		return conf.getBoolean("options.options.cancel_warmup_on_move", false);
 	}
 
 	public static boolean getCancelWarmupOnSprint() {
-		return conf.getBoolean(
-				"options.options.cancel_warmup_on_sprint", false);
+		return conf
+				.getBoolean("options.options.cancel_warmup_on_sprint", false);
 	}
 
 	public static boolean getCancelWarmupOnSneak() {
-		return conf.getBoolean(
-				"options.options.cancel_warmup_on_sneak", false);
+		return conf.getBoolean("options.options.cancel_warmup_on_sneak", false);
 	}
-	
+
 	public static boolean getCommandLogging() {
-		return conf.getBoolean(
-				"options.options.command_logging", false);
+		return conf.getBoolean("options.options.command_logging", false);
 	}
 
-	public static boolean getBlocked2(Player player, String pre) {
-		boolean blocked = false;
+	public static int getLimit2(Player player, String pre) {
+		int limit = -1;
 		pre = pre.toLowerCase();
-		blocked = conf.getBoolean("commands.blocked.blocked2." + pre, blocked);
-		return blocked;
+		limit = conf.getInt("commands.limits.limit2." + pre, limit);
+		return limit;
 	}
 
-	public static boolean getBlocked3(Player player, String pre) {
-		boolean blocked = false;
+	public static int getLimit3(Player player, String pre) {
+		int limit = -1;
 		pre = pre.toLowerCase();
-		blocked = conf.getBoolean("commands.blocked.blocked3." + pre, blocked);
-		return blocked;
+		limit = conf.getInt("commands.limits.limit3." + pre, limit);
+		return limit;
 	}
 
-	public static boolean getBlocked4(Player player, String pre) {
-		boolean blocked = false;
+	public static int getLimit4(Player player, String pre) {
+		int limit = -1;
 		pre = pre.toLowerCase();
-		blocked = conf.getBoolean("commands.blocked.blocked4." + pre, blocked);
-		return blocked;
+		limit = conf.getInt("commands.limits.limit4." + pre, limit);
+		return limit;
 	}
 
-	public static boolean getBlocked5(Player player, String pre) {
-		boolean blocked = false;
+	public static int getLimit5(Player player, String pre) {
+		int limit = -1;
 		pre = pre.toLowerCase();
-		blocked = conf.getBoolean("commands.blocked.blocked5." + pre, blocked);
-		return blocked;
+		limit = conf.getInt("commands.limits.limit5." + pre, limit);
+		return limit;
 	}
 
-	public static boolean getBlocked(Player player, String pre) {
-		boolean blocked = false;
+	public static int getLimit(Player player, String pre) {
+		int limit = -1;
 		pre = pre.toLowerCase();
-		blocked = conf.getBoolean("commands.blocked.blocked." + pre, blocked);
-		return blocked;
+		limit = conf.getInt("commands.limits.limit." + pre, limit);
+		return limit;
 	}
 
 	public static boolean getCancelWarmUpOnGameModeChange() {
@@ -394,8 +378,8 @@ public class boosConfigManager {
 	}
 
 	public static boolean getBlockInteractDuringWarmup() {
-		return conf.getBoolean(
-				"options.options.block_interact_during_warmup", false);
+		return conf.getBoolean("options.options.block_interact_during_warmup",
+				false);
 	}
 
 	public static String getInteractBlockedMessage() {

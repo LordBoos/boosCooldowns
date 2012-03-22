@@ -66,24 +66,27 @@ public class boosCoolDownManager {
 	}
 
 	static void clear() {
-		ConfigurationSection userSection = confusers.getConfigurationSection("users");
+		ConfigurationSection userSection = confusers
+				.getConfigurationSection("users");
 		if (userSection == null)
 			return;
 		for (String user : userSection.getKeys(false)) {
 			// clear cooldown
-			ConfigurationSection cooldown = confusers.getConfigurationSection("users."+user+".cooldown");
+			ConfigurationSection cooldown = confusers
+					.getConfigurationSection("users." + user + ".cooldown");
 			if (cooldown != null) {
 				for (String key : cooldown.getKeys(false)) {
-					confusers.set("users."+user+".cooldown."+key, null);
+					confusers.set("users." + user + ".cooldown." + key, null);
 				}
 			}
-			confusers.set("users."+user+".cooldown", null);
-			
+			confusers.set("users." + user + ".cooldown", null);
+
 			// clear warmup
-			ConfigurationSection warmup = confusers.getConfigurationSection("users."+user+".warmup");
+			ConfigurationSection warmup = confusers
+					.getConfigurationSection("users." + user + ".warmup");
 			if (warmup != null) {
 				for (String key : warmup.getKeys(false)) {
-					confusers.set("users."+user+".warmup."+key, null);
+					confusers.set("users." + user + ".warmup." + key, null);
 				}
 			}
 			confusers.set("users." + user + ".warmup", null);
@@ -101,8 +104,9 @@ public class boosCoolDownManager {
 		if (boosCoolDown.isUsingPermissions()) {
 			if (coolDownSeconds > 0
 					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.nocooldown") && !boosCoolDown.getPermissions().has(player,
-									"booscooldowns.nocooldown."+pre)) {
+							"booscooldowns.nocooldown")
+					&& !boosCoolDown.getPermissions().has(player,
+							"booscooldowns.nocooldown." + pre)) {
 				Date lastTime = getTime(player, pre);
 				if (lastTime == null) {
 					setTime(player, pre);
@@ -190,8 +194,8 @@ public class boosCoolDownManager {
 		}
 		return false;
 	}
-	
-	static void cancelCooldown(Player player, String pre){
+
+	static void cancelCooldown(Player player, String pre) {
 		confusers.set("users." + player.getName() + ".cooldown." + pre, null);
 	}
 
@@ -360,4 +364,22 @@ public class boosCoolDownManager {
 		confusers.set("users." + player.getName() + ".warmup." + pre, null);
 		save();
 	}
+
+	static void setUses(Player player, String pre, String message) {
+		pre = pre.toLowerCase();
+		int uses = getUses(player, pre);
+		uses = uses + 1;
+		confusers.set("users." + player.getName() + ".uses." + pre + message,
+				uses);
+		save();
+	}
+
+	static int getUses(Player player, String pre) {
+		pre = pre.toLowerCase();
+		int uses = 0;
+		uses = confusers.getInt("users." + player.getName() + ".uses." + pre,
+				uses);
+		return uses;
+	}
+
 }
