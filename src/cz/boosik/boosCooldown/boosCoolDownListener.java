@@ -1,6 +1,6 @@
 package cz.boosik.boosCooldown;
 
-import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -21,8 +21,8 @@ import util.boosChat;
 public class boosCoolDownListener implements Listener {
 	private final boosCoolDown plugin;
 	private boolean blocked = false;
-	private static WeakHashMap<Player, Location> playerloc = new WeakHashMap<Player, Location>();
-	private static WeakHashMap<Player, String> playerworld = new WeakHashMap<Player, String>();
+	private static ConcurrentHashMap<Player, Location> playerloc = new ConcurrentHashMap<Player, Location>();
+	private static ConcurrentHashMap<Player, String> playerworld = new ConcurrentHashMap<Player, String>();
 
 	public boosCoolDownListener(boosCoolDown instance) {
 		plugin = instance;
