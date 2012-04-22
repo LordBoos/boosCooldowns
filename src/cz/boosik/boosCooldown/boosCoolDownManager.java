@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -97,7 +98,7 @@ public class boosCoolDownManager {
 		load();
 	}
 
-	static boolean coolDown(Player player, String pre, String message) {
+	static boolean coolDown(Player player, String pre) {
 		pre = pre.toLowerCase();
 		int coolDownSeconds = 0;
 		coolDownSeconds = getCooldownGroup(player, pre, coolDownSeconds);
@@ -107,92 +108,70 @@ public class boosCoolDownManager {
 							"booscooldowns.nocooldown")
 					&& !boosCoolDown.getPermissions().has(player,
 							"booscooldowns.nocooldown." + pre)) {
-				Date lastTime = getTime(player, pre);
-				if (lastTime == null) {
-					setTime(player, pre);
-					return false;
-				} else {
-					Calendar calcurrTime = Calendar.getInstance();
-					calcurrTime.setTime(getCurrTime());
-					Calendar callastTime = Calendar.getInstance();
-					callastTime.setTime(lastTime);
-					long secondsBetween = secondsBetween(callastTime,
-							calcurrTime);
-					long waitSeconds = coolDownSeconds - secondsBetween;
-					long waitMinutes = Math.round(waitSeconds / 60) + 1;
-					long waitHours = Math.round(waitMinutes / 60) + 1;
-					if (secondsBetween > coolDownSeconds) {
-						setTime(player, pre);
-						return false;
-					} else {
-						String msg = boosConfigManager.getCoolDownMessage();
-						msg = msg.replaceAll("&command&", pre);
-						if (waitSeconds >= 60 && 3600 >= waitSeconds) {
-							msg = msg.replaceAll("&seconds&",
-									Long.toString(waitMinutes));
-							msg = msg.replaceAll("&unit&",
-									boosConfigManager.getUnitMinutesMessage());
-						} else if (waitMinutes >= 60) {
-							msg = msg.replaceAll("&seconds&",
-									Long.toString(waitHours));
-							msg = msg.replaceAll("&unit&",
-									boosConfigManager.getUnitHoursMessage());
-						} else {
-							msg = msg.replaceAll("&seconds&",
-									Long.toString(waitSeconds));
-							msg = msg.replaceAll("&unit&",
-									boosConfigManager.getUnitSecondsMessage());
-						}
-						boosChat.sendMessageToPlayer(player, msg);
-						return true;
-					}
-				}
+				return cd(player, pre, coolDownSeconds);
 			}
 		} else {
 			if (coolDownSeconds > 0) {
-				Date lastTime = getTime(player, pre);
-				if (lastTime == null) {
-					setTime(player, pre);
-					return false;
-				} else {
-					Calendar calcurrTime = Calendar.getInstance();
-					calcurrTime.setTime(getCurrTime());
-					Calendar callastTime = Calendar.getInstance();
-					callastTime.setTime(lastTime);
-					long secondsBetween = secondsBetween(callastTime,
-							calcurrTime);
-					long waitSeconds = coolDownSeconds - secondsBetween;
-					long waitMinutes = Math.round(waitSeconds / 60) + 1;
-					long waitHours = Math.round(waitMinutes / 60) + 1;
-					if (secondsBetween > coolDownSeconds) {
-						setTime(player, pre);
-						return false;
-					} else {
-						String msg = boosConfigManager.getCoolDownMessage();
-						msg = msg.replaceAll("&command&", pre);
-						if (waitSeconds >= 60 && 3600 >= waitSeconds) {
-							msg = msg.replaceAll("&seconds&",
-									Long.toString(waitMinutes));
-							msg = msg.replaceAll("&unit&",
-									boosConfigManager.getUnitMinutesMessage());
-						} else if (waitMinutes >= 60) {
-							msg = msg.replaceAll("&seconds&",
-									Long.toString(waitHours));
-							msg = msg.replaceAll("&unit&",
-									boosConfigManager.getUnitHoursMessage());
-						} else {
-							msg = msg.replaceAll("&seconds&",
-									Long.toString(waitSeconds));
-							msg = msg.replaceAll("&unit&",
-									boosConfigManager.getUnitSecondsMessage());
-						}
-						boosChat.sendMessageToPlayer(player, msg);
-						return true;
-					}
-				}
+				return cd(player, pre, coolDownSeconds);
 			}
 		}
 		return false;
+	}
+
+	private static boolean cd(Player player, String pre, int coolDownSeconds) {
+		Date lastTime = getTime(player, pre);
+		String link = boosConfigManager.getLink(pre);
+		if (lastTime == null) {
+			if (link == null) {
+				setTime(player, pre);
+			} else {
+				List<String> linkGroup = boosConfigManager.getLinkList(link);
+				for (String a : linkGroup) {
+					setTime(player, a);
+				}
+			}
+			return false;
+		} else {
+			Calendar calcurrTime = Calendar.getInstance();
+			calcurrTime.setTime(getCurrTime());
+			Calendar callastTime = Calendar.getInstance();
+			callastTime.setTime(lastTime);
+			long secondsBetween = secondsBetween(callastTime, calcurrTime);
+			long waitSeconds = coolDownSeconds - secondsBetween;
+			long waitMinutes = Math.round(waitSeconds / 60) + 1;
+			long waitHours = Math.round(waitMinutes / 60) + 1;
+			if (secondsBetween > coolDownSeconds) {
+				if (link == null) {
+					setTime(player, pre);
+				} else {
+					List<String> linkGroup = boosConfigManager.getLinkList(link);
+					for (String a : linkGroup) {
+						setTime(player, a);
+					}
+				}
+				return false;
+			} else {
+				String msg = boosConfigManager.getCoolDownMessage();
+				msg = msg.replaceAll("&command&", pre);
+				if (waitSeconds >= 60 && 3600 >= waitSeconds) {
+					msg = msg.replaceAll("&seconds&",
+							Long.toString(waitMinutes));
+					msg = msg.replaceAll("&unit&",
+							boosConfigManager.getUnitMinutesMessage());
+				} else if (waitMinutes >= 60) {
+					msg = msg.replaceAll("&seconds&", Long.toString(waitHours));
+					msg = msg.replaceAll("&unit&",
+							boosConfigManager.getUnitHoursMessage());
+				} else {
+					msg = msg.replaceAll("&seconds&",
+							Long.toString(waitSeconds));
+					msg = msg.replaceAll("&unit&",
+							boosConfigManager.getUnitSecondsMessage());
+				}
+				boosChat.sendMessageToPlayer(player, msg);
+				return true;
+			}
+		}
 	}
 
 	static void cancelCooldown(Player player, String pre) {
@@ -248,34 +227,23 @@ public class boosCoolDownManager {
 	private static int getCooldownGroup(Player player, String pre,
 			int coolDownSeconds) {
 		if (boosCoolDown.isUsingPermissions()) {
-			if (!boosCoolDown.getPermissions().has(player,
-					"booscooldowns.cooldown2")
-					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.cooldown3")
-					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.cooldown4")
-					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.cooldown5")) {
-				coolDownSeconds = boosConfigManager.getCoolDown(player, pre);
-			}
 			if (boosCoolDown.getPermissions().has(player,
 					"booscooldowns.cooldown2")) {
-				coolDownSeconds = boosConfigManager.getCoolDown2(player, pre);
-			}
-			if (boosCoolDown.getPermissions().has(player,
+				coolDownSeconds = boosConfigManager.getCoolDown2(pre);
+			} else if (boosCoolDown.getPermissions().has(player,
 					"booscooldowns.cooldown3")) {
-				coolDownSeconds = boosConfigManager.getCoolDown3(player, pre);
-			}
-			if (boosCoolDown.getPermissions().has(player,
+				coolDownSeconds = boosConfigManager.getCoolDown3(pre);
+			} else if (boosCoolDown.getPermissions().has(player,
 					"booscooldowns.cooldown4")) {
-				coolDownSeconds = boosConfigManager.getCoolDown4(player, pre);
-			}
-			if (boosCoolDown.getPermissions().has(player,
+				coolDownSeconds = boosConfigManager.getCoolDown4(pre);
+			} else if (boosCoolDown.getPermissions().has(player,
 					"booscooldowns.cooldown5")) {
-				coolDownSeconds = boosConfigManager.getCoolDown5(player, pre);
+				coolDownSeconds = boosConfigManager.getCoolDown5(pre);
+			} else {
+				coolDownSeconds = boosConfigManager.getCoolDown(pre);
 			}
 		} else {
-			coolDownSeconds = boosConfigManager.getCoolDown(player, pre);
+			coolDownSeconds = boosConfigManager.getCoolDown(pre);
 		}
 		return coolDownSeconds;
 	}

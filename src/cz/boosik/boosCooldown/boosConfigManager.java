@@ -3,12 +3,12 @@ package cz.boosik.boosCooldown;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 
 public class boosConfigManager {
 
@@ -111,7 +111,15 @@ public class boosConfigManager {
 			conf.addDefault("commands.limits.limit2./example", 100);
 			conf.addDefault("commands.limits.limit3./command", 50);
 			conf.addDefault("commands.limits.limit4./command", 11);
-			conf.addDefault("commands.limits.limit5./lol", 1);
+			conf.addDefault("commands.limits.limit5./lol", 2);
+			conf.addDefault("commands.links.link./lol", "default");
+			conf.addDefault("commands.links.link./home", "default");
+			conf.addDefault("commands.links.link./warp", "default");
+			conf.addDefault("commands.links.link./yourCommandHere", "yourNameHere");
+			String[] def = {"/home", "/lol", "/warp"};
+			conf.addDefault("commands.links.linkGroups.default", Arrays.asList(def));
+			String[] def2 = {"/yourCommandHere", "/someCommand", "/otherCommand"};
+			conf.addDefault("commands.links.linkGroups.yourNameHere", Arrays.asList(def2));
 			conf.save(confFile);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -135,105 +143,105 @@ public class boosConfigManager {
 		load();
 	}
 
-	static int getCoolDown(Player player, String pre) {
+	static int getCoolDown(String pre) {
 		int coolDown = 0;
 		pre = pre.toLowerCase();
 		coolDown = conf.getInt("commands.cooldowns.cooldown." + pre, coolDown);
 		return coolDown;
 	}
 
-	public static int getCoolDown2(Player player, String pre) {
+	public static int getCoolDown2(String pre) {
 		int coolDown = 0;
 		pre = pre.toLowerCase();
 		coolDown = conf.getInt("commands.cooldowns.cooldown2." + pre, coolDown);
 		return coolDown;
 	}
 
-	public static int getCoolDown3(Player player, String pre) {
+	public static int getCoolDown3(String pre) {
 		int coolDown = 0;
 		pre = pre.toLowerCase();
 		coolDown = conf.getInt("commands.cooldowns.cooldown3." + pre, coolDown);
 		return coolDown;
 	}
 
-	public static int getCoolDown4(Player player, String pre) {
+	public static int getCoolDown4(String pre) {
 		int coolDown = 0;
 		pre = pre.toLowerCase();
 		coolDown = conf.getInt("commands.cooldowns.cooldown4." + pre, coolDown);
 		return coolDown;
 	}
 
-	public static int getCoolDown5(Player player, String pre) {
+	public static int getCoolDown5(String pre) {
 		int coolDown = 0;
 		pre = pre.toLowerCase();
 		coolDown = conf.getInt("commands.cooldowns.cooldown5." + pre, coolDown);
 		return coolDown;
 	}
 
-	public static int getWarmUp(Player player, String pre) {
+	public static int getWarmUp(String pre) {
 		int warmUp = -1;
 		pre = pre.toLowerCase();
 		warmUp = conf.getInt("commands.warmups.warmup." + pre, warmUp);
 		return warmUp;
 	}
 
-	public static int getWarmUp2(Player player, String pre) {
+	public static int getWarmUp2(String pre) {
 		int warmUp = -1;
 		pre = pre.toLowerCase();
 		warmUp = conf.getInt("commands.warmups.warmup2." + pre, warmUp);
 		return warmUp;
 	}
 
-	public static int getWarmUp3(Player player, String pre) {
+	public static int getWarmUp3(String pre) {
 		int warmUp = -1;
 		pre = pre.toLowerCase();
 		warmUp = conf.getInt("commands.warmups.warmup3." + pre, warmUp);
 		return warmUp;
 	}
 
-	public static int getWarmUp4(Player player, String pre) {
+	public static int getWarmUp4(String pre) {
 		int warmUp = -1;
 		pre = pre.toLowerCase();
 		warmUp = conf.getInt("commands.warmups.warmup4." + pre, warmUp);
 		return warmUp;
 	}
 
-	public static int getWarmUp5(Player player, String pre) {
+	public static int getWarmUp5(String pre) {
 		int warmUp = -1;
 		pre = pre.toLowerCase();
 		warmUp = conf.getInt("commands.warmups.warmup5." + pre, warmUp);
 		return warmUp;
 	}
 
-	public static int getPrice(Player player, String pre) {
+	public static int getPrice(String pre) {
 		int price = 0;
 		pre = pre.toLowerCase();
 		price = conf.getInt("commands.prices.price." + pre, price);
 		return price;
 	}
 
-	public static int getPrice2(Player player, String pre) {
+	public static int getPrice2(String pre) {
 		int price = 0;
 		pre = pre.toLowerCase();
 		price = conf.getInt("commands.prices.price2." + pre, price);
 		return price;
 	}
 
-	public static int getPrice3(Player player, String pre) {
+	public static int getPrice3(String pre) {
 		int price = 0;
 		pre = pre.toLowerCase();
 		price = conf.getInt("commands.prices.price3." + pre, price);
 		return price;
 	}
 
-	public static int getPrice4(Player player, String pre) {
+	public static int getPrice4(String pre) {
 		int price = 0;
 		pre = pre.toLowerCase();
 		price = conf.getInt("commands.prices.price4." + pre, price);
 		return price;
 	}
 
-	public static int getPrice5(Player player, String pre) {
+	public static int getPrice5(String pre) {
 		int price = 0;
 		pre = pre.toLowerCase();
 		price = conf.getInt("commands.prices.price5." + pre, price);
@@ -331,41 +339,55 @@ public class boosConfigManager {
 		return conf.getBoolean("options.options.command_logging", false);
 	}
 
-	public static int getLimit2(Player player, String pre) {
+	public static int getLimit2(String pre) {
 		int limit = -1;
 		pre = pre.toLowerCase();
 		limit = conf.getInt("commands.limits.limit2." + pre, limit);
 		return limit;
 	}
 
-	public static int getLimit3(Player player, String pre) {
+	public static int getLimit3(String pre) {
 		int limit = -1;
 		pre = pre.toLowerCase();
 		limit = conf.getInt("commands.limits.limit3." + pre, limit);
 		return limit;
 	}
 
-	public static int getLimit4(Player player, String pre) {
+	public static int getLimit4(String pre) {
 		int limit = -1;
 		pre = pre.toLowerCase();
 		limit = conf.getInt("commands.limits.limit4." + pre, limit);
 		return limit;
 	}
 
-	public static int getLimit5(Player player, String pre) {
+	public static int getLimit5(String pre) {
 		int limit = -1;
 		pre = pre.toLowerCase();
 		limit = conf.getInt("commands.limits.limit5." + pre, limit);
 		return limit;
 	}
 
-	public static int getLimit(Player player, String pre) {
+	public static int getLimit(String pre) {
 		int limit = -1;
 		pre = pre.toLowerCase();
 		limit = conf.getInt("commands.limits.limit." + pre, limit);
 		return limit;
 	}
+	
+	public static String getLink(String pre) {
+		String link = null;
+		pre = pre.toLowerCase();
+		link = conf.getString("commands.links.link." + pre, link);
+		return link;
+	}
 
+	public static List<String> getLinkList(String link) {
+		List<String> linkGroup;
+		link = link.toLowerCase();
+		linkGroup = conf.getStringList("commands.links.linkGroups." + link);
+		return linkGroup;
+	}
+	
 	public static boolean getCancelWarmUpOnGameModeChange() {
 		return conf.getBoolean(
 				"options.options.cancel_warmup_on_gamemode_change", false);

@@ -38,7 +38,7 @@ public class boosCoolDown extends JavaPlugin {
 		new boosCoolDownManager(this);
 		boosCoolDownManager.load();
 		pm = getServer().getPluginManager();
-		pm.registerEvents(new boosCoolDownListener(this), this);
+		pm.registerEvents(new boosCoolDownListener<Object>(this), this);
 		initializeVault();
 		if (boosConfigManager.getClearOnRestart()) {
 			boosCoolDownManager.clear();

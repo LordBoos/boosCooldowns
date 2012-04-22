@@ -29,40 +29,29 @@ public class boosPriceManager {
 	private static EconomyResponse getPriceGroup(Player player, String pre,
 			EconomyResponse r) {
 		if (boosCoolDown.isUsingPermissions()) {
-			if (!boosCoolDown.getPermissions().has(player,
-					"booscooldowns.price2")
-					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.price3")
-					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.price4")
-					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.price5")) {
-				r = economy.withdrawPlayer(player.getName(),
-						boosConfigManager.getPrice(player, pre));
-			}
 			if (boosCoolDown.getPermissions().has(player,
 					"booscooldowns.price2")) {
 				r = economy.withdrawPlayer(player.getName(),
-						boosConfigManager.getPrice2(player, pre));
-			}
-			if (boosCoolDown.getPermissions().has(player,
+						boosConfigManager.getPrice2(pre));
+			} else if (boosCoolDown.getPermissions().has(player,
 					"booscooldowns.price3")) {
 				r = economy.withdrawPlayer(player.getName(),
-						boosConfigManager.getPrice3(player, pre));
-			}
-			if (boosCoolDown.getPermissions().has(player,
+						boosConfigManager.getPrice3(pre));
+			} else if (boosCoolDown.getPermissions().has(player,
 					"booscooldowns.price4")) {
 				r = economy.withdrawPlayer(player.getName(),
-						boosConfigManager.getPrice4(player, pre));
-			}
-			if (boosCoolDown.getPermissions().has(player,
+						boosConfigManager.getPrice4(pre));
+			} else if (boosCoolDown.getPermissions().has(player,
 					"booscooldowns.price5")) {
 				r = economy.withdrawPlayer(player.getName(),
-						boosConfigManager.getPrice5(player, pre));
+						boosConfigManager.getPrice5(pre));
+			} else{
+				r = economy.withdrawPlayer(player.getName(),
+						boosConfigManager.getPrice(pre));
 			}
 		} else {
 			r = economy.withdrawPlayer(player.getName(),
-					boosConfigManager.getPrice(player, pre));
+					boosConfigManager.getPrice(pre));
 		}
 		return r;
 	}
