@@ -16,7 +16,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
 
-
 import util.boosChat;
 
 public class boosCoolDownListener<a> implements Listener {
@@ -35,6 +34,7 @@ public class boosCoolDownListener<a> implements Listener {
 			return;
 		}
 		String message = event.getMessage();
+		message = message.trim().replaceAll(" +", " ");
 		Player player = event.getPlayer();
 		boolean on = true;
 		on = isPluginOnForPlayer(player);
@@ -42,7 +42,7 @@ public class boosCoolDownListener<a> implements Listener {
 		if (on) {
 			playerloc.put(player, player.getLocation());
 			playerworld.put(player, player.getWorld().getName());
-			int i = message.lastIndexOf(' ');
+			int i = message.indexOf(' ');
 			if (i < 0) {
 				i = message.length();
 			}
@@ -50,36 +50,86 @@ public class boosCoolDownListener<a> implements Listener {
 			String preCommand = message.substring(0, i);
 			String messageCommand = message.substring(i, message.length());
 			boolean used = false;
+			String preSub = "";
+			String preSub2 = "";
+			String preSub3 = "";
+			String messageSub = "";
+			String messageSub2 = "";
+			String messageSub3 = "";
 			int preSubCheck = -1;
+			int preSubCheck2 = -1;
+			int preSubCheck3 = -1;
 			if (!used && messageCommand.length() > 1) {
 				int j = messageCommand.indexOf(' ', 1);
 				if (j < 0) {
 					j = messageCommand.length();
 				}
-
-				String preSub = messageCommand.substring(1, j);
-				String messageSub = messageCommand.substring(j,
+				preSub = messageCommand.substring(1, j);
+				messageSub = messageCommand.substring(j,
 						messageCommand.length());
 				preSub = preCommand + ' ' + preSub;
-				preSubCheck = preSubCheck(player, preSub);
-				if (preCDCheck(player, preSub) > 0) {
-					preSubCheck = 0;
-				} else if (prePriceCheck(player, preSub) > 0) {
-					preSubCheck = 0;
-				} else if (preLimitCheck(player, preSub) > 0) {
-					preSubCheck = 0;
-				}
-				if (preSubCheck >= 0) {
-					blocked = blocked(player, preSub, messageSub);
-					this.checkCooldown(event, player, preSub, messageSub);
-					used = true;
-				} else {
-					blocked = blocked(player, preCommand, messageCommand);
-					this.checkCooldown(event, player, preCommand,
-							messageCommand);
-					used = true;
-				}
 			}
+			if (messageSub.length() > 1) {
+				int k = messageSub.indexOf(' ', 1);
+				if (k < 0) {
+					k = messageSub.length();
+				}
+				preSub2 = messageSub.substring(1, k);
+				messageSub2 = messageSub.substring(k, messageSub.length());
+				preSub2 = preCommand + ' ' + preSub + ' ' + preSub2;
+			}
+			if (messageSub2.length() > 1) {
+				int l = messageSub.indexOf(' ', 1);
+				if (l < 0) {
+					l = messageSub.length();
+				}
+				preSub3 = messageSub2.substring(1, l);
+				messageSub3 = messageSub2.substring(l, messageSub2.length());
+				preSub3 = preCommand + ' ' + preSub + ' ' + preSub2 + ' '
+						+ preSub3;
+			}
+			preSubCheck3 = preSubCheck(player, preSub3);
+			if (preCDCheck(player, preSub3) > 0) {
+				preSubCheck3 = 0;
+			} else if (prePriceCheck(player, preSub3) > 0) {
+				preSubCheck3 = 0;
+			} else if (preLimitCheck(player, preSub3) > 0) {
+				preSubCheck3 = 0;
+			}
+			preSubCheck2 = preSubCheck(player, preSub2);
+			if (preCDCheck(player, preSub2) > 0) {
+				preSubCheck2 = 0;
+			} else if (prePriceCheck(player, preSub2) > 0) {
+				preSubCheck2 = 0;
+			} else if (preLimitCheck(player, preSub2) > 0) {
+				preSubCheck2 = 0;
+			}
+			preSubCheck = preSubCheck(player, preSub);
+			if (preCDCheck(player, preSub2) > 0) {
+				preSubCheck = 0;
+			} else if (prePriceCheck(player, preSub) > 0) {
+				preSubCheck = 0;
+			} else if (preLimitCheck(player, preSub) > 0) {
+				preSubCheck = 0;
+			}
+			if (preSubCheck3 >= 0) {
+				blocked = blocked(player, preSub3, messageSub3);
+				this.checkCooldown(event, player, preSub3, messageSub3);
+				used = true;
+			} else if (preSubCheck2 >= 0) {
+				blocked = blocked(player, preSub2, messageSub2);
+				this.checkCooldown(event, player, preSub2, messageSub2);
+				used = true;
+			} else if (preSubCheck >= 0) {
+				blocked = blocked(player, preSub, messageSub);
+				this.checkCooldown(event, player, preSub, messageSub);
+				used = true;
+			} else {
+				blocked = blocked(player, preCommand, messageCommand);
+				this.checkCooldown(event, player, preCommand, messageCommand);
+				used = true;
+			}
+
 			if (!used) {
 				blocked = blocked(player, preCommand, messageCommand);
 				this.checkCooldown(event, player, preCommand, messageCommand);
@@ -280,6 +330,7 @@ public class boosCoolDownListener<a> implements Listener {
 				} else {
 					if (boosCoolDownManager.coolDown(player, pre)) {
 						event.setCancelled(true);
+
 					}
 				}
 			} else {
@@ -315,14 +366,11 @@ public class boosCoolDownListener<a> implements Listener {
 					"booscooldowns.noprice")
 					&& !boosCoolDown.getPermissions().has(player,
 							"booscooldowns.noprice." + pre)) {
-				if (boosCoolDown.getEconomy().getBalance(
-						player.getName()) >= boosConfigManager
+				if (boosCoolDown.getEconomy().getBalance(player.getName()) >= boosConfigManager
 						.getPrice(pre)) {
-					boosPriceManager
-							.payForCommand(player, pre, message);
+					boosPriceManager.payForCommand(player, pre);
 				} else {
-					boosPriceManager
-							.payForCommand(player, pre, message);
+					boosPriceManager.payForCommand(player, pre);
 					boosCoolDownManager.cancelCooldown(player, pre);
 					event.setCancelled(true);
 				}
@@ -343,11 +391,10 @@ public class boosCoolDownListener<a> implements Listener {
 		} else {
 			if (boosCoolDownManager.coolDown(player, pre)) {
 				event.setCancelled(true);
-				
 			} else {
 				boosCoolDownManager.removeWarmUpOK(player, pre, message);
-				}
-			
+			}
+
 		}
 	}
 

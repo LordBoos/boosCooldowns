@@ -16,8 +16,8 @@ public class boosWarmUpManager {
 	public static void startWarmUp(boosCoolDown bCoolDown, Player player,
 			String pre, String message, int warmUpSeconds) {
 		pre = pre.toLowerCase();
-		long warmUpMinutes = Math.round(warmUpSeconds / 60) + 1;
-		long warmUpHours = Math.round(warmUpMinutes / 60) + 1;
+		long warmUpMinutes = Math.round(warmUpSeconds / 60);
+		long warmUpHours = Math.round(warmUpMinutes / 60);
 		if (!isWarmUpProcess(player, pre, message)) {
 			boosCoolDownManager.removeWarmUpOK(player, pre, message);
 			String msg = boosConfigManager.getWarmUpMessage();
