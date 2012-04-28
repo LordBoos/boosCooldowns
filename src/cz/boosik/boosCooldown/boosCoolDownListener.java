@@ -342,7 +342,7 @@ public class boosCoolDownListener<a> implements Listener {
 					}
 				}
 			}
-			if (boosCoolDown.isUsingEconomy()) {
+			if (!event.isCancelled() && boosCoolDown.isUsingEconomy()) {
 				payForCommand(event, player, pre, message);
 			}
 		} else {
