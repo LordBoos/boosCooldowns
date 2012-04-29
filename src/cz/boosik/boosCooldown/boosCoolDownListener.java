@@ -79,9 +79,9 @@ public class boosCoolDownListener<a> implements Listener {
 				preSub2 = preCommand + ' ' + preSub + ' ' + preSub2;
 			}
 			if (messageSub2.length() > 1) {
-				int l = messageSub.indexOf(' ', 1);
+				int l = messageSub2.indexOf(' ', 1);
 				if (l < 0) {
-					l = messageSub.length();
+					l = messageSub2.length();
 				}
 				preSub3 = messageSub2.substring(1, l);
 				messageSub3 = messageSub2.substring(l, messageSub2.length());
