@@ -1,6 +1,6 @@
 name: boosCooldown
 main: cz.boosik.boosCooldown.boosCoolDown
-version: 2.6.6
+version: 2.6.7
 author: boosik
 softdepend: [Vault,PermissionsEX]
 description: >

@@ -335,17 +335,17 @@ public class boosCoolDownManager {
 
 	static void setUses(Player player, String pre, String message) {
 		pre = pre.toLowerCase();
-		int uses = getUses(player, pre);
+		int uses = getUses(player, pre, message);
 		uses = uses + 1;
 		confusers.set("users." + player.getName() + ".uses." + pre + message,
 				uses);
 		save();
 	}
 
-	static int getUses(Player player, String pre) {
+	static int getUses(Player player, String pre, String message) {
 		pre = pre.toLowerCase();
 		int uses = 0;
-		uses = confusers.getInt("users." + player.getName() + ".uses." + pre,
+		uses = confusers.getInt("users." + player.getName() + ".uses." + pre + message,
 				uses);
 		return uses;
 	}

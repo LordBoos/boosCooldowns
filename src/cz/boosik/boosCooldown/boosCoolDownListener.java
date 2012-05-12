@@ -40,16 +40,8 @@ public class boosCoolDownListener<a> implements Listener {
 		on = isPluginOnForPlayer(player);
 
 		if (on) {
-			playerloc.put(player, player.getLocation());
-			playerworld.put(player, player.getWorld().getName());
-			int i = message.indexOf(' ');
-			if (i < 0) {
-				i = message.length();
-			}
-
-			String preCommand = message.substring(0, i);
-			String messageCommand = message.substring(i, message.length());
 			boolean used = false;
+			String messageCommand = "";
 			String preSub = "";
 			String preSub2 = "";
 			String preSub3 = "";
@@ -59,59 +51,61 @@ public class boosCoolDownListener<a> implements Listener {
 			int preSubCheck = -1;
 			int preSubCheck2 = -1;
 			int preSubCheck3 = -1;
-			if (!used && messageCommand.length() > 1) {
-				int j = messageCommand.indexOf(' ', 1);
-				if (j < 0) {
-					j = messageCommand.length();
-				}
-				preSub = messageCommand.substring(1, j);
-				messageSub = messageCommand.substring(j,
-						messageCommand.length());
-				preSub = preCommand + ' ' + preSub;
-			}
-			if (messageSub.length() > 1) {
-				int k = messageSub.indexOf(' ', 1);
-				if (k < 0) {
-					k = messageSub.length();
-				}
-				preSub2 = messageSub.substring(1, k);
-				messageSub2 = messageSub.substring(k, messageSub.length());
-				preSub2 = preCommand + ' ' + preSub + ' ' + preSub2;
-			}
-			if (messageSub2.length() > 1) {
-				int l = messageSub2.indexOf(' ', 1);
-				if (l < 0) {
-					l = messageSub2.length();
-				}
-				preSub3 = messageSub2.substring(1, l);
-				messageSub3 = messageSub2.substring(l, messageSub2.length());
-				preSub3 = preCommand + ' ' + preSub + ' ' + preSub2 + ' '
-						+ preSub3;
-			}
+			playerloc.put(player, player.getLocation());
+			playerworld.put(player, player.getWorld().getName());
+			String[] splitCommand;
+			splitCommand = message.split(" ");
+			String preCommand = splitCommand[0];
+			if (splitCommand.length > 1){
+			for (int i = 1; i < splitCommand.length; i++) {
+				messageCommand = messageCommand + " " + splitCommand[i];
+			}}
+			if (splitCommand.length > 1){
+			preSub = splitCommand[0] + " " + splitCommand[1];
+			for (int i = 2; i < splitCommand.length; i++) {
+				messageSub = messageSub + " " + splitCommand[i];
+			}}
+			if (splitCommand.length > 2){
+			preSub2 = splitCommand[0] + " " + splitCommand[1] + " " + splitCommand[2];
+			for (int i = 3; i < splitCommand.length; i++) {
+				messageSub2 = messageSub2 + " " + splitCommand[i];
+			}}
+			if (splitCommand.length > 3){
+			preSub3 = splitCommand[0] + " " + splitCommand[1] + " " + splitCommand[2] + " " + splitCommand[3];
+			for (int i = 4; i < splitCommand.length; i++) {
+				messageSub3 = messageSub3 + " " + splitCommand[i];
+			}}
+
+			if(preSub3 != null){
 			preSubCheck3 = preSubCheck(player, preSub3);
+			if(preSubCheck3 < 0){
 			if (preCDCheck(player, preSub3) > 0) {
 				preSubCheck3 = 0;
 			} else if (prePriceCheck(player, preSub3) > 0) {
 				preSubCheck3 = 0;
 			} else if (preLimitCheck(player, preSub3) > 0) {
 				preSubCheck3 = 0;
-			}
+			}}}
+			if(preSub2 != null && preSubCheck3 < 0){
 			preSubCheck2 = preSubCheck(player, preSub2);
+			if(preSubCheck2 < 0){
 			if (preCDCheck(player, preSub2) > 0) {
 				preSubCheck2 = 0;
 			} else if (prePriceCheck(player, preSub2) > 0) {
 				preSubCheck2 = 0;
 			} else if (preLimitCheck(player, preSub2) > 0) {
 				preSubCheck2 = 0;
-			}
+			}}}
+			if(preSub != null && preSubCheck2 < 0){
 			preSubCheck = preSubCheck(player, preSub);
+			if(preSubCheck < 0){
 			if (preCDCheck(player, preSub2) > 0) {
 				preSubCheck = 0;
 			} else if (prePriceCheck(player, preSub) > 0) {
 				preSubCheck = 0;
 			} else if (preLimitCheck(player, preSub) > 0) {
 				preSubCheck = 0;
-			}
+			}}}
 			if (preSubCheck3 >= 0) {
 				blocked = blocked(player, preSub3, messageSub3);
 				this.checkCooldown(event, player, preSub3, messageSub3);
@@ -237,7 +231,7 @@ public class boosCoolDownListener<a> implements Listener {
 	private boolean blocked(Player player, String pre, String msg) {
 		boolean blocked = false;
 		int limit = -1;
-		int uses = boosCoolDownManager.getUses(player, pre);
+		int uses = boosCoolDownManager.getUses(player, pre, msg);
 		if (boosCoolDown.isUsingPermissions()) {
 			if (boosCoolDown.getPermissions().has(player,
 					"booscooldowns.nolimit")
@@ -600,26 +594,26 @@ public class boosCoolDownListener<a> implements Listener {
 						&& !boosCoolDown.getPermissions().has(player,
 								"booscooldowns.dontblock.interact")) {
 					if (boosWarmUpManager.hasWarmUps(player)) {
-						if (event.getClickedBlock().getType().equals("CHEST")
-								|| event.getClickedBlock().getType()
+						if (event.getClickedBlock().getType().name().equals("CHEST")
+								|| event.getClickedBlock().getType().name()
 										.equals("FURNACE")
-								|| event.getClickedBlock().getType()
+								|| event.getClickedBlock().getType().name()
 										.equals("BURNING_FURNACE")
-								|| event.getClickedBlock().getType()
+								|| event.getClickedBlock().getType().name()
 										.equals("WORKBENCH")
-								|| event.getClickedBlock().getType()
+								|| event.getClickedBlock().getType().name()
 										.equals("DISPENSER")
-								|| event.getClickedBlock().getType()
+								|| event.getClickedBlock().getType().name()
 										.equals("JUKEBOX")
-								|| event.getClickedBlock().getType()
+								|| event.getClickedBlock().getType().name()
 										.equals("LOCKED_CHEST")
-								|| event.getClickedBlock().getType()
+								|| event.getClickedBlock().getType().name()
 										.equals("ENCHANTMENT_TABLE")
-								|| event.getClickedBlock().getType()
+								|| event.getClickedBlock().getType().name()
 										.equals("BREWING_STAND")
-								|| event.getClickedBlock().getType()
+								|| event.getClickedBlock().getType().name()
 										.equals("CAULDRON")
-								|| event.getClickedBlock().getType()
+								|| event.getClickedBlock().getType().name()
 										.equals("STORAGE_MINECART")) {
 							event.setCancelled(true);
 							boosChat.sendMessageToPlayer(player,
@@ -632,26 +626,26 @@ public class boosCoolDownListener<a> implements Listener {
 			} else {
 				if (player != null) {
 					if (boosWarmUpManager.hasWarmUps(player)) {
-						if (event.getClickedBlock().getType().equals("CHEST")
-								|| event.getClickedBlock().getType()
+						if (event.getClickedBlock().getType().name().equals("CHEST")
+								|| event.getClickedBlock().getType().name()
 										.equals("FURNACE")
-								|| event.getClickedBlock().getType()
+								|| event.getClickedBlock().getType().name()
 										.equals("BURNING_FURNACE")
-								|| event.getClickedBlock().getType()
+								|| event.getClickedBlock().getType().name()
 										.equals("WORKBENCH")
-								|| event.getClickedBlock().getType()
+								|| event.getClickedBlock().getType().name()
 										.equals("DISPENSER")
-								|| event.getClickedBlock().getType()
+								|| event.getClickedBlock().getType().name()
 										.equals("JUKEBOX")
-								|| event.getClickedBlock().getType()
+								|| event.getClickedBlock().getType().name()
 										.equals("LOCKED_CHEST")
-								|| event.getClickedBlock().getType()
+								|| event.getClickedBlock().getType().name()
 										.equals("ENCHANTMENT_TABLE")
-								|| event.getClickedBlock().getType()
+								|| event.getClickedBlock().getType().name()
 										.equals("BREWING_STAND")
-								|| event.getClickedBlock().getType()
+								|| event.getClickedBlock().getType().name()
 										.equals("CAULDRON")
-								|| event.getClickedBlock().getType()
+								|| event.getClickedBlock().getType().name()
 										.equals("STORAGE_MINECART")) {
 							event.setCancelled(true);
 							boosChat.sendMessageToPlayer(player,
