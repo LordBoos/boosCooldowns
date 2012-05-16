@@ -63,24 +63,102 @@ public class boosCoolDown extends JavaPlugin {
 			String commandLabel, String[] args) {
 		String command = c.getName().toLowerCase();
 		if (usingPermissions) {
-			if (permissions.has(sender, "booscooldowns.reload")
-					&& command.equalsIgnoreCase("boosCooldowns")) {
-				boosConfigManager.reload();
-				boosChat.sendMessageToCommandSender(sender,
-						"&6[" + pdfFile.getName() + "]" + " config reloaded");
-				return true;
+			if (command.equalsIgnoreCase("booscooldowns")) {
+				if (args.length == 1) {
+					if (permissions.has(sender, "booscooldowns.reload")
+							&& args[0].equalsIgnoreCase("reload")) {
+						boosConfigManager.reload();
+						boosChat.sendMessageToCommandSender(sender, "&6["
+								+ pdfFile.getName() + "]&e"
+								+ " config reloaded");
+						return true;
+					}
+				}
+				if (args.length == 2) {
+					String jmeno = args[1];
+					if (permissions.has(sender, "booscooldowns.clearcooldowns")
+							&& args[0].equalsIgnoreCase("clearcooldowns")) {
+						String co = "cooldown";
+						boosCoolDownManager.clearSomething(co, jmeno);
+						boosChat.sendMessageToCommandSender(sender, "&6["
+								+ pdfFile.getName() + "]&e"
+								+ " cooldowns of player " + jmeno + " cleared");
+						return true;
+					} else if (permissions.has(sender,
+							"booscooldowns.clearuses")
+							&& command.equalsIgnoreCase("booscooldowns")
+							&& args[0].equalsIgnoreCase("clearuses")) {
+						String co = "uses";
+						boosCoolDownManager.clearSomething(co, jmeno);
+						boosChat.sendMessageToCommandSender(sender, "&6["
+								+ pdfFile.getName() + "]&e"
+								+ " uses of player " + jmeno + " cleared");
+						return true;
+					} else if (permissions.has(sender,
+							"booscooldowns.clearwarmups")
+							&& command.equalsIgnoreCase("booscooldowns")
+							&& args[0].equalsIgnoreCase("clearwarmups")) {
+						String co = "warmup";
+						boosCoolDownManager.clearSomething(co, jmeno);
+						boosChat.sendMessageToCommandSender(sender, "&6["
+								+ pdfFile.getName() + "]&e"
+								+ " warmups of player " + jmeno + " cleared");
+						return true;
+					}
+				}
 			}
-		} else if (sender.isOp() && command.equalsIgnoreCase("boosCooldowns")) {
-			boosConfigManager.reload();
-			boosChat.sendMessageToCommandSender(sender,
-					"&6[" + pdfFile.getName() + "]" + " config reloaded");
-			return true;
+
+		} else if (sender.isOp()) {
+			if (command.equalsIgnoreCase("booscooldowns")) {
+				if (args.length == 1) {
+					if (permissions.has(sender, "booscooldowns.reload")
+							&& args[0].equalsIgnoreCase("reload")) {
+						boosConfigManager.reload();
+						boosChat.sendMessageToCommandSender(sender, "&6["
+								+ pdfFile.getName() + "]&e"
+								+ " config reloaded");
+						return true;
+					}
+				}
+				if (args.length == 2) {
+					String jmeno = args[1];
+					if (permissions.has(sender, "booscooldowns.clearcooldowns")
+							&& args[0].equalsIgnoreCase("clearcooldowns")) {
+						String co = "cooldown";
+						boosCoolDownManager.clearSomething(co, jmeno);
+						boosChat.sendMessageToCommandSender(sender, "&6["
+								+ pdfFile.getName() + "]&e"
+								+ " cooldowns of player " + jmeno + " cleared");
+						return true;
+					} else if (permissions.has(sender,
+							"booscooldowns.clearuses")
+							&& command.equalsIgnoreCase("booscooldowns")
+							&& args[0].equalsIgnoreCase("clearuses")) {
+						String co = "uses";
+						boosCoolDownManager.clearSomething(co, jmeno);
+						boosChat.sendMessageToCommandSender(sender, "&6["
+								+ pdfFile.getName() + "]&e"
+								+ " uses of player " + jmeno + " cleared");
+						return true;
+					} else if (permissions.has(sender,
+							"booscooldowns.clearwarmups")
+							&& command.equalsIgnoreCase("booscooldowns")
+							&& args[0].equalsIgnoreCase("clearwarmups")) {
+						String co = "warmup";
+						boosCoolDownManager.clearSomething(co, jmeno);
+						boosChat.sendMessageToCommandSender(sender, "&6["
+								+ pdfFile.getName() + "]&e"
+								+ " warmups of player " + jmeno + " cleared");
+						return true;
+					}
+				}
+			}
 		} else {
 			boosChat.sendMessageToCommandSender(
 					sender,
 					"&6["
 							+ pdfFile.getName()
-							+ "]"
+							+ "]&e"
 							+ " access denied, you lack required permission to do this!");
 		}
 		return false;

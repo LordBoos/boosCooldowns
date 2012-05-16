@@ -97,6 +97,16 @@ public class boosCoolDownManager {
 		save();
 		load();
 	}
+	
+	static void clearSomething(String co, String player) {
+		ConfigurationSection userSection = confusers
+				.getConfigurationSection("users."+player+"."+co);
+		if (userSection == null)
+			return;
+		confusers.set("users." + player + "." + co, null);
+		save();
+		load();
+	}
 
 	static boolean coolDown(Player player, String pre) {
 		pre = pre.toLowerCase();
@@ -256,7 +266,6 @@ public class boosCoolDownManager {
 		currTime = sdf.format(cal.getTime());
 		confusers.set("users." + player.getName() + ".cooldown." + pre,
 				currTime);
-		save();
 	}
 
 	static Date getCurrTime() {
@@ -307,7 +316,6 @@ public class boosCoolDownManager {
 	static void setWarmUpOK(Player player, String pre, String message) {
 		pre = pre.toLowerCase();
 		confusers.set("users." + player.getName() + ".warmup." + pre, 1);
-		save();
 	}
 
 	static boolean checkWarmUpOK(Player player, String pre, String message) {
@@ -324,22 +332,23 @@ public class boosCoolDownManager {
 	static void removeWarmUpOK(Player player, String pre, String message) {
 		pre = pre.toLowerCase();
 		confusers.set("users." + player.getName() + ".warmup." + pre, null);
-		save();
 	}
 
 	static void removeWarmUp(Player player, String pre, String message) {
 		pre = pre.toLowerCase();
 		confusers.set("users." + player.getName() + ".warmup." + pre, null);
-		save();
 	}
 
 	static void setUses(Player player, String pre, String message) {
 		pre = pre.toLowerCase();
 		int uses = getUses(player, pre, message);
 		uses = uses + 1;
+		try{
 		confusers.set("users." + player.getName() + ".uses." + pre + message,
 				uses);
-		save();
+		} catch (IllegalArgumentException e) {
+				boosCoolDown.log.warning("Player " + player.getName() + " used empty command and caused this error!");		
+		}
 	}
 
 	static int getUses(Player player, String pre, String message) {

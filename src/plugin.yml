@@ -1,12 +1,11 @@
 name: boosCooldown
 main: cz.boosik.boosCooldown.boosCoolDown
-version: 2.6.7
+version: 2.7.0
 author: boosik
 softdepend: [Vault,PermissionsEX]
 description: >
              Shortcuts
 commands:
-  boosCooldowns:
-    description: Reload Command for boosCooldown
-    usage: |
-           /boosCooldowns
+  booscooldowns:
+    description: Reload command.
+    usage: Use /booscooldowns reload, clearcooldowns <player>, clearwarmups <player> or clearuses <player>
