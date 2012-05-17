@@ -56,56 +56,68 @@ public class boosCoolDownListener<a> implements Listener {
 			String[] splitCommand;
 			splitCommand = message.split(" ");
 			String preCommand = splitCommand[0];
-			if (splitCommand.length > 1){
-			for (int i = 1; i < splitCommand.length; i++) {
-				messageCommand = messageCommand + " " + splitCommand[i];
-			}}
-			if (splitCommand.length > 1){
-			preSub = splitCommand[0] + " " + splitCommand[1];
-			for (int i = 2; i < splitCommand.length; i++) {
-				messageSub = messageSub + " " + splitCommand[i];
-			}}
-			if (splitCommand.length > 2){
-			preSub2 = splitCommand[0] + " " + splitCommand[1] + " " + splitCommand[2];
-			for (int i = 3; i < splitCommand.length; i++) {
-				messageSub2 = messageSub2 + " " + splitCommand[i];
-			}}
-			if (splitCommand.length > 3){
-			preSub3 = splitCommand[0] + " " + splitCommand[1] + " " + splitCommand[2] + " " + splitCommand[3];
-			for (int i = 4; i < splitCommand.length; i++) {
-				messageSub3 = messageSub3 + " " + splitCommand[i];
-			}}
+			if (splitCommand.length > 1) {
+				for (int i = 1; i < splitCommand.length; i++) {
+					messageCommand = messageCommand + " " + splitCommand[i];
+				}
+			}
+			if (splitCommand.length > 1) {
+				preSub = splitCommand[0] + " " + splitCommand[1];
+				for (int i = 2; i < splitCommand.length; i++) {
+					messageSub = messageSub + " " + splitCommand[i];
+				}
+			}
+			if (splitCommand.length > 2) {
+				preSub2 = splitCommand[0] + " " + splitCommand[1] + " "
+						+ splitCommand[2];
+				for (int i = 3; i < splitCommand.length; i++) {
+					messageSub2 = messageSub2 + " " + splitCommand[i];
+				}
+			}
+			if (splitCommand.length > 3) {
+				preSub3 = splitCommand[0] + " " + splitCommand[1] + " "
+						+ splitCommand[2] + " " + splitCommand[3];
+				for (int i = 4; i < splitCommand.length; i++) {
+					messageSub3 = messageSub3 + " " + splitCommand[i];
+				}
+			}
 
-			if(preSub3 != null){
-			preSubCheck3 = preSubCheck(player, preSub3);
-			if(preSubCheck3 < 0){
-			if (preCDCheck(player, preSub3) > 0) {
-				preSubCheck3 = 0;
-			} else if (prePriceCheck(player, preSub3) > 0) {
-				preSubCheck3 = 0;
-			} else if (preLimitCheck(player, preSub3) > 0) {
-				preSubCheck3 = 0;
-			}}}
-			if(preSub2 != null && preSubCheck3 < 0){
-			preSubCheck2 = preSubCheck(player, preSub2);
-			if(preSubCheck2 < 0){
-			if (preCDCheck(player, preSub2) > 0) {
-				preSubCheck2 = 0;
-			} else if (prePriceCheck(player, preSub2) > 0) {
-				preSubCheck2 = 0;
-			} else if (preLimitCheck(player, preSub2) > 0) {
-				preSubCheck2 = 0;
-			}}}
-			if(preSub != null && preSubCheck2 < 0){
-			preSubCheck = preSubCheck(player, preSub);
-			if(preSubCheck < 0){
-			if (preCDCheck(player, preSub2) > 0) {
-				preSubCheck = 0;
-			} else if (prePriceCheck(player, preSub) > 0) {
-				preSubCheck = 0;
-			} else if (preLimitCheck(player, preSub) > 0) {
-				preSubCheck = 0;
-			}}}
+			if (preSub3 != null) {
+				preSubCheck3 = preSubCheck(player, preSub3);
+				if (preSubCheck3 < 0) {
+					if (preCDCheck(player, preSub3) > 0) {
+						preSubCheck3 = 0;
+					} else if (prePriceCheck(player, preSub3) > 0) {
+						preSubCheck3 = 0;
+					} else if (preLimitCheck(player, preSub3) > 0) {
+						preSubCheck3 = 0;
+					}
+				}
+			}
+			if (preSub2 != null && preSubCheck3 < 0) {
+				preSubCheck2 = preSubCheck(player, preSub2);
+				if (preSubCheck2 < 0) {
+					if (preCDCheck(player, preSub2) > 0) {
+						preSubCheck2 = 0;
+					} else if (prePriceCheck(player, preSub2) > 0) {
+						preSubCheck2 = 0;
+					} else if (preLimitCheck(player, preSub2) > 0) {
+						preSubCheck2 = 0;
+					}
+				}
+			}
+			if (preSub != null && preSubCheck2 < 0) {
+				preSubCheck = preSubCheck(player, preSub);
+				if (preSubCheck < 0) {
+					if (preCDCheck(player, preSub) > 0) {
+						preSubCheck = 0;
+					} else if (prePriceCheck(player, preSub) > 0) {
+						preSubCheck = 0;
+					} else if (preLimitCheck(player, preSub) > 0) {
+						preSubCheck = 0;
+					}
+				}
+			}
 			if (preSubCheck3 >= 0) {
 				blocked = blocked(player, preSub3, messageSub3);
 				this.checkCooldown(event, player, preSub3, messageSub3);
@@ -594,7 +606,8 @@ public class boosCoolDownListener<a> implements Listener {
 						&& !boosCoolDown.getPermissions().has(player,
 								"booscooldowns.dontblock.interact")) {
 					if (boosWarmUpManager.hasWarmUps(player)) {
-						if (event.getClickedBlock().getType().name().equals("CHEST")
+						if (event.getClickedBlock().getType().name()
+								.equals("CHEST")
 								|| event.getClickedBlock().getType().name()
 										.equals("FURNACE")
 								|| event.getClickedBlock().getType().name()
@@ -626,7 +639,8 @@ public class boosCoolDownListener<a> implements Listener {
 			} else {
 				if (player != null) {
 					if (boosWarmUpManager.hasWarmUps(player)) {
-						if (event.getClickedBlock().getType().name().equals("CHEST")
+						if (event.getClickedBlock().getType().name()
+								.equals("CHEST")
 								|| event.getClickedBlock().getType().name()
 										.equals("FURNACE")
 								|| event.getClickedBlock().getType().name()
