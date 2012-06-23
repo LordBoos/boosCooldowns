@@ -106,8 +106,40 @@ public class boosCoolDown extends JavaPlugin {
 						return true;
 					}
 				}
+				if (args.length == 3) {
+					String jmeno = args[1];
+					String command2 = args[2].trim();
+					if (permissions.has(sender, "booscooldowns.clearcooldowns")
+							&& args[0].equalsIgnoreCase("clearcooldowns")) {
+						String co = "cooldown";
+						boosCoolDownManager.clearSomething(co, jmeno, command2);
+						boosChat.sendMessageToCommandSender(sender, "&6["
+								+ pdfFile.getName() + "]&e"
+								+ " cooldown for command "+command2+" of player " + jmeno + " cleared");
+						return true;
+					} else if (permissions.has(sender,
+							"booscooldowns.clearuses")
+							&& command.equalsIgnoreCase("booscooldowns")
+							&& args[0].equalsIgnoreCase("clearuses")) {
+						String co = "uses";
+						boosCoolDownManager.clearSomething(co, jmeno, command2);
+						boosChat.sendMessageToCommandSender(sender, "&6["
+								+ pdfFile.getName() + "]&e"
+								+ " uses for command "+command2+" of player " + jmeno + " cleared");
+						return true;
+					} else if (permissions.has(sender,
+							"booscooldowns.clearwarmups")
+							&& command.equalsIgnoreCase("booscooldowns")
+							&& args[0].equalsIgnoreCase("clearwarmups")) {
+						String co = "warmup";
+						boosCoolDownManager.clearSomething(co, jmeno, command2);
+						boosChat.sendMessageToCommandSender(sender, "&6["
+								+ pdfFile.getName() + "]&e"
+								+ " warmups for command "+command2+" of player " + jmeno + " cleared");
+						return true;
+					}
+				}
 			}
-
 		} else if (sender.isOp()) {
 			if (command.equalsIgnoreCase("booscooldowns")) {
 				if (args.length == 1) {

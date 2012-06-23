@@ -107,6 +107,16 @@ public class boosCoolDownManager {
 		save();
 		load();
 	}
+	
+	static void clearSomething(String co, String player, String command) {
+//		ConfigurationSection userSection = confusers
+//				.getConfigurationSection("users."+player+"."+co+"."+command);
+//		if (userSection == null)
+//			return;
+		confusers.set("users." + player + "." + co + "." + command, 0);
+		save();
+		load();
+	}
 
 	static boolean coolDown(Player player, String pre) {
 		pre = pre.toLowerCase();
