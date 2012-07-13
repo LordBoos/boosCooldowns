@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -137,21 +138,25 @@ public class boosCoolDownListener<a> implements Listener {
 			}
 			if (preSubCheck3 >= 0) {
 				blocked = blocked(player, preSub3, messageSub3);
-				this.checkCooldown(event, player, preSub3, messageSub3, preSubCheck3, price);
+				this.checkCooldown(event, player, preSub3, messageSub3,
+						preSubCheck3, price);
 				used = true;
 			} else if (preSubCheck2 >= 0) {
 				blocked = blocked(player, preSub2, messageSub2);
-				this.checkCooldown(event, player, preSub2, messageSub2, preSubCheck2, price);
+				this.checkCooldown(event, player, preSub2, messageSub2,
+						preSubCheck2, price);
 				used = true;
 			} else if (preSubCheck >= 0) {
 				blocked = blocked(player, preSub, messageSub);
-				this.checkCooldown(event, player, preSub, messageSub, preSubCheck, price);
+				this.checkCooldown(event, player, preSub, messageSub,
+						preSubCheck, price);
 				used = true;
 			} else {
 				blocked = blocked(player, preCommand, messageCommand);
 				int preCmdCheck = preSubCheck(player, preCommand);
 				price = prePriceCheck(player, preCommand);
-				this.checkCooldown(event, player, preCommand, messageCommand, preCmdCheck, price);
+				this.checkCooldown(event, player, preCommand, messageCommand,
+						preCmdCheck, price);
 				used = true;
 			}
 
@@ -159,7 +164,8 @@ public class boosCoolDownListener<a> implements Listener {
 				blocked = blocked(player, preCommand, messageCommand);
 				int preCmdCheck = preSubCheck(player, preCommand);
 				price = prePriceCheck(player, preCommand);
-				this.checkCooldown(event, player, preCommand, messageCommand, preCmdCheck, price);
+				this.checkCooldown(event, player, preCommand, messageCommand,
+						preCmdCheck, price);
 				used = false;
 			}
 		}
@@ -333,10 +339,11 @@ public class boosCoolDownListener<a> implements Listener {
 
 	// Returns true if the command is on cooldown, false otherwise
 	private void checkCooldown(PlayerCommandPreprocessEvent event,
-			Player player, String pre, String message, int warmUpSeconds, int price) {
+			Player player, String pre, String message, int warmUpSeconds,
+			int price) {
 		if (!blocked) {
-			//int warmUpSeconds = 0;
-			//warmUpSeconds = preSubCheck(player, pre);
+			// int warmUpSeconds = 0;
+			// warmUpSeconds = preSubCheck(player, pre);
 			if (boosCoolDown.isUsingPermissions()) {
 				if (warmUpSeconds > 0) {
 					if (!boosCoolDown.getPermissions().has(player,
@@ -380,15 +387,14 @@ public class boosCoolDownListener<a> implements Listener {
 			Player player, String pre, String message, int price) {
 		String name = player.getName();
 		if (price > 0) {
-			if (!boosCoolDown.getPermissions().has(player, 
+			if (!boosCoolDown.getPermissions().has(player,
 					"booscooldowns.noprice")
-					&& !boosCoolDown.getPermissions().has(player,  
+					&& !boosCoolDown.getPermissions().has(player,
 							"booscooldowns.noprice." + pre)) {
-				if (boosCoolDown.getEconomy().has(name, price)) {
-					boosPriceManager.payForCommand(player, pre, price, name);
+				if (boosPriceManager.payForCommand(player, pre, price, name)) {
 					return;
 				} else {
-					boosPriceManager.payForCommand(player, pre, price, name);
+					//boosPriceManager.payForCommand(player, pre, price, name);
 					boosCoolDownManager.cancelCooldown(player, pre);
 					event.setCancelled(true);
 					return;
@@ -685,6 +691,46 @@ public class boosCoolDownListener<a> implements Listener {
 						boosWarmUpManager.cancelWarmUps(player);
 					}
 
+				}
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerDeath(PlayerDeathEvent event) {
+		if (!boosConfigManager.getCleanCooldownsOnDeath()
+				&& !boosConfigManager.getCleanUsesOnDeath())
+			return;
+		Entity entity = event.getEntity();
+		if (entity != null && entity instanceof Player) {
+			Player player = (Player) entity;
+			if (boosCoolDown.isUsingPermissions()) {
+				if (player != null
+						&& boosCoolDown.getPermissions().has(player,
+								"booscooldowns.clear.cooldowns.death")) {
+					if (boosConfigManager.getCleanCooldownsOnDeath()) {
+						boosCoolDownManager.clearSomething("cooldown",
+								player.getName());
+					}
+				}
+				if (player != null
+						&& boosCoolDown.getPermissions().has(player,
+								"booscooldowns.clear.uses.death")) {
+					if (boosConfigManager.getCleanUsesOnDeath()) {
+						boosCoolDownManager.clearSomething("uses",
+								player.getName());
+					}
+				}
+			} else {
+				if (player != null) {
+					if (boosConfigManager.getCleanCooldownsOnDeath()) {
+						boosCoolDownManager.clearSomething("cooldown",
+								player.getName());
+					}
+					if (boosConfigManager.getCleanUsesOnDeath()) {
+						boosCoolDownManager.clearSomething("uses",
+								player.getName());
+					}
 				}
 			}
 		}

@@ -97,22 +97,56 @@ public class boosCoolDownManager {
 		save();
 		load();
 	}
-	
+
+	static void getLimits(Player player) {
+		int usesNum = 0;
+		int limitNum = 0;
+		int num;
+		String message;
+		String lim = boosConfigManager.getLimGrp(player);
+		ConfigurationSection uses = boosConfigManager.getLimits(player);
+		if (uses != null) {
+			for (String key : uses.getKeys(false)) {
+				usesNum = confusers.getInt("users." + player.getName() + ".uses." + key, usesNum);
+				if (lim.equals("limit")) {
+					limitNum = boosConfigManager.getLimit(key);
+				} else if (lim.equals("limit2")) {
+					limitNum = boosConfigManager.getLimit2(key);
+				} else if (lim.equals("limit3")) {
+					limitNum = boosConfigManager.getLimit3(key);
+				} else if (lim.equals("limit4")) {
+					limitNum = boosConfigManager.getLimit4(key);
+				} else if (lim.equals("limit5")) {
+					limitNum = boosConfigManager.getLimit5(key);
+				}
+				num = limitNum - usesNum;
+				if (num < 0){
+					num = 0;
+				}
+			message = boosConfigManager.getLimitListMessage();
+			message = message.replaceAll("&command&", key);
+			message = message.replaceAll("&limit&", String.valueOf(limitNum));
+			message = message.replaceAll("&times&", String.valueOf(num));
+			boosChat.sendMessageToPlayer(player, message);
+			}
+		}
+	}
+
 	static void clearSomething(String co, String player) {
 		ConfigurationSection userSection = confusers
-				.getConfigurationSection("users."+player+"."+co);
+				.getConfigurationSection("users." + player + "." + co);
 		if (userSection == null)
 			return;
 		confusers.set("users." + player + "." + co, null);
 		save();
 		load();
 	}
-	
+
 	static void clearSomething(String co, String player, String command) {
-//		ConfigurationSection userSection = confusers
-//				.getConfigurationSection("users."+player+"."+co+"."+command);
-//		if (userSection == null)
-//			return;
+		// ConfigurationSection userSection = confusers
+		// .getConfigurationSection("users."+player+"."+co+"."+command);
+		// if (userSection == null)
+		// return;
 		confusers.set("users." + player + "." + co + "." + command, 0);
 		save();
 		load();
@@ -164,7 +198,8 @@ public class boosCoolDownManager {
 				if (link == null) {
 					setTime(player, pre);
 				} else {
-					List<String> linkGroup = boosConfigManager.getLinkList(link);
+					List<String> linkGroup = boosConfigManager
+							.getLinkList(link);
 					for (String a : linkGroup) {
 						setTime(player, a);
 					}
@@ -353,19 +388,20 @@ public class boosCoolDownManager {
 		pre = pre.toLowerCase();
 		int uses = getUses(player, pre, message);
 		uses = uses + 1;
-		try{
-		confusers.set("users." + player.getName() + ".uses." + pre + message,
-				uses);
+		try {
+			confusers.set("users." + player.getName() + ".uses." + pre
+					+ message, uses);
 		} catch (IllegalArgumentException e) {
-				boosCoolDown.log.warning("Player " + player.getName() + " used empty command and caused this error!");		
+			boosCoolDown.log.warning("Player " + player.getName()
+					+ " used empty command and caused this error!");
 		}
 	}
 
 	static int getUses(Player player, String pre, String message) {
 		pre = pre.toLowerCase();
 		int uses = 0;
-		uses = confusers.getInt("users." + player.getName() + ".uses." + pre + message,
-				uses);
+		uses = confusers.getInt("users." + player.getName() + ".uses." + pre
+				+ message, uses);
 		return uses;
 	}
 

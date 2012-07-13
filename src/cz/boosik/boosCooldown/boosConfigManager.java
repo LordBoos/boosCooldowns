@@ -7,8 +7,10 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 public class boosConfigManager {
 
@@ -43,6 +45,8 @@ public class boosConfigManager {
 			conf.addDefault("options.options.block_interact_during_warmup",
 					false);
 			conf.addDefault("options.options.clear_on_restart", false);
+			conf.addDefault("options.options.clear_uses_on_death", false);
+			conf.addDefault("options.options.clear_cooldowns_on_death", false);
 			conf.addDefault("options.options.command_logging", false);
 			conf.addDefault("options.units.seconds", "seconds");
 			conf.addDefault("options.units.minutes", "minutes");
@@ -73,6 +77,8 @@ public class boosConfigManager {
 					"&6Price of&e &command& &6was&e %s &6and you now have&e %s");
 			conf.addDefault("options.messages.limit_achieved",
 					"&6You cannot use this command anymore!&f");
+			conf.addDefault("options.messages.limit_list",
+					"&6Limit for command &e&command&&6 is &e&limit&&6. You can still use it &e&times&&6 times.&f");
 			conf.addDefault("options.messages.interact_blocked_during_warmup",
 					"&6You can't do this when command is warming-up!&f");
 		}
@@ -115,11 +121,15 @@ public class boosConfigManager {
 			conf.addDefault("commands.links.link./lol", "default");
 			conf.addDefault("commands.links.link./home", "default");
 			conf.addDefault("commands.links.link./warp", "default");
-			conf.addDefault("commands.links.link./yourCommandHere", "yourNameHere");
-			String[] def = {"/home", "/lol", "/warp"};
-			conf.addDefault("commands.links.linkGroups.default", Arrays.asList(def));
-			String[] def2 = {"/yourCommandHere", "/someCommand", "/otherCommand"};
-			conf.addDefault("commands.links.linkGroups.yourNameHere", Arrays.asList(def2));
+			conf.addDefault("commands.links.link./yourCommandHere",
+					"yourNameHere");
+			String[] def = { "/home", "/lol", "/warp" };
+			conf.addDefault("commands.links.linkGroups.default",
+					Arrays.asList(def));
+			String[] def2 = { "/yourCommandHere", "/someCommand",
+					"/otherCommand" };
+			conf.addDefault("commands.links.linkGroups.yourNameHere",
+					Arrays.asList(def2));
 			conf.save(confFile);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -373,7 +383,7 @@ public class boosConfigManager {
 		limit = conf.getInt("commands.limits.limit." + pre, limit);
 		return limit;
 	}
-	
+
 	public static String getLink(String pre) {
 		String link = null;
 		pre = pre.toLowerCase();
@@ -387,7 +397,7 @@ public class boosConfigManager {
 		linkGroup = conf.getStringList("commands.links.linkGroups." + link);
 		return linkGroup;
 	}
-	
+
 	public static boolean getCancelWarmUpOnGameModeChange() {
 		return conf.getBoolean(
 				"options.options.cancel_warmup_on_gamemode_change", false);
@@ -410,6 +420,50 @@ public class boosConfigManager {
 				"&6You can't do this when command is warming-up!&f");
 	}
 
+	public static boolean getCleanUsesOnDeath() {
+		return conf.getBoolean("options.options.clear_uses_on_death", false);
+	}
+
+	public static boolean getCleanCooldownsOnDeath() {
+		return conf.getBoolean("options.options.clear_cooldowns_on_death",
+				false);
+	}
+	
+	public static String getLimitListMessage(){
+		return conf.getString("options.messages.limit_list",
+			"&6Limit for command &e&command&&6 is &e&limit&&6. You can still use it &e&times&&6 times.&f");
+	}
+	
+	public static String getLimGrp(Player player){
+	String lim;
+	if (boosCoolDown.isUsingPermissions()) {
+		if (boosCoolDown.getPermissions().has(player,
+				"booscooldowns.limit2")) {
+			lim = "limit2";
+		} else if (boosCoolDown.getPermissions().has(player,
+				"booscooldowns.limit3")) {
+			lim = "limit3";
+		} else if (boosCoolDown.getPermissions().has(player,
+				"booscooldowns.limit4")) {
+			lim = "limit4";
+		} else if (boosCoolDown.getPermissions().has(player,
+				"booscooldowns.limit5")) {
+			lim = "limit5";
+		} else {
+			lim = "limit";
+		}
+	} else {
+		lim = "limit";
+	}
+	return lim;
+	}
+	
+	public static ConfigurationSection getLimits(Player player){
+		String lim = getLimGrp(player);
+	ConfigurationSection uses = conf
+			.getConfigurationSection("commands.limits." + lim);
+	return uses;
+	}
 	// public static String getWarmUpCancelledByDeathMessage() {
 	// return conf.getString(
 	// "commands.options.message_warmup_cancelled_by_death",

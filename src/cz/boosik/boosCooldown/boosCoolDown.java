@@ -8,6 +8,7 @@ import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -71,6 +72,16 @@ public class boosCoolDown extends JavaPlugin {
 						boosChat.sendMessageToCommandSender(sender, "&6["
 								+ pdfFile.getName() + "]&e"
 								+ " config reloaded");
+						return true;
+					}
+					if (permissions.has(sender, "booscooldowns.list.limits")
+							&& args[0].equalsIgnoreCase("limits")) {
+						try {
+						Player send = (Player) sender;
+						boosCoolDownManager.getLimits(send);
+					} catch (ClassCastException e){
+						log.warning("You cannot use this command from console!");
+					}
 						return true;
 					}
 				}
