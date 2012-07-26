@@ -710,7 +710,7 @@ public class boosCoolDownListener<a> implements Listener {
 								"booscooldowns.clear.cooldowns.death")) {
 					if (boosConfigManager.getCleanCooldownsOnDeath()) {
 						boosCoolDownManager.clearSomething("cooldown",
-								player.getName());
+								player.getName().toLowerCase());
 					}
 				}
 				if (player != null
@@ -718,18 +718,18 @@ public class boosCoolDownListener<a> implements Listener {
 								"booscooldowns.clear.uses.death")) {
 					if (boosConfigManager.getCleanUsesOnDeath()) {
 						boosCoolDownManager.clearSomething("uses",
-								player.getName());
+								player.getName().toLowerCase());
 					}
 				}
 			} else {
 				if (player != null) {
 					if (boosConfigManager.getCleanCooldownsOnDeath()) {
 						boosCoolDownManager.clearSomething("cooldown",
-								player.getName());
+								player.getName().toLowerCase());
 					}
 					if (boosConfigManager.getCleanUsesOnDeath()) {
 						boosCoolDownManager.clearSomething("uses",
-								player.getName());
+								player.getName().toLowerCase());
 					}
 				}
 			}
