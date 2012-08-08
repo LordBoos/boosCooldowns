@@ -211,6 +211,7 @@ public class boosConfigManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		reload();
 	}
 
 	public static int getWarmUp(String pre) {
