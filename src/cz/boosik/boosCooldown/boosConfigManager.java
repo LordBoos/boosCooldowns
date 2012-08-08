@@ -187,6 +187,31 @@ public class boosConfigManager {
 		coolDown = conf.getInt("commands.cooldowns.cooldown5." + pre, coolDown);
 		return coolDown;
 	}
+	
+	static void setAddToConfigFile(String coSetnout, String co, int hodnota) {
+		co = co.toLowerCase();
+		coSetnout = coSetnout.toLowerCase();
+		String sekce = null;
+		if (coSetnout.contains("cooldown")){
+			sekce = "cooldowns";
+		} else if (coSetnout.contains("warmup")){
+			sekce = "warmups";
+		} else if (coSetnout.contains("limit")){
+			sekce = "limits";
+		} else if (coSetnout.contains("price")){
+			sekce = "prices";
+		} else {
+			return;
+		}
+		reload();
+		conf.set("commands."+sekce+"."+coSetnout+"." + co, hodnota);
+		try {
+			conf.save(confFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	public static int getWarmUp(String pre) {
 		int warmUp = -1;

@@ -77,11 +77,11 @@ public class boosCoolDown extends JavaPlugin {
 					if (permissions.has(sender, "booscooldowns.list.limits")
 							&& args[0].equalsIgnoreCase("limits")) {
 						try {
-						Player send = (Player) sender;
-						boosCoolDownManager.getLimits(send);
-					} catch (ClassCastException e){
-						log.warning("You cannot use this command from console!");
-					}
+							Player send = (Player) sender;
+							boosCoolDownManager.getLimits(send);
+						} catch (ClassCastException e) {
+							log.warning("You cannot use this command from console!");
+						}
 						return true;
 					}
 				}
@@ -126,36 +126,98 @@ public class boosCoolDown extends JavaPlugin {
 						boosCoolDownManager.clearSomething(co, jmeno, command2);
 						boosChat.sendMessageToCommandSender(sender, "&6["
 								+ pdfFile.getName() + "]&e"
-								+ " cooldown for command "+command2+" of player " + jmeno + " cleared");
+								+ " cooldown for command " + command2
+								+ " of player " + jmeno + " cleared");
 						return true;
 					} else if (permissions.has(sender,
 							"booscooldowns.clearuses")
-							&& command.equalsIgnoreCase("booscooldowns")
 							&& args[0].equalsIgnoreCase("clearuses")) {
 						String co = "uses";
 						boosCoolDownManager.clearSomething(co, jmeno, command2);
 						boosChat.sendMessageToCommandSender(sender, "&6["
 								+ pdfFile.getName() + "]&e"
-								+ " uses for command "+command2+" of player " + jmeno + " cleared");
+								+ " uses for command " + command2
+								+ " of player " + jmeno + " cleared");
 						return true;
 					} else if (permissions.has(sender,
 							"booscooldowns.clearwarmups")
-							&& command.equalsIgnoreCase("booscooldowns")
 							&& args[0].equalsIgnoreCase("clearwarmups")) {
 						String co = "warmup";
 						boosCoolDownManager.clearSomething(co, jmeno, command2);
 						boosChat.sendMessageToCommandSender(sender, "&6["
 								+ pdfFile.getName() + "]&e"
-								+ " warmups for command "+command2+" of player " + jmeno + " cleared");
+								+ " warmups for command " + command2
+								+ " of player " + jmeno + " cleared");
 						return true;
+					}
+				}
+				if (args.length == 4) {
+					if (permissions.has(sender, "booscooldowns.set")
+							&& args[0].equalsIgnoreCase("set")) {
+						String coSetnout = args[1];
+						String co = args[2];
+						int hodnota = 0;
+						try {
+							hodnota = Integer.valueOf(args[3]);
+						} catch (Exception e) {
+							boosChat.sendMessageToCommandSender(sender,
+									"Added value must be number!");
+							return true;
+						}
+						if (co.startsWith("/")) {
+							if (coSetnout.equals("cooldown")
+									|| coSetnout.equals("cooldown2")
+									|| coSetnout.equals("cooldown3")
+									|| coSetnout.equals("cooldown4")
+									|| coSetnout.equals("cooldown5")
+									|| coSetnout.equals("warmup")
+									|| coSetnout.equals("warmup2")
+									|| coSetnout.equals("warmup3")
+									|| coSetnout.equals("warmup4")
+									|| coSetnout.equals("warmup5")
+									|| coSetnout.equals("limit")
+									|| coSetnout.equals("limit2")
+									|| coSetnout.equals("limit3")
+									|| coSetnout.equals("limit4")
+									|| coSetnout.equals("limit5")
+									|| coSetnout.equals("price")
+									|| coSetnout.equals("price2")
+									|| coSetnout.equals("price3")
+									|| coSetnout.equals("price4")
+									|| coSetnout.equals("price5")) {
+								boosConfigManager.setAddToConfigFile(coSetnout,
+										co, hodnota);
+								boosChat.sendMessageToCommandSender(sender,
+										"&6[" + pdfFile.getName() + "]&e" + " "
+												+ coSetnout + " for command "
+												+ co + " is now set to "
+												+ hodnota);
+								return true;
+							} else {
+								boosChat.sendMessageToCommandSender(
+										sender,
+										"&6["
+												+ pdfFile.getName()
+												+ "]&e"
+												+ " You can only set cooldown, cooldown2, cooldown3, cooldown4, cooldown5, warmup, warmup2, warmup3, warmup4, warmup5, limit, limit2, limit3, limit4, limit5, price, price2, price3, price4, price5.");
+								return true;
+							}
+						} else {
+							boosChat.sendMessageToCommandSender(
+									sender,
+									"&6["
+											+ pdfFile.getName()
+											+ "]&e"
+											+ " Added command have to start with \"/\".");
+							return true;
+						}
 					}
 				}
 			}
 		} else if (sender.isOp()) {
 			if (command.equalsIgnoreCase("booscooldowns")) {
 				if (args.length == 1) {
-					if (permissions.has(sender, "booscooldowns.reload")
-							&& args[0].equalsIgnoreCase("reload")) {
+					if (args[0].equalsIgnoreCase("reload")) {
 						boosConfigManager.reload();
 						boosChat.sendMessageToCommandSender(sender, "&6["
 								+ pdfFile.getName() + "]&e"
@@ -165,34 +227,119 @@ public class boosCoolDown extends JavaPlugin {
 				}
 				if (args.length == 2) {
 					String jmeno = args[1];
-					if (permissions.has(sender, "booscooldowns.clearcooldowns")
-							&& args[0].equalsIgnoreCase("clearcooldowns")) {
+					if (args[0].equalsIgnoreCase("clearcooldowns")) {
 						String co = "cooldown";
 						boosCoolDownManager.clearSomething(co, jmeno);
 						boosChat.sendMessageToCommandSender(sender, "&6["
 								+ pdfFile.getName() + "]&e"
 								+ " cooldowns of player " + jmeno + " cleared");
 						return true;
-					} else if (permissions.has(sender,
-							"booscooldowns.clearuses")
-							&& command.equalsIgnoreCase("booscooldowns")
-							&& args[0].equalsIgnoreCase("clearuses")) {
+					} else if (args[0].equalsIgnoreCase("clearuses")) {
 						String co = "uses";
 						boosCoolDownManager.clearSomething(co, jmeno);
 						boosChat.sendMessageToCommandSender(sender, "&6["
 								+ pdfFile.getName() + "]&e"
 								+ " uses of player " + jmeno + " cleared");
 						return true;
-					} else if (permissions.has(sender,
-							"booscooldowns.clearwarmups")
-							&& command.equalsIgnoreCase("booscooldowns")
-							&& args[0].equalsIgnoreCase("clearwarmups")) {
+					} else if (args[0].equalsIgnoreCase("clearwarmups")) {
 						String co = "warmup";
 						boosCoolDownManager.clearSomething(co, jmeno);
 						boosChat.sendMessageToCommandSender(sender, "&6["
 								+ pdfFile.getName() + "]&e"
 								+ " warmups of player " + jmeno + " cleared");
 						return true;
+					}
+				}
+				if (args.length == 3) {
+					String jmeno = args[1];
+					String command2 = args[2].trim();
+					if (args[0].equalsIgnoreCase("clearcooldowns")) {
+						String co = "cooldown";
+						boosCoolDownManager.clearSomething(co, jmeno, command2);
+						boosChat.sendMessageToCommandSender(sender, "&6["
+								+ pdfFile.getName() + "]&e"
+								+ " cooldown for command " + command2
+								+ " of player " + jmeno + " cleared");
+						return true;
+					} else if (args[0].equalsIgnoreCase("clearuses")) {
+						String co = "uses";
+						boosCoolDownManager.clearSomething(co, jmeno, command2);
+						boosChat.sendMessageToCommandSender(sender, "&6["
+								+ pdfFile.getName() + "]&e"
+								+ " uses for command " + command2
+								+ " of player " + jmeno + " cleared");
+						return true;
+					} else if (args[0].equalsIgnoreCase("clearwarmups")) {
+						String co = "warmup";
+						boosCoolDownManager.clearSomething(co, jmeno, command2);
+						boosChat.sendMessageToCommandSender(sender, "&6["
+								+ pdfFile.getName() + "]&e"
+								+ " warmups for command " + command2
+								+ " of player " + jmeno + " cleared");
+						return true;
+					}
+				}
+				if (args.length == 4) {
+					if (args[0].equalsIgnoreCase("set")) {
+						String coSetnout = args[1];
+						String co = args[2];
+						int hodnota = 0;
+						try {
+							hodnota = Integer.valueOf(args[3]);
+						} catch (Exception e) {
+							boosChat.sendMessageToCommandSender(sender, "&6["
+									+ pdfFile.getName() + "]&e"
+									+ " Added value must be number!");
+							return true;
+						}
+						if (co.startsWith("/")) {
+							if (coSetnout.equals("cooldown")
+									|| coSetnout.equals("cooldown2")
+									|| coSetnout.equals("cooldown3")
+									|| coSetnout.equals("cooldown4")
+									|| coSetnout.equals("cooldown5")
+									|| coSetnout.equals("warmup")
+									|| coSetnout.equals("warmup2")
+									|| coSetnout.equals("warmup3")
+									|| coSetnout.equals("warmup4")
+									|| coSetnout.equals("warmup5")
+									|| coSetnout.equals("limit")
+									|| coSetnout.equals("limit2")
+									|| coSetnout.equals("limit3")
+									|| coSetnout.equals("limit4")
+									|| coSetnout.equals("limit5")
+									|| coSetnout.equals("price")
+									|| coSetnout.equals("price2")
+									|| coSetnout.equals("price3")
+									|| coSetnout.equals("price4")
+									|| coSetnout.equals("price5")) {
+								boosConfigManager.setAddToConfigFile(coSetnout,
+										co, hodnota);
+								boosChat.sendMessageToCommandSender(sender,
+										"&6[" + pdfFile.getName() + "]&e" + " "
+												+ coSetnout + " for command "
+												+ co + " is now set to "
+												+ hodnota);
+								return true;
+							} else {
+								boosChat.sendMessageToCommandSender(
+										sender,
+										"&6["
+												+ pdfFile.getName()
+												+ "]&e"
+												+ " You can only set cooldown, cooldown2, cooldown3, cooldown4, cooldown5, warmup, warmup2, warmup3, warmup4, warmup5, limit, limit2, limit3, limit4, limit5, price, price2, price3, price4, price5.");
+								return true;
+							}
+						} else {
+							boosChat.sendMessageToCommandSender(
+									sender,
+									"&6["
+											+ pdfFile.getName()
+											+ "]&e"
+											+ " Added command have to start with \"/\".");
+							return true;
+						}
+
 					}
 				}
 			}
