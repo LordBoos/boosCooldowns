@@ -10,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -29,7 +30,7 @@ public class boosCoolDownListener<a> implements Listener {
 		plugin = instance;
 	}
 
-	@EventHandler(priority = EventPriority.LOWEST)
+	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		if (event.isCancelled()) {
 			return;
@@ -394,7 +395,7 @@ public class boosCoolDownListener<a> implements Listener {
 				if (boosPriceManager.payForCommand(player, pre, price, name)) {
 					return;
 				} else {
-					//boosPriceManager.payForCommand(player, pre, price, name);
+					// boosPriceManager.payForCommand(player, pre, price, name);
 					boosCoolDownManager.cancelCooldown(player, pre);
 					event.setCancelled(true);
 					return;
@@ -709,28 +710,48 @@ public class boosCoolDownListener<a> implements Listener {
 						&& boosCoolDown.getPermissions().has(player,
 								"booscooldowns.clear.cooldowns.death")) {
 					if (boosConfigManager.getCleanCooldownsOnDeath()) {
-						boosCoolDownManager.clearSomething("cooldown",
-								player.getName().toLowerCase());
+						boosCoolDownManager.clearSomething("cooldown", player
+								.getName().toLowerCase());
 					}
 				}
 				if (player != null
 						&& boosCoolDown.getPermissions().has(player,
 								"booscooldowns.clear.uses.death")) {
 					if (boosConfigManager.getCleanUsesOnDeath()) {
-						boosCoolDownManager.clearSomething("uses",
-								player.getName().toLowerCase());
+						boosCoolDownManager.clearSomething("uses", player
+								.getName().toLowerCase());
 					}
 				}
 			} else {
 				if (player != null) {
 					if (boosConfigManager.getCleanCooldownsOnDeath()) {
-						boosCoolDownManager.clearSomething("cooldown",
-								player.getName().toLowerCase());
+						boosCoolDownManager.clearSomething("cooldown", player
+								.getName().toLowerCase());
 					}
 					if (boosConfigManager.getCleanUsesOnDeath()) {
-						boosCoolDownManager.clearSomething("uses",
-								player.getName().toLowerCase());
+						boosCoolDownManager.clearSomething("uses", player
+								.getName().toLowerCase());
 					}
+				}
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.LOW)
+	public void onPlayerChat(AsyncPlayerChatEvent event) {
+		String chatMessage = event.getMessage();
+		if (chatMessage.startsWith("!")) {
+			String temp = "globalchat";
+			if (!boosCoolDownManager.checkCoolDownOK(event.getPlayer(), temp,
+					chatMessage)) {
+				event.setCancelled(true);
+				return;
+			} else {
+				if (boosCoolDownManager.coolDown(event.getPlayer(), temp)) {
+					event.setCancelled(true);
+					return;
+				} else {
+					return;
 				}
 			}
 		}

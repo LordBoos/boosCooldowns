@@ -218,8 +218,12 @@ public class boosCoolDownManager {
 					msg = msg.replaceAll("&unit&",
 							boosConfigManager.getUnitHoursMessage());
 				} else {
+					String secs = Long.toString(waitSeconds);
+					if (secs.equals("0")){
+						secs = "1";
+					}
 					msg = msg.replaceAll("&seconds&",
-							Long.toString(waitSeconds));
+							secs);
 					msg = msg.replaceAll("&unit&",
 							boosConfigManager.getUnitSecondsMessage());
 				}
