@@ -173,103 +173,86 @@ public class boosCoolDownListener<a> implements Listener {
 	}
 
 	private int preSubCheck(Player player, String preSub) {
-		if (boosCoolDown.isUsingPermissions()) {
-			if (boosCoolDown.getPermissions().has(player,
-					"booscooldowns.warmup2")) {
+
+			if (player.hasPermission("booscooldowns.warmup2")) {
 				return boosConfigManager.getWarmUp2(preSub);
-			} else if (boosCoolDown.getPermissions().has(player,
-					"booscooldowns.warmup3")) {
+			} else if (player.hasPermission("booscooldowns.warmup3")) {
 				return boosConfigManager.getWarmUp3(preSub);
-			} else if (boosCoolDown.getPermissions().has(player,
+			} else if (player.hasPermission(
 					"booscooldowns.warmup4")) {
 				return boosConfigManager.getWarmUp4(preSub);
-			} else if (boosCoolDown.getPermissions().has(player,
+			} else if (player.hasPermission(
 					"booscooldowns.warmup5")) {
 				return boosConfigManager.getWarmUp5(preSub);
 			} else {
 				return boosConfigManager.getWarmUp(preSub);
 			}
-		} else {
-			return boosConfigManager.getWarmUp(preSub);
-		}
+
 	}
 
 	private int preLimitCheck(Player player, String preSub) {
-		if (boosCoolDown.isUsingPermissions()) {
-			if (boosCoolDown.getPermissions().has(player,
+			if (player.hasPermission(
 					"booscooldowns.limit2")) {
 				return boosConfigManager.getLimit2(preSub);
-			} else if (boosCoolDown.getPermissions().has(player,
+			} else if (player.hasPermission(
 					"booscooldowns.limit3")) {
 				return boosConfigManager.getLimit3(preSub);
-			} else if (boosCoolDown.getPermissions().has(player,
+			} else if (player.hasPermission(
 					"booscooldowns.limit4")) {
 				return boosConfigManager.getLimit4(preSub);
-			} else if (boosCoolDown.getPermissions().has(player,
+			} else if (player.hasPermission(
 					"booscooldowns.limit5")) {
 				return boosConfigManager.getLimit5(preSub);
 			} else {
 				return boosConfigManager.getLimit(preSub);
 			}
-		} else {
-			return boosConfigManager.getLimit(preSub);
-		}
 	}
 
 	private int preCDCheck(Player player, String preSub) {
-		if (boosCoolDown.isUsingPermissions()) {
-			if (boosCoolDown.getPermissions().has(player,
+			if (player.hasPermission(
 					"booscooldowns.cooldown2")) {
 				return boosConfigManager.getCoolDown2(preSub);
-			} else if (boosCoolDown.getPermissions().has(player,
+			} else if (player.hasPermission(
 					"booscooldowns.cooldown3")) {
 				return boosConfigManager.getCoolDown3(preSub);
-			} else if (boosCoolDown.getPermissions().has(player,
+			} else if (player.hasPermission(
 					"booscooldowns.cooldown4")) {
 				return boosConfigManager.getCoolDown4(preSub);
-			} else if (boosCoolDown.getPermissions().has(player,
+			} else if (player.hasPermission(
 					"booscooldowns.cooldown5")) {
 				return boosConfigManager.getCoolDown5(preSub);
 			} else {
 				return boosConfigManager.getCoolDown(preSub);
 			}
-		} else {
-			return boosConfigManager.getCoolDown(preSub);
-		}
 	}
 
 	public int prePriceCheck(Player player, String preSub) {
-		if (boosCoolDown.isUsingPermissions()) {
-			if (boosCoolDown.getPermissions().has(player,
+			if (player.hasPermission(
 					"booscooldowns.cooldown2")) {
 				return boosConfigManager.getPrice2(preSub);
-			} else if (boosCoolDown.getPermissions().has(player,
+			} else if (player.hasPermission(
 					"booscooldowns.cooldown3")) {
 				return boosConfigManager.getPrice3(preSub);
-			} else if (boosCoolDown.getPermissions().has(player,
+			} else if (player.hasPermission(
 					"booscooldowns.cooldown4")) {
 				return boosConfigManager.getPrice4(preSub);
-			} else if (boosCoolDown.getPermissions().has(player,
+			} else if (player.hasPermission(
 					"booscooldowns.cooldown5")) {
 				return boosConfigManager.getPrice5(preSub);
 			} else {
 				return boosConfigManager.getPrice(preSub);
 			}
-		} else {
-			return boosConfigManager.getPrice(preSub);
-		}
 	}
 
 	private boolean blocked(Player player, String pre, String msg) {
 		int limit = -1;
 		int uses = boosCoolDownManager.getUses(player, pre, msg);
-		if (boosCoolDown.isUsingPermissions()) {
-			if (boosCoolDown.getPermissions().has(player,
+			if (player.hasPermission(
 					"booscooldowns.nolimit")
-					|| boosCoolDown.getPermissions().has(player,
+					|| player.hasPermission(
 							"booscooldowns.nolimit." + pre)) {
 			} else {
-				if (boosCoolDown.getPermissions().has(player,
+				if (player.hasPermission(
 						"booscooldowns.limit2")) {
 					limit = boosConfigManager.getLimit2(pre);
 					if (limit == -1) {
@@ -277,7 +260,7 @@ public class boosCoolDownListener<a> implements Listener {
 					} else if (limit <= uses) {
 						return true;
 					}
-				} else if (boosCoolDown.getPermissions().has(player,
+				} else if (player.hasPermission(
 						"booscooldowns.limit3")) {
 					limit = boosConfigManager.getLimit3(pre);
 					if (limit == -1) {
@@ -285,7 +268,7 @@ public class boosCoolDownListener<a> implements Listener {
 					} else if (limit <= uses) {
 						return true;
 					}
-				} else if (boosCoolDown.getPermissions().has(player,
+				} else if (player.hasPermission(
 						"booscooldowns.limit4")) {
 					limit = boosConfigManager.getLimit4(pre);
 					if (limit == -1) {
@@ -293,7 +276,7 @@ public class boosCoolDownListener<a> implements Listener {
 					} else if (limit <= uses) {
 						return true;
 					}
-				} else if (boosCoolDown.getPermissions().has(player,
+				} else if (player.hasPermission(
 						"booscooldowns.limit5")) {
 					limit = boosConfigManager.getLimit5(pre);
 					if (limit == -1) {
@@ -310,14 +293,6 @@ public class boosCoolDownListener<a> implements Listener {
 					}
 				}
 			}
-		} else {
-			limit = boosConfigManager.getLimit(pre);
-			if (limit == -1) {
-				return false;
-			} else if (limit <= uses) {
-				return true;
-			}
-		}
 		return false;
 	}
 
@@ -326,8 +301,7 @@ public class boosCoolDownListener<a> implements Listener {
 		if (player.isOp()) {
 			on = false;
 		}
-		if (boosCoolDown.isUsingPermissions()
-				&& boosCoolDown.getPermissions().has(player,
+		if (player.hasPermission(
 						"booscooldowns.exception")) {
 			on = false;
 		} else if (player.isOp()) {
@@ -343,13 +317,10 @@ public class boosCoolDownListener<a> implements Listener {
 			Player player, String pre, String message, int warmUpSeconds,
 			int price) {
 		if (!blocked) {
-			// int warmUpSeconds = 0;
-			// warmUpSeconds = preSubCheck(player, pre);
-			if (boosCoolDown.isUsingPermissions()) {
 				if (warmUpSeconds > 0) {
-					if (!boosCoolDown.getPermissions().has(player,
+					if (!player.hasPermission(
 							"booscooldowns.nowarmup")
-							&& !boosCoolDown.getPermissions().has(player,
+							&& !player.hasPermission(
 									"booscooldowns.nowarmup." + pre)) {
 						start(event, player, pre, message, warmUpSeconds);
 					}
@@ -358,16 +329,7 @@ public class boosCoolDownListener<a> implements Listener {
 						event.setCancelled(true);
 					}
 				}
-			} else {
-				if (warmUpSeconds > 0) {
-					start(event, player, pre, message, warmUpSeconds);
-				} else {
-					if (boosCoolDownManager.coolDown(player, pre)) {
-						event.setCancelled(true);
-					}
-				}
-			}
-			if (!event.isCancelled() && boosCoolDown.isUsingEconomy()) {
+			if (!event.isCancelled()) {
 				payForCommand(event, player, pre, message, price);
 			}
 		} else {
@@ -388,14 +350,13 @@ public class boosCoolDownListener<a> implements Listener {
 			Player player, String pre, String message, int price) {
 		String name = player.getName();
 		if (price > 0) {
-			if (!boosCoolDown.getPermissions().has(player,
+			if (!player.hasPermission(
 					"booscooldowns.noprice")
-					&& !boosCoolDown.getPermissions().has(player,
+					&& !player.hasPermission(
 							"booscooldowns.noprice." + pre)) {
 				if (boosPriceManager.payForCommand(player, pre, price, name)) {
 					return;
 				} else {
-					// boosPriceManager.payForCommand(player, pre, price, name);
 					boosCoolDownManager.cancelCooldown(player, pre);
 					event.setCancelled(true);
 					return;
@@ -436,9 +397,8 @@ public class boosCoolDownListener<a> implements Listener {
 			return;
 
 		Player player = event.getPlayer();
-		if (boosCoolDown.isUsingPermissions()) {
 			if (player != null
-					&& !boosCoolDown.getPermissions().has(player,
+					&& !player.hasPermission(
 							"booscooldowns.nocancel.move")) {
 				if (boosWarmUpManager.hasWarmUps(player) && hasMoved(player)) {
 					clearLocWorld(player);
@@ -448,17 +408,6 @@ public class boosCoolDownListener<a> implements Listener {
 				}
 
 			}
-		} else {
-			if (player != null) {
-				if (boosWarmUpManager.hasWarmUps(player) && hasMoved(player)) {
-					clearLocWorld(player);
-					boosChat.sendMessageToPlayer(player,
-							boosConfigManager.getWarmUpCancelledByMoveMessage());
-					boosWarmUpManager.cancelWarmUps(player);
-				}
-
-			}
-		}
 	}
 
 	public static boolean hasMoved(Player player) {
@@ -489,9 +438,8 @@ public class boosCoolDownListener<a> implements Listener {
 			return;
 
 		Player player = event.getPlayer();
-		if (boosCoolDown.isUsingPermissions()) {
 			if (player != null
-					&& !boosCoolDown.getPermissions().has(player,
+					&& !player.hasPermission(
 							"booscooldowns.nocancel.sneak")) {
 				if (boosWarmUpManager.hasWarmUps(player)) {
 					boosChat.sendMessageToPlayer(player,
@@ -500,16 +448,6 @@ public class boosCoolDownListener<a> implements Listener {
 				}
 
 			}
-		} else {
-			if (player != null) {
-				if (boosWarmUpManager.hasWarmUps(player)) {
-					boosChat.sendMessageToPlayer(player,
-							boosConfigManager.getCancelWarmupOnSneakMessage());
-					boosWarmUpManager.cancelWarmUps(player);
-				}
-
-			}
-		}
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -521,9 +459,8 @@ public class boosCoolDownListener<a> implements Listener {
 			return;
 
 		Player player = event.getPlayer();
-		if (boosCoolDown.isUsingPermissions()) {
 			if (player != null
-					&& !boosCoolDown.getPermissions().has(player,
+					&& !player.hasPermission(
 							"booscooldowns.nocancel.sprint")) {
 				if (boosWarmUpManager.hasWarmUps(player)) {
 					boosChat.sendMessageToPlayer(player,
@@ -532,16 +469,6 @@ public class boosCoolDownListener<a> implements Listener {
 				}
 
 			}
-		} else {
-			if (player != null) {
-				if (boosWarmUpManager.hasWarmUps(player)) {
-					boosChat.sendMessageToPlayer(player,
-							boosConfigManager.getCancelWarmupOnSprintMessage());
-					boosWarmUpManager.cancelWarmUps(player);
-				}
-
-			}
-		}
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -555,9 +482,8 @@ public class boosCoolDownListener<a> implements Listener {
 		Entity entity = event.getEntity();
 		if (entity != null && entity instanceof Player) {
 			Player player = (Player) entity;
-			if (boosCoolDown.isUsingPermissions()) {
 				if (player != null
-						&& !boosCoolDown.getPermissions().has(player,
+						&& !player.hasPermission(
 								"booscooldowns.nocancel.damage")) {
 					if (boosWarmUpManager.hasWarmUps(player)) {
 						boosChat.sendMessageToPlayer(player, boosConfigManager
@@ -566,16 +492,6 @@ public class boosCoolDownListener<a> implements Listener {
 					}
 
 				}
-			} else {
-				if (player != null) {
-					if (boosWarmUpManager.hasWarmUps(player)) {
-						boosChat.sendMessageToPlayer(player, boosConfigManager
-								.getWarmUpCancelledByDamageMessage());
-						boosWarmUpManager.cancelWarmUps(player);
-					}
-
-				}
-			}
 		}
 	}
 
@@ -590,9 +506,8 @@ public class boosCoolDownListener<a> implements Listener {
 		Entity entity = event.getPlayer();
 		if (entity != null && entity instanceof Player) {
 			Player player = (Player) entity;
-			if (boosCoolDown.isUsingPermissions()) {
 				if (player != null
-						&& !boosCoolDown.getPermissions().has(player,
+						&& !player.hasPermission(
 								"booscooldowns.dontblock.interact")) {
 					if (boosWarmUpManager.hasWarmUps(player)) {
 						if (event.getClickedBlock().getType().name()
@@ -625,40 +540,6 @@ public class boosCoolDownListener<a> implements Listener {
 					}
 
 				}
-			} else {
-				if (player != null) {
-					if (boosWarmUpManager.hasWarmUps(player)) {
-						if (event.getClickedBlock().getType().name()
-								.equals("CHEST")
-								|| event.getClickedBlock().getType().name()
-										.equals("FURNACE")
-								|| event.getClickedBlock().getType().name()
-										.equals("BURNING_FURNACE")
-								|| event.getClickedBlock().getType().name()
-										.equals("WORKBENCH")
-								|| event.getClickedBlock().getType().name()
-										.equals("DISPENSER")
-								|| event.getClickedBlock().getType().name()
-										.equals("JUKEBOX")
-								|| event.getClickedBlock().getType().name()
-										.equals("LOCKED_CHEST")
-								|| event.getClickedBlock().getType().name()
-										.equals("ENCHANTMENT_TABLE")
-								|| event.getClickedBlock().getType().name()
-										.equals("BREWING_STAND")
-								|| event.getClickedBlock().getType().name()
-										.equals("CAULDRON")
-								|| event.getClickedBlock().getType().name()
-										.equals("STORAGE_MINECART")) {
-							event.setCancelled(true);
-							boosChat.sendMessageToPlayer(player,
-									boosConfigManager
-											.getInteractBlockedMessage());
-						}
-					}
-
-				}
-			}
 		}
 	}
 
@@ -673,9 +554,8 @@ public class boosCoolDownListener<a> implements Listener {
 		Entity entity = event.getPlayer();
 		if (entity != null && entity instanceof Player) {
 			Player player = (Player) entity;
-			if (boosCoolDown.isUsingPermissions()) {
 				if (player != null
-						&& !boosCoolDown.getPermissions().has(player,
+						&& !player.hasPermission(
 								"booscooldowns.nocancel.gamemodechange")) {
 					if (boosWarmUpManager.hasWarmUps(player)) {
 						boosChat.sendMessageToPlayer(player, boosConfigManager
@@ -684,16 +564,6 @@ public class boosCoolDownListener<a> implements Listener {
 					}
 
 				}
-			} else {
-				if (player != null) {
-					if (boosWarmUpManager.hasWarmUps(player)) {
-						boosChat.sendMessageToPlayer(player, boosConfigManager
-								.getCancelWarmupByGameModeChangeMessage());
-						boosWarmUpManager.cancelWarmUps(player);
-					}
-
-				}
-			}
 		}
 	}
 
@@ -705,9 +575,8 @@ public class boosCoolDownListener<a> implements Listener {
 		Entity entity = event.getEntity();
 		if (entity != null && entity instanceof Player) {
 			Player player = (Player) entity;
-			if (boosCoolDown.isUsingPermissions()) {
 				if (player != null
-						&& boosCoolDown.getPermissions().has(player,
+						&& player.hasPermission(
 								"booscooldowns.clear.cooldowns.death")) {
 					if (boosConfigManager.getCleanCooldownsOnDeath()) {
 						boosCoolDownManager.clearSomething("cooldown", player
@@ -715,25 +584,13 @@ public class boosCoolDownListener<a> implements Listener {
 					}
 				}
 				if (player != null
-						&& boosCoolDown.getPermissions().has(player,
+						&& player.hasPermission(
 								"booscooldowns.clear.uses.death")) {
 					if (boosConfigManager.getCleanUsesOnDeath()) {
 						boosCoolDownManager.clearSomething("uses", player
 								.getName().toLowerCase());
 					}
 				}
-			} else {
-				if (player != null) {
-					if (boosConfigManager.getCleanCooldownsOnDeath()) {
-						boosCoolDownManager.clearSomething("cooldown", player
-								.getName().toLowerCase());
-					}
-					if (boosConfigManager.getCleanUsesOnDeath()) {
-						boosCoolDownManager.clearSomething("uses", player
-								.getName().toLowerCase());
-					}
-				}
-			}
 		}
 	}
 

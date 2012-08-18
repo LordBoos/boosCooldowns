@@ -462,25 +462,21 @@ public class boosConfigManager {
 	
 	public static String getLimGrp(Player player){
 	String lim;
-	if (boosCoolDown.isUsingPermissions()) {
-		if (boosCoolDown.getPermissions().has(player,
+		if (player.hasPermission(
 				"booscooldowns.limit2")) {
 			lim = "limit2";
-		} else if (boosCoolDown.getPermissions().has(player,
+		} else if (player.hasPermission(
 				"booscooldowns.limit3")) {
 			lim = "limit3";
-		} else if (boosCoolDown.getPermissions().has(player,
+		} else if (player.hasPermission(
 				"booscooldowns.limit4")) {
 			lim = "limit4";
-		} else if (boosCoolDown.getPermissions().has(player,
+		} else if (player.hasPermission(
 				"booscooldowns.limit5")) {
 			lim = "limit5";
 		} else {
 			lim = "limit";
 		}
-	} else {
-		lim = "limit";
-	}
 	return lim;
 	}
 	

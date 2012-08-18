@@ -156,19 +156,11 @@ public class boosCoolDownManager {
 		pre = pre.toLowerCase();
 		int coolDownSeconds = 0;
 		coolDownSeconds = getCooldownGroup(player, pre, coolDownSeconds);
-		if (boosCoolDown.isUsingPermissions()) {
 			if (coolDownSeconds > 0
-					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.nocooldown")
-					&& !boosCoolDown.getPermissions().has(player,
-							"booscooldowns.nocooldown." + pre)) {
+					&& !player.hasPermission("booscooldowns.nocooldown")
+					&& !player.hasPermission("booscooldowns.nocooldown." + pre)) {
 				return cd(player, pre, coolDownSeconds);
 			}
-		} else {
-			if (coolDownSeconds > 0) {
-				return cd(player, pre, coolDownSeconds);
-			}
-		}
 		return false;
 	}
 
@@ -285,25 +277,17 @@ public class boosCoolDownManager {
 
 	private static int getCooldownGroup(Player player, String pre,
 			int coolDownSeconds) {
-		if (boosCoolDown.isUsingPermissions()) {
-			if (boosCoolDown.getPermissions().has(player,
-					"booscooldowns.cooldown2")) {
+			if (player.hasPermission("booscooldowns.cooldown2")) {
 				coolDownSeconds = boosConfigManager.getCoolDown2(pre);
-			} else if (boosCoolDown.getPermissions().has(player,
-					"booscooldowns.cooldown3")) {
+			} else if (player.hasPermission("booscooldowns.cooldown3")) {
 				coolDownSeconds = boosConfigManager.getCoolDown3(pre);
-			} else if (boosCoolDown.getPermissions().has(player,
-					"booscooldowns.cooldown4")) {
+			} else if (player.hasPermission("booscooldowns.cooldown4")) {
 				coolDownSeconds = boosConfigManager.getCoolDown4(pre);
-			} else if (boosCoolDown.getPermissions().has(player,
-					"booscooldowns.cooldown5")) {
+			} else if (player.hasPermission("booscooldowns.cooldown5")) {
 				coolDownSeconds = boosConfigManager.getCoolDown5(pre);
 			} else {
 				coolDownSeconds = boosConfigManager.getCoolDown(pre);
 			}
-		} else {
-			coolDownSeconds = boosConfigManager.getCoolDown(pre);
-		}
 		return coolDownSeconds;
 	}
 

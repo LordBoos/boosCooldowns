@@ -9,3 +9,76 @@ commands:
   booscooldowns:
     description: Reload command.
     usage: Use /booscooldowns reload, clearcooldowns <player>, clearwarmups <player> or clearuses <player>
+permissions:
+    booscooldowns.exception:
+        description: Player wont be affected by plugin at all (no warmups, no cooldowns, no prices).
+        default: op
+    booscooldowns.nocancel.move:
+        description: Players warmups will not be canceled by moving, even if it's turned on.
+        default: false
+    booscooldowns.nocancel.damage:
+        description: Players warmups will not be canceled by damage, even if it's turned on.
+        default: false
+    booscooldowns.nocancel.sneak:
+        description: Players warmups will not be canceled by sneaking, even if it's turned on.
+        default: false
+    booscooldowns.nocancel.sprint:
+        description: Players warmups will not be canceled by sprinting, even if it's turned on.
+        default: false
+    booscooldowns.nocancel.gamemodechange:
+        description: Players warmups will not be canceled by changing gamemode, even if it's turned on.
+        default: false
+    booscooldowns.dontblock.interact:
+        description: Players interaction will not be blocked during warmup, even if it's turned on.
+        default: false
+    booscooldowns.noprice:
+        description: Players commands will always be free of charge.
+        default: false
+    booscooldowns.noprice./command:
+        description: Command "/command" will not be affected by price for users with this permission.
+        default: false
+    booscooldowns.nocooldown:
+        description: Player wont be affected by cooldowns.
+        default: false
+    booscooldowns.nocooldown./command:
+        description: Command "/command" will not be affected by cooldown for users with this permission.
+        default: false
+    booscooldowns.nowarmup:
+        description: Player wont be affected by warmups.
+        default: false
+    booscooldowns.nowarmup./command:
+        description: Command "/command" will not be affected by warmup for users with this permission.
+        default: false
+    booscooldowns.nolimit:
+        description: Player wont be affected by limiting.
+        default: false
+    booscooldowns.nolimit./command:
+        description: Command "/command" will not be affected by limits for users with this permission.
+        default: false
+    booscooldowns.warmup2-5:
+        description: (example booscooldowns.warmup4) Player will be affected by given number of warmup group (times from warmup4 in config file will be used for player with booscooldowns.warmup4). Players without this permission, will be affected by default warmups, from warmup in config file.
+        default: false
+    booscooldowns.price2-5:
+        description: (example booscooldowns.price3) Player will be affected by given number of price group (times from price3 in config file will be used for player with booscooldowns.price3). Players without this permission, will be affected by default pricess, from price in config file.
+        default: false
+    booscooldowns.cooldown2-5:
+        description: (example booscooldowns.cooldown5) Player will be affected by given number of cooldown group (times from cooldown5 in config file will be used for player with booscooldowns.cooldown5). Players without this permission, will be affected by default cooldowns, from cooldown in config file.
+        default: false
+    booscooldowns.limit2-5:
+        description: (example booscooldowns.blocked2) Player will be affected by given number of limit group (limited commands from blocked2 in config file will be used for player with booscooldowns.limit2). Players without this permission, will be affected by default blocked commands, from blocked in config file.
+        default: false
+    booscooldowns.reload:
+        description: Player can use "/booscooldowns reload" to reload config file.
+        default: op
+    booscooldowns.clear.uses.death:
+        description: Players uses (limit-uses=how many times playr can still use command) are cleared on death (must be enabled in config file too!).
+        default: false
+    booscooldowns.clear.cooldowns.death:
+        description: Players cooldowns are cleared on death (must be enabled in config file too!).
+        default: false
+    booscooldowns.list.limits:
+        description: Player can use "/booscooldowns limits" to see limits and how many times he can still use commands.
+        default: true
+    booscooldowns.set:
+        description: Users with this can use "/booscooldowns set" command.
+        default: op

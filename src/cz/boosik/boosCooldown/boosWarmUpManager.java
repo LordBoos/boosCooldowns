@@ -1,5 +1,6 @@
 package cz.boosik.boosCooldown;
 
+import java.util.Iterator;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -62,14 +63,23 @@ public class boosWarmUpManager {
 		boosWarmUpManager.playercommands.remove(tag);
 	}
 
+//	public static void cancelWarmUps(Player player) {
+//		for (String key : playercommands.keySet()) {
+//			if (key.startsWith(player.getName() + "@")) {
+//				removeWarmUpProcess(key);
+//			}
+//		}
+//	}
+
 	public static void cancelWarmUps(Player player) {
-		for (String key : playercommands.keySet()) {
-			if (key.startsWith(player.getName() + "@")) {
-				removeWarmUpProcess(key);
+		Iterator<String> iter = playercommands.keySet().iterator();
+		while (iter.hasNext()) {
+			if (iter.next().startsWith(player.getName() + "@")) {
+				iter.remove();
 			}
 		}
 	}
-
+	
 	public static boolean hasWarmUps(Player player) {
 		for (String key : playercommands.keySet()) {
 			if (key.startsWith(player.getName() + "@")) {

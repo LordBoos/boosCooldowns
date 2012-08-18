@@ -10,6 +10,8 @@ import net.milkbowl.vault.economy.EconomyResponse;
 public class boosPriceManager {
 	private static Economy economy = boosCoolDown.getEconomy();
 	public static boolean payForCommand(Player player, String pre, int price, String name) {
+		if (economy == null){
+			return true;}
 		EconomyResponse r = economy.withdrawPlayer(name, price);
 		if (r.transactionSuccess()) {
 			String msg = String.format(
