@@ -75,9 +75,17 @@ public class boosWarmUpManager {
 		Iterator<String> iter = playercommands.keySet().iterator();
 		while (iter.hasNext()) {
 			if (iter.next().startsWith(player.getName() + "@")) {
+				killTimer(player);
 				iter.remove();
 			}
 		}
+	}
+	public static void killTimer(Player player) {
+	for (String key : playercommands.keySet()) {
+		if (key.startsWith(player.getName() + "@")) {
+			playercommands.get(key).cancel();
+		}
+	}
 	}
 	
 	public static boolean hasWarmUps(Player player) {
