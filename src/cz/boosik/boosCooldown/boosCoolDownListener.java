@@ -330,7 +330,7 @@ public class boosCoolDownListener<a> implements Listener {
 					}
 				}
 			if (!event.isCancelled()) {
-				payForCommand(event, player, pre, message, price);
+				payForCommand(event, player, pre, price);
 			}
 		} else {
 			event.setCancelled(true);
@@ -346,8 +346,27 @@ public class boosCoolDownListener<a> implements Listener {
 		}
 	}
 
-	private void payForCommand(PlayerCommandPreprocessEvent event,
-			Player player, String pre, String message, int price) {
+	public void payForCommand(PlayerCommandPreprocessEvent event,
+			Player player, String pre, int price) {
+		String name = player.getName();
+		if (price > 0) {
+			if (!player.hasPermission(
+					"booscooldowns.noprice")
+					&& !player.hasPermission(
+							"booscooldowns.noprice." + pre)) {
+				if (boosPriceManager.payForCommand(player, pre, price, name)) {
+					return;
+				} else {
+					boosCoolDownManager.cancelCooldown(player, pre);
+					event.setCancelled(true);
+					return;
+				}
+			}
+		}
+	}
+	
+	public void payForCommand2(AsyncPlayerChatEvent event,
+			Player player, String pre, int price) {
 		String name = player.getName();
 		if (price > 0) {
 			if (!player.hasPermission(
@@ -597,20 +616,22 @@ public class boosCoolDownListener<a> implements Listener {
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerChat(AsyncPlayerChatEvent event) {
 		String chatMessage = event.getMessage();
+		String temp = "globalchat";
+		int price = 0;
+		Player player = event.getPlayer();
 		if (chatMessage.startsWith("!")) {
-			String temp = "globalchat";
-			if (!boosCoolDownManager.checkCoolDownOK(event.getPlayer(), temp,
+			if (!boosCoolDownManager.checkCoolDownOK(player, temp,
 					chatMessage)) {
 				event.setCancelled(true);
 				return;
 			} else {
-				if (boosCoolDownManager.coolDown(event.getPlayer(), temp)) {
+				if (boosCoolDownManager.coolDown(player, temp)) {
 					event.setCancelled(true);
-					return;
-				} else {
 					return;
 				}
 			}
+				price = prePriceCheck(player, temp);
+				payForCommand2(event, player, temp, price);
+			}
 		}
 	}
-}
