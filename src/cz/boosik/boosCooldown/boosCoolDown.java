@@ -1,5 +1,6 @@
 package cz.boosik.boosCooldown;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import net.milkbowl.vault.Vault;
@@ -12,6 +13,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.MetricsLite;
 
 import util.boosChat;
 
@@ -38,6 +40,12 @@ public class boosCoolDown extends JavaPlugin {
 		initializeVault();
 		if (boosConfigManager.getClearOnRestart()) {
 			boosCoolDownManager.clear();
+		}
+		try {
+		    MetricsLite metrics = new MetricsLite(this);
+		    metrics.start();
+		} catch (IOException e) {
+		    // Failed to submit the stats :-(
 		}
 
 	}
