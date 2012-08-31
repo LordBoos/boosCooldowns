@@ -130,6 +130,8 @@ public class boosConfigManager {
 					"/otherCommand" };
 			conf.addDefault("commands.links.linkGroups.yourNameHere",
 					Arrays.asList(def2));
+			conf.addDefault("commands.aliasses./home", "/warp home");
+			conf.addDefault("commands.aliasses./spawn", "/mv spawn");
 			conf.save(confFile);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -486,10 +488,14 @@ public class boosConfigManager {
 			.getConfigurationSection("commands.limits." + lim);
 	return uses;
 	}
-	// public static String getWarmUpCancelledByDeathMessage() {
-	// return conf.getString(
-	// "commands.options.message_warmup_cancelled_by_death",
-	// "&6Warm-ups have been cancelled due to death.&f");
-	// }
-
+	
+	public static ConfigurationSection getAliasses(){
+		ConfigurationSection aliasses = conf
+				.getConfigurationSection("commands.aliasses");
+		return aliasses;
+	}
+	
+	public static String getAliass(String message){
+		return conf.getString("commands.aliasses." + message);
+	}
 }

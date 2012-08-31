@@ -3,6 +3,7 @@ package cz.boosik.boosCooldown;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -35,7 +36,11 @@ public class boosCoolDownListener<a> implements Listener {
 		if (event.isCancelled()) {
 			return;
 		}
+		ConfigurationSection aliasses = boosConfigManager.getAliasses();
 		String message = event.getMessage();
+		if (aliasses.contains(message)){
+			message = boosConfigManager.getAliass(message);
+		}
 		message = message.trim().replaceAll(" +", " ");
 		Player player = event.getPlayer();
 		boolean on = true;
