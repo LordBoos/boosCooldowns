@@ -36,10 +36,10 @@ public class boosCoolDownListener<a> implements Listener {
 		if (event.isCancelled()) {
 			return;
 		}
-		ConfigurationSection aliasses = boosConfigManager.getAliasses();
+		ConfigurationSection aliases = boosConfigManager.getAliases();
 		String message = event.getMessage();
-		if (aliasses.contains(message)){
-			message = boosConfigManager.getAliass(message);
+		if (aliases.contains(message)){
+			message = boosConfigManager.getAlias(message);
 		}
 		message = message.trim().replaceAll(" +", " ");
 		Player player = event.getPlayer();

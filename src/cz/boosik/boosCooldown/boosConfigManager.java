@@ -130,8 +130,8 @@ public class boosConfigManager {
 					"/otherCommand" };
 			conf.addDefault("commands.links.linkGroups.yourNameHere",
 					Arrays.asList(def2));
-			conf.addDefault("commands.aliasses./home", "/warp home");
-			conf.addDefault("commands.aliasses./spawn", "/mv spawn");
+			conf.addDefault("commands.aliases./home", "/warp home");
+			conf.addDefault("commands.aliases./spawn", "/mv spawn");
 			conf.save(confFile);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -489,13 +489,13 @@ public class boosConfigManager {
 	return uses;
 	}
 	
-	public static ConfigurationSection getAliasses(){
-		ConfigurationSection aliasses = conf
-				.getConfigurationSection("commands.aliasses");
-		return aliasses;
+	public static ConfigurationSection getAliases(){
+		ConfigurationSection aliases = conf
+				.getConfigurationSection("commands.aliases");
+		return aliases;
 	}
 	
-	public static String getAliass(String message){
-		return conf.getString("commands.aliasses." + message);
+	public static String getAlias(String message){
+		return conf.getString("commands.aliases." + message);
 	}
 }
