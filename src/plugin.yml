@@ -1,8 +1,8 @@
 name: boosCooldowns
 main: cz.boosik.boosCooldown.boosCoolDown
-version: 3.0.0
+version: 3.0.1
 authors: [LordBoos (ingame name boosik)]
-softdepend: [Vault,PermissionsEX]
+softdepend: [Vault]
 description: >
              Shortcuts
 commands:
@@ -11,8 +11,16 @@ commands:
     usage: Use /booscooldowns reload, clearcooldowns <player>, clearwarmups <player> or clearuses <player>
 permissions:
     booscooldowns.exception:
-        description: Player wont be affected by plugin at all (no warmups, no cooldowns, no prices).
-        default: op
+        description: Player wont be affected by plugin at all (no warmups, no cooldowns, no prices, no limits, no aliases).
+        default: false
+    booscooldowns.norestriction:
+        description: Player wont be affected by restrictions but will be affected by aliases(no warmups, no cooldowns, no prices, no limits).
+        default: false
+        children:
+            booscooldowns.noprice: true
+            booscooldowns.nocooldown: true
+            booscooldowns.nowarmup: true
+            booscooldowns.nolimit: true
     booscooldowns.nocancel.move:
         description: Players warmups will not be canceled by moving, even if it's turned on.
         default: false
@@ -69,7 +77,7 @@ permissions:
         default: false
     booscooldowns.reload:
         description: Player can use "/booscooldowns reload" to reload config file.
-        default: op
+        default: false
     booscooldowns.clear.uses.death:
         description: Players uses (limit-uses=how many times playr can still use command) are cleared on death (must be enabled in config file too!).
         default: false
@@ -81,4 +89,4 @@ permissions:
         default: true
     booscooldowns.set:
         description: Users with this can use "/booscooldowns set" command.
-        default: op
+        default: false
