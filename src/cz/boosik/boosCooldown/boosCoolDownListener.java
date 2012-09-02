@@ -40,6 +40,7 @@ public class boosCoolDownListener<a> implements Listener {
 		String message = event.getMessage();
 		if (aliases.contains(message)){
 			message = boosConfigManager.getAlias(message);
+			event.setMessage(message);
 		}
 		message = message.trim().replaceAll(" +", " ");
 		Player player = event.getPlayer();
