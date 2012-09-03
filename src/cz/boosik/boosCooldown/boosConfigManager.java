@@ -48,6 +48,7 @@ public class boosConfigManager {
 			conf.addDefault("options.options.clear_uses_on_death", false);
 			conf.addDefault("options.options.clear_cooldowns_on_death", false);
 			conf.addDefault("options.options.command_logging", false);
+			conf.addDefault("options.options.command_signs", false);
 			conf.addDefault("options.units.seconds", "seconds");
 			conf.addDefault("options.units.minutes", "minutes");
 			conf.addDefault("options.units.hours", "hours");
@@ -62,9 +63,6 @@ public class boosConfigManager {
 			conf.addDefault(
 					"options.messages.warmup_cancelled_by_gamemode_change",
 					"&6Warm-ups have been cancelled due to changing gamemode.&f");
-			// conf.addDefault(
-			// "commands.options.message_warmup_cancelled_by_death",
-			// "&6Warm-ups have been cancelled due to death.&f");
 			conf.addDefault("options.messages.cooling_down",
 					"&6Wait&e &seconds& &unit&&6 before you can use command&e &command& &6again.&f");
 			conf.addDefault("options.messages.warming_up",
@@ -81,6 +79,10 @@ public class boosConfigManager {
 					"&6Limit for command &e&command&&6 is &e&limit&&6. You can still use it &e&times&&6 times.&f");
 			conf.addDefault("options.messages.interact_blocked_during_warmup",
 					"&6You can't do this when command is warming-up!&f");
+			conf.addDefault("options.messages.cannot_create_sign",
+					"&6You are not allowed to create this kind of signs!&f");
+			conf.addDefault("options.messages.cannot_use_sign",
+					"&6You are not allowed to use this sign!&f");
 		}
 		if (confFile.exists()) {
 			try {
@@ -497,5 +499,20 @@ public class boosConfigManager {
 	
 	public static String getAlias(String message){
 		return conf.getString("commands.aliases." + message);
+	}
+
+	public static boolean getSignCommands() {
+		return conf.getBoolean("options.options.command_signs",
+				false);
+	}
+
+	public static String getCannotUseSignMessage() {
+		return conf.getString("options.messages.cannot_use_sign",
+				"&6You are not allowed to use this sign!&f");
+	}
+
+	public static String getCannotCreateSignMessage() {
+		return conf.getString("options.messages.cannot_create_sign",
+				"&6You are not allowed to create this kind of signs!&f");
 	}
 }
