@@ -132,8 +132,8 @@ public class boosConfigManager {
 					"/otherCommand" };
 			conf.addDefault("commands.links.linkGroups.yourNameHere",
 					Arrays.asList(def2));
-			conf.addDefault("commands.aliases./home", "/warp home");
-			conf.addDefault("commands.aliases./spawn", "/mv spawn");
+			conf.addDefault("commands.aliases./newcommand", "/originalcommand");
+			conf.addDefault("commands.aliases./new spawn command", "/original spawn command");
 			conf.save(confFile);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -212,7 +212,6 @@ public class boosConfigManager {
 		try {
 			conf.save(confFile);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		reload();

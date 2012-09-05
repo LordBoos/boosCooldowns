@@ -273,4 +273,7 @@ public class boosCoolDown extends JavaPlugin {
 			usingVault = false;
 		}
 	}
+	public static Logger getLog() {
+		return log;
+	}
 }

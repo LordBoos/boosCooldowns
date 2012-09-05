@@ -42,10 +42,18 @@ public class boosCoolDownListener<a> implements Listener {
 		}
 		ConfigurationSection aliases = boosConfigManager.getAliases();
 		String message = event.getMessage();
-		if (aliases.contains(message)) {
-			message = boosConfigManager.getAlias(message);
-			event.setMessage(message);
+		try {
+			if (aliases.contains(message)) {
+				message = boosConfigManager.getAlias(message);
+				event.setMessage(message);
+			}
+		} catch (NullPointerException e) {
+			boosCoolDown
+					.getLog()
+					.warning(
+							"Aliases section in config.yml is missing! Please delete your config.yml, restart server and set it again!");
 		}
+
 		message = message.trim().replaceAll(" +", " ");
 		Player player = event.getPlayer();
 		boolean on = true;
@@ -651,8 +659,8 @@ public class boosCoolDownListener<a> implements Listener {
 						plugin.getServer().dispatchCommand(
 								plugin.getServer().getConsoleSender(), msg);
 					} else {
-						boosChat.sendMessageToPlayer(player, boosConfigManager
-								.getCannotUseSignMessage());
+						boosChat.sendMessageToPlayer(player,
+								boosConfigManager.getCannotUseSignMessage());
 					}
 				}
 			}
@@ -674,8 +682,8 @@ public class boosCoolDownListener<a> implements Listener {
 			if (line2.equals("player")
 					&& !player
 							.hasPermission("booscooldowns.signs.player.place")) {
-				boosChat.sendMessageToPlayer(player, boosConfigManager
-						.getCannotCreateSignMessage());
+				boosChat.sendMessageToPlayer(player,
+						boosConfigManager.getCannotCreateSignMessage());
 				event.getBlock().breakNaturally();
 				event.setCancelled(true);
 				return;
@@ -683,8 +691,8 @@ public class boosCoolDownListener<a> implements Listener {
 			if (line2.equals("server")
 					&& !player
 							.hasPermission("booscooldowns.signs.server.place")) {
-				boosChat.sendMessageToPlayer(player, boosConfigManager
-						.getCannotCreateSignMessage());
+				boosChat.sendMessageToPlayer(player,
+						boosConfigManager.getCannotCreateSignMessage());
 				event.getBlock().breakNaturally();
 				event.setCancelled(true);
 				return;
