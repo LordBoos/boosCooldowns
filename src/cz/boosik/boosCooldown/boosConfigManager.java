@@ -17,7 +17,7 @@ public class boosConfigManager {
 	private static YamlConfiguration conf;
 	private static File confFile;
 	static List<String> players = new LinkedList<String>();
-
+//test
 	@SuppressWarnings("static-access")
 	public boosConfigManager(boosCoolDown boosCoolDown) {
 		confFile = new File(boosCoolDown.getDataFolder(), "config.yml");
