@@ -107,7 +107,9 @@ public class boosCoolDownManager {
 		ConfigurationSection uses = boosConfigManager.getLimits(player);
 		if (uses != null) {
 			for (String key : uses.getKeys(false)) {
-				usesNum = confusers.getInt("users." + player.getName().toLowerCase() + ".uses." + key, usesNum);
+				usesNum = confusers.getInt("users."
+						+ player.getName().toLowerCase() + ".uses." + key,
+						usesNum);
 				if (lim.equals("limit")) {
 					limitNum = boosConfigManager.getLimit(key);
 				} else if (lim.equals("limit2")) {
@@ -120,14 +122,15 @@ public class boosCoolDownManager {
 					limitNum = boosConfigManager.getLimit5(key);
 				}
 				num = limitNum - usesNum;
-				if (num < 0){
+				if (num < 0) {
 					num = 0;
 				}
-			message = boosConfigManager.getLimitListMessage();
-			message = message.replaceAll("&command&", key);
-			message = message.replaceAll("&limit&", String.valueOf(limitNum));
-			message = message.replaceAll("&times&", String.valueOf(num));
-			boosChat.sendMessageToPlayer(player, message);
+				message = boosConfigManager.getLimitListMessage();
+				message = message.replaceAll("&command&", key);
+				message = message.replaceAll("&limit&",
+						String.valueOf(limitNum));
+				message = message.replaceAll("&times&", String.valueOf(num));
+				boosChat.sendMessageToPlayer(player, message);
 			}
 		}
 	}
@@ -156,11 +159,11 @@ public class boosCoolDownManager {
 		pre = pre.toLowerCase();
 		int coolDownSeconds = 0;
 		coolDownSeconds = getCooldownGroup(player, pre, coolDownSeconds);
-			if (coolDownSeconds > 0
-					&& !player.hasPermission("booscooldowns.nocooldown")
-					&& !player.hasPermission("booscooldowns.nocooldown." + pre)) {
-				return cd(player, pre, coolDownSeconds);
-			}
+		if (coolDownSeconds > 0
+				&& !player.hasPermission("booscooldowns.nocooldown")
+				&& !player.hasPermission("booscooldowns.nocooldown." + pre)) {
+			return cd(player, pre, coolDownSeconds);
+		}
 		return false;
 	}
 
@@ -211,11 +214,10 @@ public class boosCoolDownManager {
 							boosConfigManager.getUnitHoursMessage());
 				} else {
 					String secs = Long.toString(waitSeconds);
-					if (secs.equals("0")){
+					if (secs.equals("0")) {
 						secs = "1";
 					}
-					msg = msg.replaceAll("&seconds&",
-							secs);
+					msg = msg.replaceAll("&seconds&", secs);
 					msg = msg.replaceAll("&unit&",
 							boosConfigManager.getUnitSecondsMessage());
 				}
@@ -226,7 +228,8 @@ public class boosCoolDownManager {
 	}
 
 	static void cancelCooldown(Player player, String pre) {
-		confusers.set("users." + player.getName().toLowerCase() + ".cooldown." + pre, null);
+		confusers.set("users." + player.getName().toLowerCase() + ".cooldown."
+				+ pre, null);
 	}
 
 	static boolean checkCoolDownOK(Player player, String pre, String message) {
@@ -277,17 +280,17 @@ public class boosCoolDownManager {
 
 	private static int getCooldownGroup(Player player, String pre,
 			int coolDownSeconds) {
-			if (player.hasPermission("booscooldowns.cooldown2")) {
-				coolDownSeconds = boosConfigManager.getCoolDown2(pre);
-			} else if (player.hasPermission("booscooldowns.cooldown3")) {
-				coolDownSeconds = boosConfigManager.getCoolDown3(pre);
-			} else if (player.hasPermission("booscooldowns.cooldown4")) {
-				coolDownSeconds = boosConfigManager.getCoolDown4(pre);
-			} else if (player.hasPermission("booscooldowns.cooldown5")) {
-				coolDownSeconds = boosConfigManager.getCoolDown5(pre);
-			} else {
-				coolDownSeconds = boosConfigManager.getCoolDown(pre);
-			}
+		if (player.hasPermission("booscooldowns.cooldown2")) {
+			coolDownSeconds = boosConfigManager.getCoolDown2(pre);
+		} else if (player.hasPermission("booscooldowns.cooldown3")) {
+			coolDownSeconds = boosConfigManager.getCoolDown3(pre);
+		} else if (player.hasPermission("booscooldowns.cooldown4")) {
+			coolDownSeconds = boosConfigManager.getCoolDown4(pre);
+		} else if (player.hasPermission("booscooldowns.cooldown5")) {
+			coolDownSeconds = boosConfigManager.getCoolDown5(pre);
+		} else {
+			coolDownSeconds = boosConfigManager.getCoolDown(pre);
+		}
 		return coolDownSeconds;
 	}
 
@@ -297,8 +300,8 @@ public class boosCoolDownManager {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 		currTime = sdf.format(cal.getTime());
-		confusers.set("users." + player.getName().toLowerCase() + ".cooldown." + pre,
-				currTime);
+		confusers.set("users." + player.getName().toLowerCase() + ".cooldown."
+				+ pre, currTime);
 	}
 
 	static Date getCurrTime() {
@@ -319,8 +322,8 @@ public class boosCoolDownManager {
 	static Date getTime(Player player, String pre) {
 		pre = pre.toLowerCase();
 		String confTime = "";
-		confTime = confusers.getString("users." + player.getName().toLowerCase()
-				+ ".cooldown." + pre, null);
+		confTime = confusers.getString("users."
+				+ player.getName().toLowerCase() + ".cooldown." + pre, null);
 
 		if (confTime != null && !confTime.equals("")) {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
@@ -348,14 +351,15 @@ public class boosCoolDownManager {
 
 	static void setWarmUpOK(Player player, String pre, String message) {
 		pre = pre.toLowerCase();
-		confusers.set("users." + player.getName().toLowerCase() + ".warmup." + pre, 1);
+		confusers.set("users." + player.getName().toLowerCase() + ".warmup."
+				+ pre, 1);
 	}
 
 	static boolean checkWarmUpOK(Player player, String pre, String message) {
 		pre = pre.toLowerCase();
 		int ok = 0;
-		ok = confusers.getInt("users." + player.getName().toLowerCase() + ".warmup." + pre,
-				ok);
+		ok = confusers.getInt("users." + player.getName().toLowerCase()
+				+ ".warmup." + pre, ok);
 		if (ok == 1) {
 			return true;
 		}
@@ -364,32 +368,38 @@ public class boosCoolDownManager {
 
 	static void removeWarmUpOK(Player player, String pre, String message) {
 		pre = pre.toLowerCase();
-		confusers.set("users." + player.getName().toLowerCase() + ".warmup." + pre, null);
+		confusers.set("users." + player.getName().toLowerCase() + ".warmup."
+				+ pre, null);
 	}
 
 	static void removeWarmUp(Player player, String pre, String message) {
 		pre = pre.toLowerCase();
-		confusers.set("users." + player.getName().toLowerCase() + ".warmup." + pre, null);
+		confusers.set("users." + player.getName().toLowerCase() + ".warmup."
+				+ pre, null);
 	}
 
 	static void setUses(Player player, String pre, String message) {
-		pre = pre.toLowerCase();
-		int uses = getUses(player, pre, message);
-		uses = uses + 1;
-		try {
-			confusers.set("users." + player.getName().toLowerCase() + ".uses." + pre
-					+ message, uses);
-		} catch (IllegalArgumentException e) {
-			boosCoolDown.log.warning("Player " + player.getName()
-					+ " used empty command and caused this error!");
+		if (boosConfigManager.getLimitsEnabled()) {
+			pre = pre.toLowerCase();
+			int uses = getUses(player, pre, message);
+			uses = uses + 1;
+			try {
+				confusers.set("users." + player.getName().toLowerCase()
+						+ ".uses." + pre + message, uses);
+			} catch (IllegalArgumentException e) {
+				boosCoolDown.log.warning("Player " + player.getName()
+						+ " used empty command and caused this error!");
+			}
+		} else {
+			return;
 		}
 	}
 
 	static int getUses(Player player, String pre, String message) {
 		pre = pre.toLowerCase();
 		int uses = 0;
-		uses = confusers.getInt("users." + player.getName().toLowerCase() + ".uses." + pre
-				+ message, uses);
+		uses = confusers.getInt("users." + player.getName().toLowerCase()
+				+ ".uses." + pre + message, uses);
 		return uses;
 	}
 

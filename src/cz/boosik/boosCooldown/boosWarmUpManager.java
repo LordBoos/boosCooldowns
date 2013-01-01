@@ -63,13 +63,13 @@ public class boosWarmUpManager {
 		boosWarmUpManager.playercommands.remove(tag);
 	}
 
-//	public static void cancelWarmUps(Player player) {
-//		for (String key : playercommands.keySet()) {
-//			if (key.startsWith(player.getName() + "@")) {
-//				removeWarmUpProcess(key);
-//			}
-//		}
-//	}
+	// public static void cancelWarmUps(Player player) {
+	// for (String key : playercommands.keySet()) {
+	// if (key.startsWith(player.getName() + "@")) {
+	// removeWarmUpProcess(key);
+	// }
+	// }
+	// }
 
 	public static void cancelWarmUps(Player player) {
 		Iterator<String> iter = playercommands.keySet().iterator();
@@ -80,14 +80,15 @@ public class boosWarmUpManager {
 			}
 		}
 	}
+
 	public static void killTimer(Player player) {
-	for (String key : playercommands.keySet()) {
-		if (key.startsWith(player.getName() + "@")) {
-			playercommands.get(key).cancel();
+		for (String key : playercommands.keySet()) {
+			if (key.startsWith(player.getName() + "@")) {
+				playercommands.get(key).cancel();
+			}
 		}
 	}
-	}
-	
+
 	public static boolean hasWarmUps(Player player) {
 		for (String key : playercommands.keySet()) {
 			if (key.startsWith(player.getName() + "@")) {

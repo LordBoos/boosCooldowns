@@ -17,7 +17,8 @@ public class boosConfigManager {
 	private static YamlConfiguration conf;
 	private static File confFile;
 	static List<String> players = new LinkedList<String>();
-//test
+
+	// test
 	@SuppressWarnings("static-access")
 	public boosConfigManager(boosCoolDown boosCoolDown) {
 		confFile = new File(boosCoolDown.getDataFolder(), "config.yml");
@@ -49,6 +50,7 @@ public class boosConfigManager {
 			conf.addDefault("options.options.clear_cooldowns_on_death", false);
 			conf.addDefault("options.options.command_logging", false);
 			conf.addDefault("options.options.command_signs", false);
+			conf.addDefault("options.options.enable_limits", true);
 			conf.addDefault("options.units.seconds", "seconds");
 			conf.addDefault("options.units.minutes", "minutes");
 			conf.addDefault("options.units.hours", "hours");
@@ -75,7 +77,8 @@ public class boosConfigManager {
 					"&6Price of&e &command& &6was&e %s &6and you now have&e %s");
 			conf.addDefault("options.messages.limit_achieved",
 					"&6You cannot use this command anymore!&f");
-			conf.addDefault("options.messages.limit_list",
+			conf.addDefault(
+					"options.messages.limit_list",
 					"&6Limit for command &e&command&&6 is &e&limit&&6. You can still use it &e&times&&6 times.&f");
 			conf.addDefault("options.messages.interact_blocked_during_warmup",
 					"&6You can't do this when command is warming-up!&f");
@@ -133,7 +136,8 @@ public class boosConfigManager {
 			conf.addDefault("commands.links.linkGroups.yourNameHere",
 					Arrays.asList(def2));
 			conf.addDefault("commands.aliases./newcommand", "/originalcommand");
-			conf.addDefault("commands.aliases./new spawn command", "/original spawn command");
+			conf.addDefault("commands.aliases./new spawn command",
+					"/original spawn command");
 			conf.save(confFile);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -191,24 +195,24 @@ public class boosConfigManager {
 		coolDown = conf.getInt("commands.cooldowns.cooldown5." + pre, coolDown);
 		return coolDown;
 	}
-	
+
 	static void setAddToConfigFile(String coSetnout, String co, int hodnota) {
 		co = co.toLowerCase();
 		coSetnout = coSetnout.toLowerCase();
 		String sekce = null;
-		if (coSetnout.contains("cooldown")){
+		if (coSetnout.contains("cooldown")) {
 			sekce = "cooldowns";
-		} else if (coSetnout.contains("warmup")){
+		} else if (coSetnout.contains("warmup")) {
 			sekce = "warmups";
-		} else if (coSetnout.contains("limit")){
+		} else if (coSetnout.contains("limit")) {
 			sekce = "limits";
-		} else if (coSetnout.contains("price")){
+		} else if (coSetnout.contains("price")) {
 			sekce = "prices";
 		} else {
 			return;
 		}
 		reload();
-		conf.set("commands."+sekce+"."+coSetnout+"." + co, hodnota);
+		conf.set("commands." + sekce + "." + coSetnout + "." + co, hodnota);
 		try {
 			conf.save(confFile);
 		} catch (IOException e) {
@@ -457,52 +461,49 @@ public class boosConfigManager {
 		return conf.getBoolean("options.options.clear_cooldowns_on_death",
 				false);
 	}
-	
-	public static String getLimitListMessage(){
-		return conf.getString("options.messages.limit_list",
-			"&6Limit for command &e&command&&6 is &e&limit&&6. You can still use it &e&times&&6 times.&f");
+
+	public static String getLimitListMessage() {
+		return conf
+				.getString(
+						"options.messages.limit_list",
+						"&6Limit for command &e&command&&6 is &e&limit&&6. You can still use it &e&times&&6 times.&f");
 	}
-	
-	public static String getLimGrp(Player player){
-	String lim;
-		if (player.hasPermission(
-				"booscooldowns.limit2")) {
+
+	public static String getLimGrp(Player player) {
+		String lim;
+		if (player.hasPermission("booscooldowns.limit2")) {
 			lim = "limit2";
-		} else if (player.hasPermission(
-				"booscooldowns.limit3")) {
+		} else if (player.hasPermission("booscooldowns.limit3")) {
 			lim = "limit3";
-		} else if (player.hasPermission(
-				"booscooldowns.limit4")) {
+		} else if (player.hasPermission("booscooldowns.limit4")) {
 			lim = "limit4";
-		} else if (player.hasPermission(
-				"booscooldowns.limit5")) {
+		} else if (player.hasPermission("booscooldowns.limit5")) {
 			lim = "limit5";
 		} else {
 			lim = "limit";
 		}
-	return lim;
+		return lim;
 	}
-	
-	public static ConfigurationSection getLimits(Player player){
+
+	public static ConfigurationSection getLimits(Player player) {
 		String lim = getLimGrp(player);
-	ConfigurationSection uses = conf
-			.getConfigurationSection("commands.limits." + lim);
-	return uses;
+		ConfigurationSection uses = conf
+				.getConfigurationSection("commands.limits." + lim);
+		return uses;
 	}
-	
-	public static ConfigurationSection getAliases(){
+
+	public static ConfigurationSection getAliases() {
 		ConfigurationSection aliases = conf
 				.getConfigurationSection("commands.aliases");
 		return aliases;
 	}
-	
-	public static String getAlias(String message){
+
+	public static String getAlias(String message) {
 		return conf.getString("commands.aliases." + message);
 	}
 
 	public static boolean getSignCommands() {
-		return conf.getBoolean("options.options.command_signs",
-				false);
+		return conf.getBoolean("options.options.command_signs", false);
 	}
 
 	public static String getCannotUseSignMessage() {
@@ -513,5 +514,9 @@ public class boosConfigManager {
 	public static String getCannotCreateSignMessage() {
 		return conf.getString("options.messages.cannot_create_sign",
 				"&6You are not allowed to create this kind of signs!&f");
+	}
+
+	public static boolean getLimitsEnabled() {
+		return conf.getBoolean("options.options.enable_limits", true);
 	}
 }
