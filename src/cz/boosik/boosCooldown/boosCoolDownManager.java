@@ -108,7 +108,7 @@ public class boosCoolDownManager {
 		if (uses != null) {
 			for (String key : uses.getKeys(false)) {
 				usesNum = confusers.getInt("users."
-						+ player.getName().toLowerCase() + ".uses." + key,
+						+ player.getName().toLowerCase().hashCode() + ".uses." + key,
 						usesNum);
 				if (lim.equals("limit")) {
 					limitNum = boosConfigManager.getLimit(key);
@@ -137,20 +137,17 @@ public class boosCoolDownManager {
 
 	static void clearSomething(String co, String player) {
 		ConfigurationSection userSection = confusers
-				.getConfigurationSection("users." + player + "." + co);
+				.getConfigurationSection("users." + player.toLowerCase().hashCode() + "." + co);
 		if (userSection == null)
 			return;
-		confusers.set("users." + player + "." + co, null);
+		confusers.set("users." + player.toLowerCase().hashCode() + "." + co, null);
 		save();
 		load();
 	}
 
 	static void clearSomething(String co, String player, String command) {
-		// ConfigurationSection userSection = confusers
-		// .getConfigurationSection("users."+player+"."+co+"."+command);
-		// if (userSection == null)
-		// return;
-		confusers.set("users." + player + "." + co + "." + command, 0);
+		int pre2 = command.toLowerCase().hashCode();
+		confusers.set("users." + player.toLowerCase().hashCode() + "." + co + "." + pre2, 0);
 		save();
 		load();
 	}
@@ -228,8 +225,9 @@ public class boosCoolDownManager {
 	}
 
 	static void cancelCooldown(Player player, String pre) {
-		confusers.set("users." + player.getName().toLowerCase() + ".cooldown."
-				+ pre, null);
+		int pre2 = pre.toLowerCase().hashCode();
+		confusers.set("users." + player.getName().toLowerCase().hashCode() + ".cooldown."
+				+ pre2, null);
 	}
 
 	static boolean checkCoolDownOK(Player player, String pre, String message) {
@@ -295,13 +293,13 @@ public class boosCoolDownManager {
 	}
 
 	static void setTime(Player player, String pre) {
-		pre = pre.toLowerCase();
+		int pre2 = pre.toLowerCase().hashCode();
 		String currTime = "";
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 		currTime = sdf.format(cal.getTime());
-		confusers.set("users." + player.getName().toLowerCase() + ".cooldown."
-				+ pre, currTime);
+		confusers.set("users." + player.getName().toLowerCase().hashCode() + ".cooldown."
+				+ pre2, currTime);
 	}
 
 	static Date getCurrTime() {
@@ -320,10 +318,10 @@ public class boosCoolDownManager {
 	}
 
 	static Date getTime(Player player, String pre) {
-		pre = pre.toLowerCase();
+		int pre2 = pre.toLowerCase().hashCode();
 		String confTime = "";
 		confTime = confusers.getString("users."
-				+ player.getName().toLowerCase() + ".cooldown." + pre, null);
+				+ player.getName().toLowerCase().hashCode() + ".cooldown." + pre2, null);
 
 		if (confTime != null && !confTime.equals("")) {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
@@ -350,16 +348,16 @@ public class boosCoolDownManager {
 	}
 
 	static void setWarmUpOK(Player player, String pre, String message) {
-		pre = pre.toLowerCase();
-		confusers.set("users." + player.getName().toLowerCase() + ".warmup."
-				+ pre, 1);
+		int pre2 = pre.toLowerCase().hashCode();
+		confusers.set("users." + player.getName().toLowerCase().hashCode() + ".warmup."
+				+ pre2, 1);
 	}
 
 	static boolean checkWarmUpOK(Player player, String pre, String message) {
-		pre = pre.toLowerCase();
+		int pre2 = pre.toLowerCase().hashCode();
 		int ok = 0;
-		ok = confusers.getInt("users." + player.getName().toLowerCase()
-				+ ".warmup." + pre, ok);
+		ok = confusers.getInt("users." + player.getName().toLowerCase().hashCode()
+				+ ".warmup." + pre2, ok);
 		if (ok == 1) {
 			return true;
 		}
@@ -367,25 +365,26 @@ public class boosCoolDownManager {
 	}
 
 	static void removeWarmUpOK(Player player, String pre, String message) {
-		pre = pre.toLowerCase();
-		confusers.set("users." + player.getName().toLowerCase() + ".warmup."
-				+ pre, null);
+		int pre2 = pre.toLowerCase().hashCode();
+		confusers.set("users." + player.getName().toLowerCase().hashCode() + ".warmup."
+				+ pre2, null);
 	}
 
 	static void removeWarmUp(Player player, String pre, String message) {
-		pre = pre.toLowerCase();
-		confusers.set("users." + player.getName().toLowerCase() + ".warmup."
-				+ pre, null);
+		int pre2 = pre.toLowerCase().hashCode();
+		confusers.set("users." + player.getName().toLowerCase().hashCode() + ".warmup."
+				+ pre2, null);
 	}
 
 	static void setUses(Player player, String pre, String message) {
 		if (boosConfigManager.getLimitsEnabled()) {
-			pre = pre.toLowerCase();
+			int pre2 = pre.toLowerCase().hashCode();
+			int message2 = message.toLowerCase().hashCode();
 			int uses = getUses(player, pre, message);
 			uses = uses + 1;
 			try {
-				confusers.set("users." + player.getName().toLowerCase()
-						+ ".uses." + pre + message, uses);
+				confusers.set("users." + player.getName().toLowerCase().hashCode()
+						+ ".uses." + pre2 + message2, uses);
 			} catch (IllegalArgumentException e) {
 				boosCoolDown.log.warning("Player " + player.getName()
 						+ " used empty command and caused this error!");
@@ -396,10 +395,11 @@ public class boosCoolDownManager {
 	}
 
 	static int getUses(Player player, String pre, String message) {
-		pre = pre.toLowerCase();
+		int pre2 = pre.toLowerCase().hashCode();
+		int message2 = message.toLowerCase().hashCode();
 		int uses = 0;
-		uses = confusers.getInt("users." + player.getName().toLowerCase()
-				+ ".uses." + pre + message, uses);
+		uses = confusers.getInt("users." + player.getName().toLowerCase().hashCode()
+				+ ".uses." + pre2 + message2, uses);
 		return uses;
 	}
 

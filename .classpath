@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/Jakub/workspace/bukkit-1.4.6-R0.1.jar"/>
+	<classpathentry kind="lib" path="D:/Downloads/df/bukkit-1.4.6-R0.3.jar"/>
 	<classpathentry kind="lib" path="D:/Downloads/df/Vault.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
