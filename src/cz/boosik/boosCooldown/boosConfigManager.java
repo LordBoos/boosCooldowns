@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -48,6 +49,7 @@ public class boosConfigManager {
 			conf.addDefault("options.options.clear_on_restart", false);
 			conf.addDefault("options.options.clear_uses_on_death", false);
 			conf.addDefault("options.options.clear_cooldowns_on_death", false);
+			conf.addDefault("options.options.start_cooldowns_on_death", false);
 			conf.addDefault("options.options.command_logging", false);
 			conf.addDefault("options.options.command_signs", false);
 			conf.addDefault("options.options.enable_limits", true);
@@ -484,12 +486,37 @@ public class boosConfigManager {
 		}
 		return lim;
 	}
+	
+	public static String getCooldownsGrp(Player player) {
+		String cooldown;
+		if (player.hasPermission("booscooldowns.cooldown2")) {
+			cooldown = "cooldown2";
+		} else if (player.hasPermission("booscooldowns.cooldown3")) {
+			cooldown = "cooldown3";
+		} else if (player.hasPermission("booscooldowns.cooldown4")) {
+			cooldown = "cooldown4";
+		} else if (player.hasPermission("booscooldowns.cooldown5")) {
+			cooldown = "cooldown5";
+		} else {
+			cooldown = "cooldown";
+		}
+		return cooldown;
+	}
 
 	public static ConfigurationSection getLimits(Player player) {
 		String lim = getLimGrp(player);
 		ConfigurationSection uses = conf
 				.getConfigurationSection("commands.limits." + lim);
 		return uses;
+	}
+	
+	public static Set<String> getCooldownsList(Player player) {
+		String cool = getCooldownsGrp(player);
+		boosCoolDown.log.info("Cooldown group: "+cool);
+		ConfigurationSection cooldownsList;
+		cooldownsList = conf.getConfigurationSection("commands.cooldowns." + cool);
+		Set<String> cooldowns = cooldownsList.getKeys(false);
+		return cooldowns;
 	}
 
 	public static ConfigurationSection getAliases() {
@@ -518,5 +545,9 @@ public class boosConfigManager {
 
 	public static boolean getLimitsEnabled() {
 		return conf.getBoolean("options.options.enable_limits", true);
+	}
+
+	public static boolean getStartCooldownsOnDeath() {
+		return conf.getBoolean("options.options.start_cooldowns_on_death", false);
 	}
 }

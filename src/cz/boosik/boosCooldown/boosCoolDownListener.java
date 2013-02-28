@@ -576,8 +576,9 @@ public class boosCoolDownListener<a> implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	private void onPlayerDeath(PlayerDeathEvent event) {
 		if (!boosConfigManager.getCleanCooldownsOnDeath()
-				&& !boosConfigManager.getCleanUsesOnDeath())
-			return;
+				&& !boosConfigManager.getCleanUsesOnDeath()
+				&& !boosConfigManager.getStartCooldownsOnDeath()){
+			return;}
 		Entity entity = event.getEntity();
 		if (entity != null && entity instanceof Player) {
 			Player player = (Player) entity;
@@ -594,6 +595,11 @@ public class boosCoolDownListener<a> implements Listener {
 				if (boosConfigManager.getCleanUsesOnDeath()) {
 					boosCoolDownManager.clearSomething("uses", player.getName()
 							.toLowerCase());
+				}
+			}
+			if (player != null){
+				if (boosConfigManager.getStartCooldownsOnDeath()) {
+					boosCoolDownManager.startAllCooldowns(player);
 				}
 			}
 		}

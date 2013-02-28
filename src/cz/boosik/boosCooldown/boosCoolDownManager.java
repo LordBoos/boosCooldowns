@@ -403,4 +403,12 @@ public class boosCoolDownManager {
 		return uses;
 	}
 
+	public static void startAllCooldowns(Player player) {
+		for (String a : boosConfigManager.getCooldownsList(player)) {
+			coolDown(player, a);
+		}
+		
+		
+	}
+
 }
