@@ -14,6 +14,54 @@ public class boosWarmUpManager {
 
 	static Timer scheduler;
 
+	public static void cancelWarmUps(Player player) {
+		Iterator<String> iter = playercommands.keySet().iterator();
+		while (iter.hasNext()) {
+			if (iter.next().startsWith(player.getName() + "@")) {
+				killTimer(player);
+				iter.remove();
+			}
+		}
+	}
+
+	public static boolean hasWarmUps(Player player) {
+		for (String key : playercommands.keySet()) {
+			if (key.startsWith(player.getName() + "@")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isWarmUpProcess(Player player, String pre,
+			String message) {
+		pre = pre.toLowerCase();
+		if (playercommands.containsKey(player.getName() + "@" + pre)) {
+			return true;
+		}
+		return false;
+	}
+
+	// public static void cancelWarmUps(Player player) {
+	// for (String key : playercommands.keySet()) {
+	// if (key.startsWith(player.getName() + "@")) {
+	// removeWarmUpProcess(key);
+	// }
+	// }
+	// }
+
+	public static void killTimer(Player player) {
+		for (String key : playercommands.keySet()) {
+			if (key.startsWith(player.getName() + "@")) {
+				playercommands.get(key).cancel();
+			}
+		}
+	}
+
+	public static void removeWarmUpProcess(String tag) {
+		boosWarmUpManager.playercommands.remove(tag);
+	}
+
 	public static void startWarmUp(boosCoolDown bCoolDown, Player player,
 			String pre, String message, int warmUpSeconds) {
 		pre = pre.toLowerCase();
@@ -48,53 +96,5 @@ public class boosWarmUpManager {
 			msg = msg.replaceAll("&command&", pre);
 			boosChat.sendMessageToPlayer(player, msg);
 		}
-	}
-
-	public static boolean isWarmUpProcess(Player player, String pre,
-			String message) {
-		pre = pre.toLowerCase();
-		if (playercommands.containsKey(player.getName() + "@" + pre)) {
-			return true;
-		}
-		return false;
-	}
-
-	public static void removeWarmUpProcess(String tag) {
-		boosWarmUpManager.playercommands.remove(tag);
-	}
-
-	// public static void cancelWarmUps(Player player) {
-	// for (String key : playercommands.keySet()) {
-	// if (key.startsWith(player.getName() + "@")) {
-	// removeWarmUpProcess(key);
-	// }
-	// }
-	// }
-
-	public static void cancelWarmUps(Player player) {
-		Iterator<String> iter = playercommands.keySet().iterator();
-		while (iter.hasNext()) {
-			if (iter.next().startsWith(player.getName() + "@")) {
-				killTimer(player);
-				iter.remove();
-			}
-		}
-	}
-
-	public static void killTimer(Player player) {
-		for (String key : playercommands.keySet()) {
-			if (key.startsWith(player.getName() + "@")) {
-				playercommands.get(key).cancel();
-			}
-		}
-	}
-
-	public static boolean hasWarmUps(Player player) {
-		for (String key : playercommands.keySet()) {
-			if (key.startsWith(player.getName() + "@")) {
-				return true;
-			}
-		}
-		return false;
 	}
 }

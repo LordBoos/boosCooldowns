@@ -1,11 +1,11 @@
 package cz.boosik.boosCooldown;
 
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.economy.EconomyResponse;
+
 import org.bukkit.entity.Player;
 
 import util.boosChat;
-
-import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.economy.EconomyResponse;
 
 public class boosPriceManager {
 	private static Economy economy = boosCoolDown.getEconomy();

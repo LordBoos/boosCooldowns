@@ -5,61 +5,75 @@ import java.util.logging.Logger;
 
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.mcstats.MetricsLite;
 
 import util.boosChat;
+import cz.boosik.boosCooldown.Listeners.boosEntityDamageListener;
+import cz.boosik.boosCooldown.Listeners.boosPlayerDeathListener;
+import cz.boosik.boosCooldown.Listeners.boosPlayerGameModeChangeListener;
+import cz.boosik.boosCooldown.Listeners.boosPlayerInteractListener;
+import cz.boosik.boosCooldown.Listeners.boosPlayerMoveListener;
+import cz.boosik.boosCooldown.Listeners.boosPlayerToggleSneakListener;
+import cz.boosik.boosCooldown.Listeners.boosPlayerToggleSprintListener;
+import cz.boosik.boosCooldown.Listeners.boosSignChangeListener;
+import cz.boosik.boosCooldown.Listeners.boosSignInteractListener;
 
-public class boosCoolDown extends JavaPlugin {
+public class boosCoolDown extends JavaPlugin implements Runnable {
 	public static final Logger log = Logger.getLogger("Minecraft");
 	public static PluginDescriptionFile pdfFile;
 	private static Economy economy = null;
 	private static boolean usingVault = false;
 	private PluginManager pm;
-
-	public void onEnable() {
-		pdfFile = this.getDescription();
-		PluginDescriptionFile pdfFile = this.getDescription();
-		log.info("[" + pdfFile.getName() + "]" + " version "
-				+ pdfFile.getVersion() + " by " + pdfFile.getAuthors()
-				+ " is enabled!");
-
-		new boosConfigManager(this);
-		boosConfigManager.load();
-		new boosCoolDownManager(this);
-		boosCoolDownManager.load();
-		pm = getServer().getPluginManager();
-		pm.registerEvents(new boosCoolDownListener<Object>(this), this);
-		initializeVault();
-		if (boosConfigManager.getClearOnRestart()) {
-			boosCoolDownManager.clear();
-		}
-		try {
-			MetricsLite metrics = new MetricsLite(this);
-			metrics.start();
-		} catch (IOException e) {
-			// Failed to submit the stats :-(
-		}
-
+	
+	public static void commandLogger(String player, String command) {
+		log.info("[" + "boosLogger" + "] " + player + " used command "
+				+ command);
 	}
 
-	public void onDisable() {
-		if (boosConfigManager.getClearOnRestart() == true) {
-			boosCoolDownManager.clear();
-			log.info("[" + pdfFile.getName() + "]" + " cooldowns cleared!");
+	public static Economy getEconomy() {
+		return economy;
+	}
+
+	public static Logger getLog() {
+		return log;
+	}
+
+	public static boolean isUsingVault() {
+		return usingVault;
+	}
+
+	private void initializeVault() {
+		Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
+		if (x != null & x instanceof Vault) {
+			log.info("[" + pdfFile.getName() + "]"
+					+ " found [Vault] searching for economy plugin.");
+			usingVault = true;
+			if (setupEconomy()) {
+				log.info("[" + pdfFile.getName() + "]" + " found ["
+						+ economy.getName()
+						+ "] plugin, enabling prices support.");
+			} else {
+				log.info("["
+						+ pdfFile.getName()
+						+ "]"
+						+ " economy plugin not found, disabling prices support.");
+			}
 		} else {
-			boosCoolDownManager.save();
-			log.info("[" + pdfFile.getName() + "]" + " cooldowns saved!");
+			log.info("[" + pdfFile.getName() + "]"
+					+ " [Vault] not found disabling economy support.");
+			usingVault = false;
 		}
-		log.info("[" + pdfFile.getName() + "]" + " version "
-				+ pdfFile.getVersion() + " disabled!");
 	}
 
 	@Override
@@ -70,7 +84,7 @@ public class boosCoolDown extends JavaPlugin {
 			if (args.length == 1) {
 				if (sender.hasPermission("booscooldowns.reload")
 						&& args[0].equalsIgnoreCase("reload")) {
-					boosConfigManager.reload();
+					reload();
 					boosChat.sendMessageToCommandSender(sender,
 							"&6[" + pdfFile.getName() + "]&e"
 									+ " config reloaded");
@@ -221,17 +235,88 @@ public class boosCoolDown extends JavaPlugin {
 		return false;
 	}
 
-	public static Economy getEconomy() {
-		return economy;
+	public void onDisable() {
+		if (boosConfigManager.getClearOnRestart() == true) {
+			boosCoolDownManager.clear();
+			log.info("[" + pdfFile.getName() + "]" + " cooldowns cleared!");
+		} else {
+			boosCoolDownManager.save();
+			log.info("[" + pdfFile.getName() + "]" + " cooldowns saved!");
+		}
+		log.info("[" + pdfFile.getName() + "]" + " version "
+				+ pdfFile.getVersion() + " disabled!");
 	}
 
-	public static boolean isUsingVault() {
-		return usingVault;
+	public void onEnable() {
+		pdfFile = this.getDescription();
+		PluginDescriptionFile pdfFile = this.getDescription();
+		log.info("[" + pdfFile.getName() + "]" + " version "
+				+ pdfFile.getVersion() + " by " + pdfFile.getAuthors()
+				+ " is enabled!");
+
+		new boosConfigManager(this);
+		boosConfigManager.load();
+		new boosCoolDownManager(this);
+		boosCoolDownManager.load();
+		pm = getServer().getPluginManager();
+		registerListeners();
+		initializeVault();
+		BukkitScheduler scheduler = this.getServer().getScheduler();
+		scheduler.scheduleSyncRepeatingTask(this, this, boosConfigManager.getSaveInterval()*1200, boosConfigManager.getSaveInterval()*1200);
+		if (boosConfigManager.getClearOnRestart()) {
+			boosCoolDownManager.clear();
+		}
+		try {
+			MetricsLite metrics = new MetricsLite(this);
+			metrics.start();
+		} catch (IOException e) {
+			// Failed to submit the stats :-(
+		}
+
 	}
 
-	public static void commandLogger(String player, String command) {
-		log.info("[" + "boosLogger" + "] " + player + " used command "
-				+ command);
+	private void registerListeners() {
+		HandlerList.unregisterAll(this);
+		pm.registerEvents(new boosCoolDownListener<Object>(this), this);
+		if (boosConfigManager.getCancelWarmUpOnDamage()) {
+			pm.registerEvents(new boosEntityDamageListener(), this);
+		}
+		if (boosConfigManager.getCleanCooldownsOnDeath()
+				|| boosConfigManager.getCleanUsesOnDeath()
+				|| boosConfigManager.getStartCooldownsOnDeath()) {
+			pm.registerEvents(new boosPlayerDeathListener(), this);
+		}
+		if (boosConfigManager.getCancelWarmUpOnGameModeChange()) {
+			pm.registerEvents(new boosPlayerGameModeChangeListener(), this);
+		}
+		if (boosConfigManager.getBlockInteractDuringWarmup()) {
+			pm.registerEvents(new boosPlayerInteractListener(), this);
+		}
+		if (boosConfigManager.getCancelWarmupOnMove()) {
+			pm.registerEvents(new boosPlayerMoveListener(), this);
+		}
+		if (boosConfigManager.getCancelWarmupOnSneak()) {
+			pm.registerEvents(new boosPlayerToggleSneakListener(), this);
+		}
+		if (boosConfigManager.getCancelWarmupOnSprint()) {
+			pm.registerEvents(new boosPlayerToggleSprintListener(), this);
+		}
+		if (boosConfigManager.getSignCommands()) {
+			pm.registerEvents(new boosSignChangeListener(), this);
+			pm.registerEvents(new boosSignInteractListener(this), this);
+		}
+	}
+
+	private void reload() {
+		boosConfigManager.reload();
+		registerListeners();
+	}
+
+	@Override
+	public void run() {
+		boosCoolDownManager.save();
+		boosCoolDownManager.load();
+		log.info("[boosCooldowns] Config saved!");
 	}
 
 	private boolean setupEconomy() {
@@ -245,32 +330,5 @@ public class boosCoolDown extends JavaPlugin {
 			return (economy != null);
 		}
 		return false;
-	}
-
-	private void initializeVault() {
-		Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
-		if (x != null & x instanceof Vault) {
-			log.info("[" + pdfFile.getName() + "]"
-					+ " found [Vault] searching for economy plugin.");
-			usingVault = true;
-			if (setupEconomy()) {
-				log.info("[" + pdfFile.getName() + "]" + " found ["
-						+ economy.getName()
-						+ "] plugin, enabling prices support.");
-			} else {
-				log.info("["
-						+ pdfFile.getName()
-						+ "]"
-						+ " economy plugin not found, disabling prices support.");
-			}
-		} else {
-			log.info("[" + pdfFile.getName() + "]"
-					+ " [Vault] not found disabling economy support.");
-			usingVault = false;
-		}
-	}
-
-	public static Logger getLog() {
-		return log;
 	}
 }
