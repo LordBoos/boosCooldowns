@@ -361,13 +361,13 @@ public class boosCoolDownListener<a> implements Listener {
 	}
 
 	private int prePriceCheck(Player player, String preSub) {
-		if (player.hasPermission("booscooldowns.cooldown2")) {
+		if (player.hasPermission("booscooldowns.price2")) {
 			return boosConfigManager.getPrice2(preSub);
-		} else if (player.hasPermission("booscooldowns.cooldown3")) {
+		} else if (player.hasPermission("booscooldowns.price3")) {
 			return boosConfigManager.getPrice3(preSub);
-		} else if (player.hasPermission("booscooldowns.cooldown4")) {
+		} else if (player.hasPermission("booscooldowns.price4")) {
 			return boosConfigManager.getPrice4(preSub);
-		} else if (player.hasPermission("booscooldowns.cooldown5")) {
+		} else if (player.hasPermission("booscooldowns.price5")) {
 			return boosConfigManager.getPrice5(preSub);
 		} else {
 			return boosConfigManager.getPrice(preSub);
