@@ -1,6 +1,6 @@
 name: boosCooldowns
 main: cz.boosik.boosCooldown.boosCoolDown
-version: 3.3.0
+version: 3.4.0
 authors: [LordBoos (ingame name boosik)]
 softdepend: [Vault]
 description: >
@@ -9,6 +9,7 @@ commands:
   booscooldowns:
     description: Reload command.
     usage: Use /booscooldowns reload, clearcooldowns <player>, clearwarmups <player> or clearuses <player>
+    aliases: bcd
 permissions:
     booscooldowns.exception:
         description: Player wont be affected by plugin at all (no warmups, no cooldowns, no prices, no limits, no aliases).

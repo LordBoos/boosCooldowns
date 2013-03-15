@@ -522,6 +522,14 @@ public class boosConfigManager {
 			conf.addDefault("commands.warmups.warmup3./home", 90);
 			conf.addDefault("commands.warmups.warmup4./home", 99);
 			conf.addDefault("commands.warmups.warmup5./home", 542);
+			conf.addDefault("commands.warmupPotionEffects.effect./home",
+					"WEAKNESS@3");
+			conf.addDefault(
+					"commands.warmupPotionEffects.howto1",
+					"#You can use CONFUSION, DAMAGE_RESISTANCE, FAST_DIGGING, FIRE_RESISTANCE, HARM, HEAL, HUNGER, INCREASE_DAMAGE, INVISIBILITY, JUMP, NIGHT_VISION, POISON, REGENERATION, SLOW, SLOW_DIGGING, SPEED, WATER_BREATHING, WEAKNESS, WITHER");
+			conf.addDefault(
+					"commands.warmupPotionEffects.howto2",
+					"#After effect add @number, for example WEAKNESS@3 will apply weakness III to player for the duration of warmup.");
 			conf.addDefault("commands.prices.price./spawn", 10);
 			conf.addDefault("commands.prices.price./home", 20);
 			conf.addDefault("commands.prices.price2./home", 40);
@@ -556,5 +564,13 @@ public class boosConfigManager {
 
 	public static int getSaveInterval() {
 		return conf.getInt("options.options.save_interval_in_minutes", 15);
+	}
+
+	public static String getPotionEffect(String pre) {
+		String effect = null;
+		pre = pre.toLowerCase();
+		effect = conf.getString("commands.warmupPotionEffects.effect." + pre,
+				effect);
+		return effect;
 	}
 }

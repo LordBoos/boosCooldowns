@@ -396,6 +396,7 @@ public class boosCoolDownListener<a> implements Listener {
 			if (boosCoolDownManager.checkCoolDownOK(player, pre, message)) {
 				boosWarmUpManager.startWarmUp(this.plugin, player, pre,
 						message, warmUpSeconds);
+				boosWarmUpManager.applyPotionEffect(player, pre, message, warmUpSeconds);
 				event.setCancelled(true);
 				return;
 			} else {

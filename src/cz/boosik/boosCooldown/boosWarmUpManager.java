@@ -5,6 +5,7 @@ import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
 
 import util.boosChat;
 
@@ -96,5 +97,13 @@ public class boosWarmUpManager {
 			msg = msg.replaceAll("&command&", pre);
 			boosChat.sendMessageToPlayer(player, msg);
 		}
+	}
+
+	public static void applyPotionEffect(Player player, String pre,
+			String message, int warmUpSeconds) {
+		String[] potion = boosConfigManager.getPotionEffect(pre).split("@");
+		PotionEffectType effect = PotionEffectType.getByName(potion[0]);
+		player.addPotionEffect(effect.createEffect(warmUpSeconds*40, Integer.parseInt(potion[1])-1), true);
+		
 	}
 }
