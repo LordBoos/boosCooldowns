@@ -363,20 +363,22 @@ public class boosCoolDownManager {
 
 	static void setUses(Player player, String pre, String message) {
 		if (boosConfigManager.getLimitsEnabled()) {
-			int pre2 = pre.toLowerCase().hashCode();
-			int message2 = message.toLowerCase().hashCode();
-			int uses = getUses(player, pre, message);
-			uses = uses + 1;
-			try {
-				confusers.set("users."
-						+ player.getName().toLowerCase().hashCode() + ".uses."
-						+ pre2 + message2, uses);
-			} catch (IllegalArgumentException e) {
-				boosCoolDown.log.warning("Player " + player.getName()
-						+ " used empty command and caused this error!");
+			if (boosConfigManager.getLimits(player).contains(pre)) {
+				int pre2 = pre.toLowerCase().hashCode();
+				int message2 = message.toLowerCase().hashCode();
+				int uses = getUses(player, pre, message);
+				uses = uses + 1;
+				try {
+					confusers.set("users."
+							+ player.getName().toLowerCase().hashCode()
+							+ ".uses." + pre2 + message2, uses);
+				} catch (IllegalArgumentException e) {
+					boosCoolDown.log.warning("Player " + player.getName()
+							+ " used empty command and caused this error!");
+				}
+			} else {
+				return;
 			}
-		} else {
-			return;
 		}
 	}
 

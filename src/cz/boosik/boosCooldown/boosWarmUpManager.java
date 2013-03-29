@@ -92,6 +92,7 @@ public class boosWarmUpManager {
 					scheduler, player, pre, message);
 			playercommands.put(player.getName() + "@" + pre, scheduleMe);
 			scheduler.schedule(scheduleMe, warmUpSeconds * 1000);
+			applyPotionEffect(player, pre, message, warmUpSeconds);
 		} else {
 			String msg = boosConfigManager.getWarmUpAlreadyStartedMessage();
 			msg = msg.replaceAll("&command&", pre);
@@ -101,9 +102,11 @@ public class boosWarmUpManager {
 
 	public static void applyPotionEffect(Player player, String pre,
 			String message, int warmUpSeconds) {
-		String[] potion = boosConfigManager.getPotionEffect(pre).split("@");
+		String potionTemp = boosConfigManager.getPotionEffect(pre);
+		if (potionTemp == null)
+			return;
+		String[] potion = potionTemp.split("@");
 		PotionEffectType effect = PotionEffectType.getByName(potion[0]);
 		player.addPotionEffect(effect.createEffect(warmUpSeconds*40, Integer.parseInt(potion[1])-1), true);
-		
 	}
 }

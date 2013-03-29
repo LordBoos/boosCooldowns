@@ -122,7 +122,7 @@ public class boosCoolDownListener<a> implements Listener {
 		return on;
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@EventHandler(priority = EventPriority.LOWEST)
 	private void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		if (event.isCancelled()) {
 			return;
@@ -396,7 +396,6 @@ public class boosCoolDownListener<a> implements Listener {
 			if (boosCoolDownManager.checkCoolDownOK(player, pre, message)) {
 				boosWarmUpManager.startWarmUp(this.plugin, player, pre,
 						message, warmUpSeconds);
-				boosWarmUpManager.applyPotionEffect(player, pre, message, warmUpSeconds);
 				event.setCancelled(true);
 				return;
 			} else {
