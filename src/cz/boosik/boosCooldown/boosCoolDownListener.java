@@ -77,7 +77,7 @@ public class boosCoolDownListener<a> implements Listener {
 	// Returns true if the command is on cooldown, false otherwise
 	private void checkCooldown(PlayerCommandPreprocessEvent event,
 			Player player, String pre, String message, int warmUpSeconds,
-			int price) {
+			double price) {
 		if (!blocked) {
 			if (warmUpSeconds > 0) {
 				if (!player.hasPermission("booscooldowns.nowarmup")
@@ -158,7 +158,7 @@ public class boosCoolDownListener<a> implements Listener {
 			int preSubCheck = -1;
 			int preSubCheck2 = -1;
 			int preSubCheck3 = -1;
-			int price = 0;
+			double price = 0;
 			int limit = 0;
 			int cd = 0;
 			playerloc.put(player, player.getLocation());
@@ -281,7 +281,7 @@ public class boosCoolDownListener<a> implements Listener {
 	private void onPlayerChat(AsyncPlayerChatEvent event) {
 		String chatMessage = event.getMessage();
 		String temp = "globalchat";
-		int price = 0;
+		double price = 0;
 		Player player = event.getPlayer();
 		if (chatMessage.startsWith("!")) {
 			if (!boosCoolDownManager.checkCoolDownOK(player, temp, chatMessage)) {
@@ -299,7 +299,7 @@ public class boosCoolDownListener<a> implements Listener {
 	}
 
 	private void payForCommand(PlayerCommandPreprocessEvent event,
-			Player player, String pre, int price) {
+			Player player, String pre, double price) {
 		String name = player.getName();
 		if (price > 0) {
 			if (!player.hasPermission("booscooldowns.noprice")
@@ -316,7 +316,7 @@ public class boosCoolDownListener<a> implements Listener {
 	}
 
 	private void payForCommand2(AsyncPlayerChatEvent event, Player player,
-			String pre, int price) {
+			String pre, double price) {
 		String name = player.getName();
 		if (price > 0) {
 			if (!player.hasPermission("booscooldowns.noprice")
@@ -360,7 +360,7 @@ public class boosCoolDownListener<a> implements Listener {
 		}
 	}
 
-	private int prePriceCheck(Player player, String preSub) {
+	private double prePriceCheck(Player player, String preSub) {
 		if (player.hasPermission("booscooldowns.price2")) {
 			return boosConfigManager.getPrice2(preSub);
 		} else if (player.hasPermission("booscooldowns.price3")) {

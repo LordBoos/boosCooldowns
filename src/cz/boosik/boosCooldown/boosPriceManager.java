@@ -10,7 +10,7 @@ import util.boosChat;
 public class boosPriceManager {
 	private static Economy economy = boosCoolDown.getEconomy();
 
-	public static boolean payForCommand(Player player, String pre, int price,
+	public static boolean payForCommand(Player player, String pre, double price,
 			String name) {
 		if (economy == null) {
 			return true;

@@ -272,38 +272,38 @@ public class boosConfigManager {
 				"Price of &command& was %s and you now have %s");
 	}
 
-	public static int getPrice(String pre) {
-		int price = 0;
+	public static double getPrice(String pre) {
+		double price = 0.0;
 		pre = pre.toLowerCase();
-		price = conf.getInt("commands.prices.price." + pre, price);
+		price = conf.getDouble("commands.prices.price." + pre, price);
 		return price;
 	}
 
-	public static int getPrice2(String pre) {
-		int price = 0;
+	public static double getPrice2(String pre) {
+		double price = 0.0;
 		pre = pre.toLowerCase();
-		price = conf.getInt("commands.prices.price2." + pre, price);
+		price = conf.getDouble("commands.prices.price2." + pre, price);
 		return price;
 	}
 
-	public static int getPrice3(String pre) {
-		int price = 0;
+	public static double getPrice3(String pre) {
+		double price = 0.0;
 		pre = pre.toLowerCase();
-		price = conf.getInt("commands.prices.price3." + pre, price);
+		price = conf.getDouble("commands.prices.price3." + pre, price);
 		return price;
 	}
 
-	public static int getPrice4(String pre) {
-		int price = 0;
+	public static double getPrice4(String pre) {
+		double price = 0.0;
 		pre = pre.toLowerCase();
-		price = conf.getInt("commands.prices.price4." + pre, price);
+		price = conf.getDouble("commands.prices.price4." + pre, price);
 		return price;
 	}
 
-	public static int getPrice5(String pre) {
-		int price = 0;
+	public static double getPrice5(String pre) {
+		Double price = 0.0;
 		pre = pre.toLowerCase();
-		price = conf.getInt("commands.prices.price5." + pre, price);
+		price = conf.getDouble("commands.prices.price5." + pre, price);
 		return price;
 	}
 
@@ -530,12 +530,12 @@ public class boosConfigManager {
 			conf.addDefault(
 					"commands.warmupPotionEffects.howto2",
 					"#After effect add @number, for example WEAKNESS@3 will apply weakness III to player for the duration of warmup.");
-			conf.addDefault("commands.prices.price./spawn", 10);
-			conf.addDefault("commands.prices.price./home", 20);
-			conf.addDefault("commands.prices.price2./home", 40);
-			conf.addDefault("commands.prices.price3./home", 90);
-			conf.addDefault("commands.prices.price4./home", 99);
-			conf.addDefault("commands.prices.price5./home", 542);
+			conf.addDefault("commands.prices.price./spawn", 10.0);
+			conf.addDefault("commands.prices.price./home", 20.0);
+			conf.addDefault("commands.prices.price2./home", 40.0);
+			conf.addDefault("commands.prices.price3./home", 90.0);
+			conf.addDefault("commands.prices.price4./home", 99.0);
+			conf.addDefault("commands.prices.price5./home", 542.0);
 			conf.addDefault("commands.limits.limit./example", 0);
 			conf.addDefault("commands.limits.limit2./example", 100);
 			conf.addDefault("commands.limits.limit3./command", 50);
