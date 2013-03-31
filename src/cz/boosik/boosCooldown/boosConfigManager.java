@@ -196,7 +196,7 @@ public class boosConfigManager {
 	}
 
 	public static boolean getLimitsEnabled() {
-		return conf.getBoolean("options.options.enable_limits", true);
+		return conf.getBoolean("options.options.limits_enabled", true);
 	}
 
 	public static String getLink(String pre) {
