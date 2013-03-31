@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -142,7 +143,7 @@ public class boosCoolDownManager {
 	static boolean coolDown(Player player, String pre) {
 		pre = pre.toLowerCase();
 		int coolDownSeconds = 0;
-		coolDownSeconds = getCooldownGroup(player, pre, coolDownSeconds);
+		coolDownSeconds = getCooldownTime(player, pre);
 		if (coolDownSeconds > 0
 				&& !player.hasPermission("booscooldowns.nocooldown")
 				&& !player.hasPermission("booscooldowns.nocooldown." + pre)) {
@@ -151,19 +152,8 @@ public class boosCoolDownManager {
 		return false;
 	}
 
-	private static int getCooldownGroup(Player player, String pre,
-			int coolDownSeconds) {
-		if (player.hasPermission("booscooldowns.cooldown2")) {
-			coolDownSeconds = boosConfigManager.getCoolDown2(pre);
-		} else if (player.hasPermission("booscooldowns.cooldown3")) {
-			coolDownSeconds = boosConfigManager.getCoolDown3(pre);
-		} else if (player.hasPermission("booscooldowns.cooldown4")) {
-			coolDownSeconds = boosConfigManager.getCoolDown4(pre);
-		} else if (player.hasPermission("booscooldowns.cooldown5")) {
-			coolDownSeconds = boosConfigManager.getCoolDown5(pre);
-		} else {
-			coolDownSeconds = boosConfigManager.getCoolDown(pre);
-		}
+	private static int getCooldownTime(Player player, String pre) {
+		int coolDownSeconds = boosConfigManager.getCoolDown(pre, player);
 		return coolDownSeconds;
 	}
 
@@ -187,24 +177,13 @@ public class boosCoolDownManager {
 		int limitNum = 0;
 		int num;
 		String message;
-		String lim = boosConfigManager.getLimGrp(player);
-		ConfigurationSection uses = boosConfigManager.getLimits(player);
+		Set<String> uses = boosConfigManager.getLimits(player);
 		if (uses != null) {
-			for (String key : uses.getKeys(false)) {
+			for (String key : uses) {
 				usesNum = confusers.getInt("users."
 						+ player.getName().toLowerCase().hashCode() + ".uses."
 						+ key, usesNum);
-				if (lim.equals("limit")) {
-					limitNum = boosConfigManager.getLimit(key);
-				} else if (lim.equals("limit2")) {
-					limitNum = boosConfigManager.getLimit2(key);
-				} else if (lim.equals("limit3")) {
-					limitNum = boosConfigManager.getLimit3(key);
-				} else if (lim.equals("limit4")) {
-					limitNum = boosConfigManager.getLimit4(key);
-				} else if (lim.equals("limit5")) {
-					limitNum = boosConfigManager.getLimit5(key);
-				}
+					limitNum = boosConfigManager.getLimit(key, player);
 				num = limitNum - usesNum;
 				if (num < 0) {
 					num = 0;
@@ -253,7 +232,7 @@ public class boosCoolDownManager {
 	static boolean checkCoolDownOK(Player player, String pre, String message) {
 		pre = pre.toLowerCase();
 		int coolDownSeconds = 0;
-		coolDownSeconds = getCooldownGroup(player, pre, coolDownSeconds);
+		coolDownSeconds = getCooldownTime(player, pre);
 		if (coolDownSeconds > 0) {
 			Date lastTime = getTime(player, pre);
 			if (lastTime == null) {
@@ -389,7 +368,7 @@ public class boosCoolDownManager {
 	}
 
 	public static void startAllCooldowns(Player player) {
-		for (String a : boosConfigManager.getCooldownsList(player)) {
+		for (String a : boosConfigManager.getCooldowns(player)) {
 			coolDown(player, a);
 		}
 

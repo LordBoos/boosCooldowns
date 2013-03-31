@@ -105,39 +105,19 @@ public class boosConfigManager {
 		return conf.getBoolean("options.options.command_logging", false);
 	}
 
-	static int getCoolDown(String pre) {
+	static int getCoolDown(String pre, Player player) {
 		int coolDown = 0;
+		String group = getCoolGrp(player);
 		pre = pre.toLowerCase();
-		coolDown = conf.getInt("commands.cooldowns.cooldown." + pre, coolDown);
+		coolDown = conf.getInt("commands.cooldowns." + group + "." + pre,
+				coolDown);
 		return coolDown;
 	}
 
-	public static int getCoolDown2(String pre) {
-		int coolDown = 0;
-		pre = pre.toLowerCase();
-		coolDown = conf.getInt("commands.cooldowns.cooldown2." + pre, coolDown);
-		return coolDown;
-	}
-
-	public static int getCoolDown3(String pre) {
-		int coolDown = 0;
-		pre = pre.toLowerCase();
-		coolDown = conf.getInt("commands.cooldowns.cooldown3." + pre, coolDown);
-		return coolDown;
-	}
-
-	public static int getCoolDown4(String pre) {
-		int coolDown = 0;
-		pre = pre.toLowerCase();
-		coolDown = conf.getInt("commands.cooldowns.cooldown4." + pre, coolDown);
-		return coolDown;
-	}
-
-	public static int getCoolDown5(String pre) {
-		int coolDown = 0;
-		pre = pre.toLowerCase();
-		coolDown = conf.getInt("commands.cooldowns.cooldown5." + pre, coolDown);
-		return coolDown;
+	private static Set<String> getCooldownGroups() {
+		Set<String> groups = conf.getConfigurationSection("commands.cooldowns")
+				.getKeys(false);
+		return groups;
 	}
 
 	static String getCoolDownMessage() {
@@ -147,30 +127,21 @@ public class boosConfigManager {
 						"&6Wait&e &seconds& seconds&6 before you can use command&e &command& &6again.&f");
 	}
 
-	public static String getCooldownsGrp(Player player) {
-		String cooldown;
-		if (player.hasPermission("booscooldowns.cooldown2")) {
-			cooldown = "cooldown2";
-		} else if (player.hasPermission("booscooldowns.cooldown3")) {
-			cooldown = "cooldown3";
-		} else if (player.hasPermission("booscooldowns.cooldown4")) {
-			cooldown = "cooldown4";
-		} else if (player.hasPermission("booscooldowns.cooldown5")) {
-			cooldown = "cooldown5";
-		} else {
-			cooldown = "cooldown";
-		}
-		return cooldown;
+	public static Set<String> getCooldowns(Player player) {
+		String cool = getCoolGrp(player);
+		Set<String> cooldowns = conf.getConfigurationSection(
+				"commands.cooldowns." + cool).getKeys(false);
+		return cooldowns;
 	}
 
-	public static Set<String> getCooldownsList(Player player) {
-		String cool = getCooldownsGrp(player);
-		boosCoolDown.log.info("Cooldown group: " + cool);
-		ConfigurationSection cooldownsList;
-		cooldownsList = conf.getConfigurationSection("commands.cooldowns."
-				+ cool);
-		Set<String> cooldowns = cooldownsList.getKeys(false);
-		return cooldowns;
+	private static String getCoolGrp(Player player) {
+		String cool = "cooldown";
+		for (String group : getCooldownGroups()) {
+			if (player.hasPermission("booscooldowns." + group)) {
+				cool = group;
+			}
+		}
+		return cool;
 	}
 
 	public static String getInteractBlockedMessage() {
@@ -180,53 +151,26 @@ public class boosConfigManager {
 	}
 
 	public static String getLimGrp(Player player) {
-		String lim;
-		if (player.hasPermission("booscooldowns.limit2")) {
-			lim = "limit2";
-		} else if (player.hasPermission("booscooldowns.limit3")) {
-			lim = "limit3";
-		} else if (player.hasPermission("booscooldowns.limit4")) {
-			lim = "limit4";
-		} else if (player.hasPermission("booscooldowns.limit5")) {
-			lim = "limit5";
-		} else {
-			lim = "limit";
+		String lim = "limit";
+		for (String group : getLimitGroups()) {
+			if (player.hasPermission("booscooldowns." + group)) {
+				lim = group;
+			}
 		}
 		return lim;
 	}
 
-	public static int getLimit(String pre) {
-		int limit = -1;
-		pre = pre.toLowerCase();
-		limit = conf.getInt("commands.limits.limit." + pre, limit);
-		return limit;
+	private static Set<String> getLimitGroups() {
+		Set<String> groups = conf.getConfigurationSection("commands.limits")
+				.getKeys(false);
+		return groups;
 	}
 
-	public static int getLimit2(String pre) {
+	public static int getLimit(String pre, Player player) {
 		int limit = -1;
+		String group = getLimGrp(player);
 		pre = pre.toLowerCase();
-		limit = conf.getInt("commands.limits.limit2." + pre, limit);
-		return limit;
-	}
-
-	public static int getLimit3(String pre) {
-		int limit = -1;
-		pre = pre.toLowerCase();
-		limit = conf.getInt("commands.limits.limit3." + pre, limit);
-		return limit;
-	}
-
-	public static int getLimit4(String pre) {
-		int limit = -1;
-		pre = pre.toLowerCase();
-		limit = conf.getInt("commands.limits.limit4." + pre, limit);
-		return limit;
-	}
-
-	public static int getLimit5(String pre) {
-		int limit = -1;
-		pre = pre.toLowerCase();
-		limit = conf.getInt("commands.limits.limit5." + pre, limit);
+		limit = conf.getInt("commands.limits." + group + "." + pre, limit);
 		return limit;
 	}
 
@@ -237,11 +181,11 @@ public class boosConfigManager {
 						"&6Limit for command &e&command&&6 is &e&limit&&6. You can still use it &e&times&&6 times.&f");
 	}
 
-	public static ConfigurationSection getLimits(Player player) {
+	public static Set<String> getLimits(Player player) {
 		String lim = getLimGrp(player);
-		ConfigurationSection uses = conf
-				.getConfigurationSection("commands.limits." + lim);
-		return uses;
+		Set<String> limits = conf.getConfigurationSection(
+				"commands.limits." + lim).getKeys(false);
+		return limits;
 	}
 
 	public static boolean getLimitsEnabled() {
@@ -272,39 +216,40 @@ public class boosConfigManager {
 				"Price of &command& was %s and you now have %s");
 	}
 
-	public static double getPrice(String pre) {
-		double price = 0.0;
+	public static String getPotionEffect(String pre) {
+		String effect = null;
 		pre = pre.toLowerCase();
-		price = conf.getDouble("commands.prices.price." + pre, price);
+		effect = conf.getString("commands.warmupPotionEffects.effect." + pre,
+				effect);
+		return effect;
+	}
+
+	public static double getPrice(String pre, Player player) {
+		double price = 0.0;
+		String group = getPriceGrp(player);
+		pre = pre.toLowerCase();
+		price = conf.getDouble("commands.prices." + group + "." + pre, price);
 		return price;
 	}
 
-	public static double getPrice2(String pre) {
-		double price = 0.0;
-		pre = pre.toLowerCase();
-		price = conf.getDouble("commands.prices.price2." + pre, price);
+	private static String getPriceGrp(Player player) {
+		String price = "price";
+		for (String group : getPriceGroups()) {
+			if (player.hasPermission("booscooldowns." + group)) {
+				price = group;
+			}
+		}
 		return price;
 	}
 
-	public static double getPrice3(String pre) {
-		double price = 0.0;
-		pre = pre.toLowerCase();
-		price = conf.getDouble("commands.prices.price3." + pre, price);
-		return price;
+	private static Set<String> getPriceGroups() {
+		Set<String> groups = conf.getConfigurationSection("commands.prices")
+				.getKeys(false);
+		return groups;
 	}
 
-	public static double getPrice4(String pre) {
-		double price = 0.0;
-		pre = pre.toLowerCase();
-		price = conf.getDouble("commands.prices.price4." + pre, price);
-		return price;
-	}
-
-	public static double getPrice5(String pre) {
-		Double price = 0.0;
-		pre = pre.toLowerCase();
-		price = conf.getDouble("commands.prices.price5." + pre, price);
-		return price;
+	public static int getSaveInterval() {
+		return conf.getInt("options.options.save_interval_in_minutes", 15);
 	}
 
 	public static boolean getSignCommands() {
@@ -328,38 +273,21 @@ public class boosConfigManager {
 		return conf.getString("options.units.seconds", "seconds");
 	}
 
-	public static int getWarmUp(String pre) {
-		int warmUp = -1;
-		pre = pre.toLowerCase();
-		warmUp = conf.getInt("commands.warmups.warmup." + pre, warmUp);
-		return warmUp;
+	public static String getWarmGrp(Player player) {
+		String warm = "warmup";
+		for (String group : getWarmupGroups()) {
+			if (player.hasPermission("booscooldowns." + group)) {
+				warm = group;
+			}
+		}
+		return warm;
 	}
 
-	public static int getWarmUp2(String pre) {
+	public static int getWarmUp(String pre, Player player) {
 		int warmUp = -1;
+		String group = getWarmGrp(player);
 		pre = pre.toLowerCase();
-		warmUp = conf.getInt("commands.warmups.warmup2." + pre, warmUp);
-		return warmUp;
-	}
-
-	public static int getWarmUp3(String pre) {
-		int warmUp = -1;
-		pre = pre.toLowerCase();
-		warmUp = conf.getInt("commands.warmups.warmup3." + pre, warmUp);
-		return warmUp;
-	}
-
-	public static int getWarmUp4(String pre) {
-		int warmUp = -1;
-		pre = pre.toLowerCase();
-		warmUp = conf.getInt("commands.warmups.warmup4." + pre, warmUp);
-		return warmUp;
-	}
-
-	public static int getWarmUp5(String pre) {
-		int warmUp = -1;
-		pre = pre.toLowerCase();
-		warmUp = conf.getInt("commands.warmups.warmup5." + pre, warmUp);
+		warmUp = conf.getInt("commands.warmups." + group + "." + pre, warmUp);
 		return warmUp;
 	}
 
@@ -378,10 +306,23 @@ public class boosConfigManager {
 				"&6Warm-ups have been cancelled due to moving.&f");
 	}
 
+	public static Set<String> getWarmupGroups() {
+		Set<String> groups = conf.getConfigurationSection("commands.warmups")
+				.getKeys(false);
+		return groups;
+	}
+
 	static String getWarmUpMessage() {
 		return conf
 				.getString("options.messages.warming_up",
 						"&6Wait&e &seconds& seconds&6 before command&e &command& &6has warmed up.&f");
+	}
+
+	public static Set<String> getWarmups(Player player) {
+		String warm = getWarmGrp(player);
+		Set<String> warmups = conf.getConfigurationSection(
+				"commands.warmups." + warm).getKeys(false);
+		return warmups;
 	}
 
 	static void load() {
@@ -560,17 +501,5 @@ public class boosConfigManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public static int getSaveInterval() {
-		return conf.getInt("options.options.save_interval_in_minutes", 15);
-	}
-
-	public static String getPotionEffect(String pre) {
-		String effect = null;
-		pre = pre.toLowerCase();
-		effect = conf.getString("commands.warmupPotionEffects.effect." + pre,
-				effect);
-		return effect;
 	}
 }
