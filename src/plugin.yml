@@ -1,6 +1,6 @@
 name: boosCooldowns
 main: cz.boosik.boosCooldown.boosCoolDown
-version: 3.5.0
+version: 3.6.0 BETA
 authors: [LordBoos (ingame name boosik)]
 softdepend: [Vault]
 description: >
@@ -66,54 +66,6 @@ permissions:
         default: false
     booscooldowns.nolimit./command:
         description: Command "/command" will not be affected by limits for users with this permission.
-        default: false
-    booscooldowns.warmup2:
-        description: Player will be affected by warmup2 group. Players without this permission, will be affected by default warmups.
-        default: false
-    booscooldowns.warmup3:
-        description: Player will be affected by warmup3 group. Players without this permission, will be affected by default warmups.
-        default: false
-    booscooldowns.warmup4:
-        description: Player will be affected by warmup4 group. Players without this permission, will be affected by default warmups.
-        default: false
-    booscooldowns.warmup5:
-        description: Player will be affected by warmup5 group. Players without this permission, will be affected by default warmups.
-        default: false
-    booscooldowns.price2:
-        description: Player will be affected by price2 group. Players without this permission, will be affected by default prices.
-        default: false
-    booscooldowns.price3:
-        description: Player will be affected by price3 group. Players without this permission, will be affected by default prices.
-        default: false
-    booscooldowns.price4:
-        description: Player will be affected by price4 group. Players without this permission, will be affected by default prices.
-        default: false
-    booscooldowns.price5:
-        description: Player will be affected by price5 group. Players without this permission, will be affected by default prices.
-        default: false
-    booscooldowns.cooldown2:
-        description: Player will be affected by cooldown2 group. Players without this permission, will be affected by default cooldowns.
-        default: false
-    booscooldowns.cooldown3:
-        description: Player will be affected by cooldown3 group. Players without this permission, will be affected by default cooldowns.
-        default: false
-    booscooldowns.cooldown4:
-        description: Player will be affected by cooldown4 group. Players without this permission, will be affected by default cooldowns.
-        default: false
-    booscooldowns.cooldown5:
-        description: Player will be affected by cooldown5 group. Players without this permission, will be affected by default cooldowns.
-        default: false
-    booscooldowns.limit2:
-        description: Player will be affected by limit2 group. Players without this permission, will be affected by default limits.
-        default: false
-    booscooldowns.limit3:
-        description: Player will be affected by limit3 group. Players without this permission, will be affected by default limits.
-        default: false
-    booscooldowns.limit4:
-        description: Player will be affected by limit4 group. Players without this permission, will be affected by default limits.
-        default: false
-    booscooldowns.limit5:
-        description: Player will be affected by limit5 group. Players without this permission, will be affected by default limits.
         default: false
     booscooldowns.reload:
         description: Player can use "/booscooldowns reload" to reload config file.

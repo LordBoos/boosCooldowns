@@ -34,8 +34,6 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 	public static PluginDescriptionFile pdfFile;
 	private static Economy economy = null;
 	private static boolean usingVault = false;
-	private PluginManager pm;
-	
 	public static void commandLogger(String player, String command) {
 		log.info("[" + "boosLogger" + "] " + player + " used command "
 				+ command);
@@ -52,6 +50,8 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 	public static boolean isUsingVault() {
 		return usingVault;
 	}
+
+	private PluginManager pm;
 
 	private void initializeVault() {
 		Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
@@ -235,6 +235,7 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 		return false;
 	}
 
+	@Override
 	public void onDisable() {
 		if (boosConfigManager.getClearOnRestart() == true) {
 			boosCoolDownManager.clear();
@@ -247,6 +248,7 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 				+ pdfFile.getVersion() + " disabled!");
 	}
 
+	@Override
 	public void onEnable() {
 		pdfFile = this.getDescription();
 		PluginDescriptionFile pdfFile = this.getDescription();
@@ -262,7 +264,9 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 		registerListeners();
 		initializeVault();
 		BukkitScheduler scheduler = this.getServer().getScheduler();
-		scheduler.scheduleSyncRepeatingTask(this, this, boosConfigManager.getSaveInterval()*1200, boosConfigManager.getSaveInterval()*1200);
+		scheduler.scheduleSyncRepeatingTask(this, this,
+				boosConfigManager.getSaveInterval() * 1200,
+				boosConfigManager.getSaveInterval() * 1200);
 		if (boosConfigManager.getClearOnRestart()) {
 			boosCoolDownManager.clear();
 		}

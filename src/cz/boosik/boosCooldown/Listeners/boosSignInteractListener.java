@@ -23,9 +23,9 @@ public class boosSignInteractListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	private void onSignInteract(PlayerInteractEvent event) {
 		String msg;
-		if (event.isCancelled()) 
+		if (event.isCancelled())
 			return;
-		
+
 		if (event.hasBlock() && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			if (event.getClickedBlock().getType() == Material.SIGN_POST
 					|| event.getClickedBlock().getType() == Material.WALL_SIGN) {

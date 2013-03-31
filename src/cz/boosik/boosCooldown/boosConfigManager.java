@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -23,9 +22,9 @@ public class boosConfigManager {
 		return conf.getString("commands.aliases." + message);
 	}
 
-	public static ConfigurationSection getAliases() {
-		ConfigurationSection aliases = conf
-				.getConfigurationSection("commands.aliases");
+	public static Set<String> getAliases() {
+		Set<String> aliases = conf.getConfigurationSection("commands.aliases")
+				.getKeys(false);
 		return aliases;
 	}
 
@@ -114,6 +113,10 @@ public class boosConfigManager {
 		return coolDown;
 	}
 
+	public static boolean getCooldownEnabled() {
+		return conf.getBoolean("options.options.cooldowns_enabled", true);
+	}
+
 	private static Set<String> getCooldownGroups() {
 		Set<String> groups = conf.getConfigurationSection("commands.cooldowns")
 				.getKeys(false);
@@ -160,18 +163,22 @@ public class boosConfigManager {
 		return lim;
 	}
 
-	private static Set<String> getLimitGroups() {
-		Set<String> groups = conf.getConfigurationSection("commands.limits")
-				.getKeys(false);
-		return groups;
-	}
-
 	public static int getLimit(String pre, Player player) {
 		int limit = -1;
 		String group = getLimGrp(player);
 		pre = pre.toLowerCase();
 		limit = conf.getInt("commands.limits." + group + "." + pre, limit);
 		return limit;
+	}
+
+	public static boolean getLimitEnabled() {
+		return conf.getBoolean("options.options.limits_enabled", true);
+	}
+
+	private static Set<String> getLimitGroups() {
+		Set<String> groups = conf.getConfigurationSection("commands.limits")
+				.getKeys(false);
+		return groups;
 	}
 
 	public static String getLimitListMessage() {
@@ -232,6 +239,16 @@ public class boosConfigManager {
 		return price;
 	}
 
+	public static boolean getPriceEnabled() {
+		return conf.getBoolean("options.options.prices_enabled", true);
+	}
+
+	private static Set<String> getPriceGroups() {
+		Set<String> groups = conf.getConfigurationSection("commands.prices")
+				.getKeys(false);
+		return groups;
+	}
+
 	private static String getPriceGrp(Player player) {
 		String price = "price";
 		for (String group : getPriceGroups()) {
@@ -242,10 +259,11 @@ public class boosConfigManager {
 		return price;
 	}
 
-	private static Set<String> getPriceGroups() {
-		Set<String> groups = conf.getConfigurationSection("commands.prices")
-				.getKeys(false);
-		return groups;
+	public static Set<String> getPrices(Player player) {
+		String price = getPriceGrp(player);
+		Set<String> prices = conf.getConfigurationSection(
+				"commands.prices." + price).getKeys(false);
+		return prices;
 	}
 
 	public static int getSaveInterval() {
@@ -304,6 +322,10 @@ public class boosConfigManager {
 	public static String getWarmUpCancelledByMoveMessage() {
 		return conf.getString("options.messages.warmup_cancelled_by_move",
 				"&6Warm-ups have been cancelled due to moving.&f");
+	}
+
+	public static boolean getWarmupEnabled() {
+		return conf.getBoolean("options.options.warmups_enabled", true);
 	}
 
 	public static Set<String> getWarmupGroups() {
@@ -386,6 +408,10 @@ public class boosConfigManager {
 			this.confFile = new File(boosCoolDown.getDataFolder(), "config.yml");
 			this.conf = new YamlConfiguration();
 			conf.options().copyDefaults(true);
+			conf.addDefault("options.options.warmups_enabled", true);
+			conf.addDefault("options.options.cooldowns_enabled", true);
+			conf.addDefault("options.options.prices_enabled", true);
+			conf.addDefault("options.options.limits_enabled", true);
 			conf.addDefault("options.options.save_interval_in_minutes", 15);
 			conf.addDefault("options.options.cancel_warmup_on_damage", false);
 			conf.addDefault("options.options.cancel_warmup_on_move", false);
@@ -401,7 +427,6 @@ public class boosConfigManager {
 			conf.addDefault("options.options.start_cooldowns_on_death", false);
 			conf.addDefault("options.options.command_logging", false);
 			conf.addDefault("options.options.command_signs", false);
-			conf.addDefault("options.options.enable_limits", true);
 			conf.addDefault("options.units.seconds", "seconds");
 			conf.addDefault("options.units.minutes", "minutes");
 			conf.addDefault("options.units.hours", "hours");
@@ -450,19 +475,16 @@ public class boosConfigManager {
 			}
 		}
 		try {
-			conf.addDefault("commands.cooldowns.cooldown./spawn", 60);
-			conf.addDefault("commands.cooldowns.cooldown./home", 30);
-			conf.addDefault("commands.cooldowns.cooldown2./home", 40);
-			conf.addDefault("commands.cooldowns.cooldown3./home", 90);
-			conf.addDefault("commands.cooldowns.cooldown4./home", 99);
-			conf.addDefault("commands.cooldowns.cooldown5./home", 542);
-			conf.addDefault("commands.warmups.warmup./warp", 10);
-			conf.addDefault("commands.warmups.warmup./warp list", 0);
-			conf.addDefault("commands.warmups.warmup./warp arena", 60);
-			conf.addDefault("commands.warmups.warmup2./home", 40);
-			conf.addDefault("commands.warmups.warmup3./home", 90);
-			conf.addDefault("commands.warmups.warmup4./home", 99);
-			conf.addDefault("commands.warmups.warmup5./home", 542);
+			conf.addDefault("commands.cooldowns.cooldown./command", 60);
+			conf.addDefault("commands.cooldowns.cooldown./anotherCommand *", 30);
+			conf.addDefault("commands.cooldowns.VIP./home", 40);
+			conf.addDefault("commands.cooldowns.Premium./home", 90);
+			conf.addDefault("commands.cooldowns.Donator./home", 99);
+			conf.addDefault("commands.cooldowns.something./home", 542);
+			conf.addDefault("commands.warmups.warmup.'*'", 1);
+			conf.addDefault("commands.warmups.warmup./anotherCommand *", 0);
+			conf.addDefault("commands.warmups.Donor./home", 40);
+			conf.addDefault("commands.warmups.example./home", 90);
 			conf.addDefault("commands.warmupPotionEffects.effect./home",
 					"WEAKNESS@3");
 			conf.addDefault(
@@ -471,23 +493,17 @@ public class boosConfigManager {
 			conf.addDefault(
 					"commands.warmupPotionEffects.howto2",
 					"#After effect add @number, for example WEAKNESS@3 will apply weakness III to player for the duration of warmup.");
-			conf.addDefault("commands.prices.price./spawn", 10.0);
-			conf.addDefault("commands.prices.price./home", 20.0);
-			conf.addDefault("commands.prices.price2./home", 40.0);
-			conf.addDefault("commands.prices.price3./home", 90.0);
-			conf.addDefault("commands.prices.price4./home", 99.0);
-			conf.addDefault("commands.prices.price5./home", 542.0);
-			conf.addDefault("commands.limits.limit./example", 0);
-			conf.addDefault("commands.limits.limit2./example", 100);
-			conf.addDefault("commands.limits.limit3./command", 50);
-			conf.addDefault("commands.limits.limit4./command", 11);
-			conf.addDefault("commands.limits.limit5./lol", 2);
+			conf.addDefault("commands.prices.price./command *", 10.0);
+			conf.addDefault("commands.prices.price./anotherCommand", 20.0);
+			conf.addDefault("commands.prices.yourGroup./home", 40.0);
+			conf.addDefault("commands.limits.limit./command *", 0);
+			conf.addDefault("commands.limits.limit2./lol", 100);
 			conf.addDefault("commands.links.link./lol", "default");
-			conf.addDefault("commands.links.link./home", "default");
-			conf.addDefault("commands.links.link./warp", "default");
+			conf.addDefault("commands.links.link./example", "default");
+			conf.addDefault("commands.links.link./command", "default");
 			conf.addDefault("commands.links.link./yourCommandHere",
 					"yourNameHere");
-			String[] def = { "/home", "/lol", "/warp" };
+			String[] def = { "/lol", "/example" };
 			conf.addDefault("commands.links.linkGroups.default",
 					Arrays.asList(def));
 			String[] def2 = { "/yourCommandHere", "/someCommand",

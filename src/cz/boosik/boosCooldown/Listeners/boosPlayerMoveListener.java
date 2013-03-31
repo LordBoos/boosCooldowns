@@ -12,30 +12,6 @@ import cz.boosik.boosCooldown.boosCoolDownListener;
 import cz.boosik.boosCooldown.boosWarmUpManager;
 
 public class boosPlayerMoveListener implements Listener {
-	int tempTimer = 0;
-	@EventHandler(priority = EventPriority.NORMAL)
-	private void onPlayerMove(PlayerMoveEvent event) {
-		if (event.isCancelled()) {
-			return;
-		}
-		if (tempTimer < 20){
-			tempTimer = tempTimer + 1;
-			return;
-		} else {
-		Player player = event.getPlayer();
-		if (player != null
-				&& !player.hasPermission("booscooldowns.nocancel.move")) {
-			if (boosWarmUpManager.hasWarmUps(player) && hasMoved(player)) {
-				boosCoolDownListener.clearLocWorld(player);
-				boosChat.sendMessageToPlayer(player,
-						boosConfigManager.getWarmUpCancelledByMoveMessage());
-				boosWarmUpManager.cancelWarmUps(player);
-			}
-		}
-		tempTimer = 0;
-	}
-}
-
 	private static boolean hasMoved(Player player) {
 		String curworld = player.getWorld().getName();
 		String cmdworld = boosCoolDownListener.playerworld.get(player);
@@ -48,5 +24,30 @@ public class boosPlayerMoveListener implements Listener {
 		}
 
 		return false;
+	}
+
+	int tempTimer = 0;
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	private void onPlayerMove(PlayerMoveEvent event) {
+		if (event.isCancelled()) {
+			return;
+		}
+		if (tempTimer < 20) {
+			tempTimer = tempTimer + 1;
+			return;
+		} else {
+			Player player = event.getPlayer();
+			if (player != null
+					&& !player.hasPermission("booscooldowns.nocancel.move")) {
+				if (boosWarmUpManager.hasWarmUps(player) && hasMoved(player)) {
+					boosCoolDownListener.clearLocWorld(player);
+					boosChat.sendMessageToPlayer(player,
+							boosConfigManager.getWarmUpCancelledByMoveMessage());
+					boosWarmUpManager.cancelWarmUps(player);
+				}
+			}
+			tempTimer = 0;
+		}
 	}
 }

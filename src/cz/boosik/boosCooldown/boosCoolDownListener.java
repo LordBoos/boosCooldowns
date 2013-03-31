@@ -1,16 +1,15 @@
 package cz.boosik.boosCooldown;
 
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Location;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-
 import util.boosChat;
 
 public class boosCoolDownListener<a> implements Listener {
@@ -28,40 +27,38 @@ public class boosCoolDownListener<a> implements Listener {
 		plugin = instance;
 	}
 
-	private boolean blocked(Player player, String pre, String msg) {
-		int limit = -1;
-		int uses = boosCoolDownManager.getUses(player, pre, msg);
+	private boolean blocked(Player player, String pre, int limit) {
+		int uses = boosCoolDownManager.getUses(player, pre);
 		if (player.hasPermission("booscooldowns.nolimit")
 				|| player.hasPermission("booscooldowns.nolimit." + pre)) {
 		} else {
-				limit = boosConfigManager.getLimit(pre, player);
-				if (limit == -1) {
-					return false;
-				} else if (limit <= uses) {
-					return true;
-				}
+			if (limit == -1) {
+				return false;
+			} else if (limit <= uses) {
+				return true;
 			}
+		}
 		return false;
 	}
 
 	// Returns true if the command is on cooldown, false otherwise
 	private void checkCooldown(PlayerCommandPreprocessEvent event,
 			Player player, String pre, String message, int warmUpSeconds,
-			double price) {
+			int cooldownTime, double price) {
 		if (!blocked) {
 			if (warmUpSeconds > 0) {
 				if (!player.hasPermission("booscooldowns.nowarmup")
 						&& !player.hasPermission("booscooldowns.nowarmup."
-								+ pre)) {
-					start(event, player, pre, message, warmUpSeconds);
+								+ message)) {
+					start(event, player, message, warmUpSeconds, cooldownTime);
 				}
 			} else {
-				if (boosCoolDownManager.coolDown(player, pre)) {
+				if (boosCoolDownManager.coolDown(player, message, cooldownTime)) {
 					event.setCancelled(true);
 				}
 			}
 			if (!event.isCancelled()) {
-				payForCommand(event, player, pre, price);
+				payForCommand(event, player, message, price);
 			}
 		} else {
 			event.setCancelled(true);
@@ -72,7 +69,7 @@ public class boosCoolDownListener<a> implements Listener {
 		if (!event.isCancelled()) {
 			boosCoolDownManager.setUses(player, pre, message);
 			if (boosConfigManager.getCommandLogging()) {
-				boosCoolDown.commandLogger(player.getName(), pre + message);
+				boosCoolDown.commandLogger(player.getName(), message);
 			}
 		}
 	}
@@ -97,8 +94,21 @@ public class boosCoolDownListener<a> implements Listener {
 		if (event.isCancelled()) {
 			return;
 		}
-		ConfigurationSection aliases = boosConfigManager.getAliases();
-		String message = event.getMessage();
+		Player player = event.getPlayer();
+		String message = event.getMessage().trim().replaceAll(" +", " ");
+		String confCmd = "";
+		Set<String> aliases = boosConfigManager.getAliases();
+		Set<String> warmups = boosConfigManager.getWarmups(player);
+		Set<String> cooldowns = boosConfigManager.getCooldowns(player);
+		Set<String> limits = boosConfigManager.getLimits(player);
+		Set<String> prices = boosConfigManager.getPrices(player);
+		boolean on = true;
+		boolean used = false;
+		int warmupTime = 0;
+		double price = 0;
+		int limit = -1;
+		int cooldownTime = 0;
+		on = isPluginOnForPlayer(player);
 		try {
 			if (aliases.contains(message)) {
 				message = boosConfigManager.getAlias(message);
@@ -110,140 +120,69 @@ public class boosCoolDownListener<a> implements Listener {
 					.warning(
 							"Aliases section in config.yml is missing! Please delete your config.yml, restart server and set it again!");
 		}
-
-		message = message.trim().replaceAll(" +", " ");
-		Player player = event.getPlayer();
-		boolean on = true;
-		on = isPluginOnForPlayer(player);
-
 		if (on) {
-			boolean used = false;
-			String messageCommand = "";
-			String preSub = "";
-			String preSub2 = "";
-			String preSub3 = "";
-			String messageSub = "";
-			String messageSub2 = "";
-			String messageSub3 = "";
-			int preSubCheck = -1;
-			int preSubCheck2 = -1;
-			int preSubCheck3 = -1;
-			double price = 0;
-			int limit = 0;
-			int cd = 0;
-			playerloc.put(player, player.getLocation());
-			playerworld.put(player, player.getWorld().getName());
-			String[] splitCommand;
-			splitCommand = message.split(" ");
-			String preCommand = splitCommand[0];
-			if (splitCommand.length > 1) {
-				for (int i = 1; i < splitCommand.length; i++) {
-					messageCommand = messageCommand + " " + splitCommand[i];
-				}
-			}
-			if (splitCommand.length > 1) {
-				preSub = splitCommand[0] + " " + splitCommand[1];
-				for (int i = 2; i < splitCommand.length; i++) {
-					messageSub = messageSub + " " + splitCommand[i];
-				}
-			}
-			if (splitCommand.length > 2) {
-				preSub2 = splitCommand[0] + " " + splitCommand[1] + " "
-						+ splitCommand[2];
-				for (int i = 3; i < splitCommand.length; i++) {
-					messageSub2 = messageSub2 + " " + splitCommand[i];
-				}
-			}
-			if (splitCommand.length > 3) {
-				preSub3 = splitCommand[0] + " " + splitCommand[1] + " "
-						+ splitCommand[2] + " " + splitCommand[3];
-				for (int i = 4; i < splitCommand.length; i++) {
-					messageSub3 = messageSub3 + " " + splitCommand[i];
-				}
-			}
-			if (preSub3.length() > 0) {
-				if (preSub3 != null) {
-					preSubCheck3 = preSubCheck(player, preSub3);
-					if (preSubCheck3 < 0) {
-						price = prePriceCheck(player, preSub3);
-						cd = preCDCheck(player, preSub3);
-						limit = preLimitCheck(player, preSub3);
-						if (cd > 0) {
-							preSubCheck3 = 0;
-						} else if (price > 0) {
-							preSubCheck3 = 0;
-						} else if (limit > 0) {
-							preSubCheck3 = 0;
+			if (boosConfigManager.getWarmupEnabled()) {
+				for (String warmup : warmups) {
+					String warmup2 = warmup.replace("*", ".+");
+					if (message.matches(warmup2)) {
+						warmupTime = boosConfigManager
+								.getWarmUp(warmup, player);
+						boosCoolDown.log.info("Regex: " + warmup + "Command: "
+								+ message);
+						if (warmupTime > 0) {
+							confCmd = warmup;
+							playerloc.put(player, player.getLocation());
+							playerworld
+									.put(player, player.getWorld().getName());
 						}
 					}
 				}
 			}
-			if (preSub2.length() > 0) {
-				if (preSub2 != null && preSubCheck3 < 0) {
-					preSubCheck2 = preSubCheck(player, preSub2);
-					if (preSubCheck2 < 0) {
-						price = prePriceCheck(player, preSub2);
-						cd = preCDCheck(player, preSub2);
-						limit = preLimitCheck(player, preSub2);
-						if (cd > 0) {
-							preSubCheck2 = 0;
-						} else if (price > 0) {
-							preSubCheck2 = 0;
-						} else if (limit > 0) {
-							preSubCheck2 = 0;
+			if (boosConfigManager.getCooldownEnabled()) {
+				for (String cooldown : cooldowns) {
+					String cooldown2 = cooldown.replace("*", ".+");
+					if (message.matches(cooldown2)) {
+						cooldownTime = boosConfigManager.getCoolDown(cooldown,
+								player);
+						if (cooldownTime > 0 && confCmd.equals("")) {
+							confCmd = cooldown;
 						}
 					}
 				}
 			}
-			if (preSub.length() > 0) {
-				if (preSub.length() < 1 || preSub != null && preSubCheck2 < 0) {
-					preSubCheck = preSubCheck(player, preSub);
-					if (preSubCheck < 0) {
-						price = prePriceCheck(player, preSub);
-						cd = preCDCheck(player, preSub);
-						limit = preLimitCheck(player, preSub);
-						if (cd > 0) {
-							preSubCheck = 0;
-						} else if (price > 0) {
-							preSubCheck = 0;
-						} else if (limit > 0) {
-							preSubCheck = 0;
+			if (boosConfigManager.getPriceEnabled()) {
+				for (String pric : prices) {
+					String pric2 = pric.replace("*", ".+");
+					if (message.matches(pric2)) {
+						price = boosConfigManager.getPrice(pric, player);
+						if (price > 0 && confCmd.equals("")) {
+							confCmd = pric;
 						}
 					}
 				}
 			}
-			if (preSubCheck3 >= 0) {
-				blocked = blocked(player, preSub3, messageSub3);
-				this.checkCooldown(event, player, preSub3, messageSub3,
-						preSubCheck3, price);
-				used = true;
-			} else if (preSubCheck2 >= 0) {
-				blocked = blocked(player, preSub2, messageSub2);
-				this.checkCooldown(event, player, preSub2, messageSub2,
-						preSubCheck2, price);
-				used = true;
-			} else if (preSubCheck >= 0) {
-				blocked = blocked(player, preSub, messageSub);
-				this.checkCooldown(event, player, preSub, messageSub,
-						preSubCheck, price);
-				used = true;
-			} else {
-				blocked = blocked(player, preCommand, messageCommand);
-				int preCmdCheck = preSubCheck(player, preCommand);
-				price = prePriceCheck(player, preCommand);
-				this.checkCooldown(event, player, preCommand, messageCommand,
-						preCmdCheck, price);
-				used = true;
+			if (boosConfigManager.getLimitEnabled()) {
+				for (String lim : limits) {
+					String lim2 = lim.replace("*", ".+");
+					if (message.matches(lim2)) {
+						limit = boosConfigManager.getLimit(lim, player);
+						if (limit > -1 && confCmd.equals("")) {
+							confCmd = lim;
+						}
+					}
+				}
 			}
+			blocked = blocked(player, message, limit);
+			this.checkCooldown(event, player, confCmd, message, warmupTime,
+					cooldownTime, price);
+			used = true;
+		}
 
-			if (!used) {
-				blocked = blocked(player, preCommand, messageCommand);
-				int preCmdCheck = preSubCheck(player, preCommand);
-				price = prePriceCheck(player, preCommand);
-				this.checkCooldown(event, player, preCommand, messageCommand,
-						preCmdCheck, price);
-				used = false;
-			}
+		if (!used) {
+			blocked = blocked(player, message, limit);
+			this.checkCooldown(event, player, confCmd, message, warmupTime,
+					cooldownTime, price);
+			used = false;
 		}
 	}
 
@@ -253,17 +192,19 @@ public class boosCoolDownListener<a> implements Listener {
 		String temp = "globalchat";
 		double price = 0;
 		Player player = event.getPlayer();
+		int cooldownTime = boosConfigManager.getCoolDown(temp, player);
 		if (chatMessage.startsWith("!")) {
-			if (!boosCoolDownManager.checkCoolDownOK(player, temp, chatMessage)) {
+			if (!boosCoolDownManager
+					.checkCoolDownOK(player, temp, cooldownTime)) {
 				event.setCancelled(true);
 				return;
 			} else {
-				if (boosCoolDownManager.coolDown(player, temp)) {
+				if (boosCoolDownManager.coolDown(player, temp, cooldownTime)) {
 					event.setCancelled(true);
 					return;
 				}
 			}
-			price = prePriceCheck(player, temp);
+			price = boosConfigManager.getPrice(temp, player);
 			payForCommand2(event, player, temp, price);
 		}
 	}
@@ -302,28 +243,12 @@ public class boosCoolDownListener<a> implements Listener {
 		}
 	}
 
-	private int preCDCheck(Player player, String preSub) {
-			return boosConfigManager.getCoolDown(preSub, player);
-	}
-
-	private int preLimitCheck(Player player, String preSub) {
-			return boosConfigManager.getLimit(preSub, player);
-	}
-
-	private double prePriceCheck(Player player, String preSub) {
-			return boosConfigManager.getPrice(preSub, player);
-	}
-
-	private int preSubCheck(Player player, String preSub) {
-			return boosConfigManager.getWarmUp(preSub, player);
-	}
-
 	private void start(PlayerCommandPreprocessEvent event, Player player,
-			String pre, String message, int warmUpSeconds) {
-		if (!boosCoolDownManager.checkWarmUpOK(player, pre, message)) {
-			if (boosCoolDownManager.checkCoolDownOK(player, pre, message)) {
+			String pre, int warmUpSeconds, int cooldownTime) {
+		if (!boosCoolDownManager.checkWarmUpOK(player, pre)) {
+			if (boosCoolDownManager.checkCoolDownOK(player, pre, cooldownTime)) {
 				boosWarmUpManager.startWarmUp(this.plugin, player, pre,
-						message, warmUpSeconds);
+						warmUpSeconds);
 				event.setCancelled(true);
 				return;
 			} else {
@@ -331,11 +256,11 @@ public class boosCoolDownListener<a> implements Listener {
 				return;
 			}
 		} else {
-			if (boosCoolDownManager.coolDown(player, pre)) {
+			if (boosCoolDownManager.coolDown(player, pre, cooldownTime)) {
 				event.setCancelled(true);
 				return;
 			} else {
-				boosCoolDownManager.removeWarmUpOK(player, pre, message);
+				boosCoolDownManager.removeWarmUpOK(player, pre);
 				return;
 			}
 		}

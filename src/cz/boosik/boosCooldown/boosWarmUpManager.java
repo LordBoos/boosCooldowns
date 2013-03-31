@@ -15,6 +15,18 @@ public class boosWarmUpManager {
 
 	static Timer scheduler;
 
+	public static void applyPotionEffect(Player player, String pre,
+			int warmUpSeconds) {
+		String potionTemp = boosConfigManager.getPotionEffect(pre);
+		if (potionTemp == null)
+			return;
+		String[] potion = potionTemp.split("@");
+		PotionEffectType effect = PotionEffectType.getByName(potion[0]);
+		player.addPotionEffect(
+				effect.createEffect(warmUpSeconds * 40,
+						Integer.parseInt(potion[1]) - 1), true);
+	}
+
 	public static void cancelWarmUps(Player player) {
 		Iterator<String> iter = playercommands.keySet().iterator();
 		while (iter.hasNext()) {
@@ -34,15 +46,6 @@ public class boosWarmUpManager {
 		return false;
 	}
 
-	public static boolean isWarmUpProcess(Player player, String pre,
-			String message) {
-		pre = pre.toLowerCase();
-		if (playercommands.containsKey(player.getName() + "@" + pre)) {
-			return true;
-		}
-		return false;
-	}
-
 	// public static void cancelWarmUps(Player player) {
 	// for (String key : playercommands.keySet()) {
 	// if (key.startsWith(player.getName() + "@")) {
@@ -50,6 +53,14 @@ public class boosWarmUpManager {
 	// }
 	// }
 	// }
+
+	public static boolean isWarmUpProcess(Player player, String pre) {
+		pre = pre.toLowerCase();
+		if (playercommands.containsKey(player.getName() + "@" + pre)) {
+			return true;
+		}
+		return false;
+	}
 
 	public static void killTimer(Player player) {
 		for (String key : playercommands.keySet()) {
@@ -64,12 +75,12 @@ public class boosWarmUpManager {
 	}
 
 	public static void startWarmUp(boosCoolDown bCoolDown, Player player,
-			String pre, String message, int warmUpSeconds) {
+			String pre, int warmUpSeconds) {
 		pre = pre.toLowerCase();
 		long warmUpMinutes = Math.round(warmUpSeconds / 60);
 		long warmUpHours = Math.round(warmUpMinutes / 60);
-		if (!isWarmUpProcess(player, pre, message)) {
-			boosCoolDownManager.removeWarmUpOK(player, pre, message);
+		if (!isWarmUpProcess(player, pre)) {
+			boosCoolDownManager.removeWarmUpOK(player, pre);
 			String msg = boosConfigManager.getWarmUpMessage();
 			msg = msg.replaceAll("&command&", pre);
 			if (warmUpSeconds >= 60 && 3600 >= warmUpSeconds) {
@@ -89,24 +100,14 @@ public class boosWarmUpManager {
 
 			scheduler = new Timer();
 			boosWarmUpTimer scheduleMe = new boosWarmUpTimer(bCoolDown,
-					scheduler, player, pre, message);
+					scheduler, player, pre);
 			playercommands.put(player.getName() + "@" + pre, scheduleMe);
 			scheduler.schedule(scheduleMe, warmUpSeconds * 1000);
-			applyPotionEffect(player, pre, message, warmUpSeconds);
+			applyPotionEffect(player, pre, warmUpSeconds);
 		} else {
 			String msg = boosConfigManager.getWarmUpAlreadyStartedMessage();
 			msg = msg.replaceAll("&command&", pre);
 			boosChat.sendMessageToPlayer(player, msg);
 		}
-	}
-
-	public static void applyPotionEffect(Player player, String pre,
-			String message, int warmUpSeconds) {
-		String potionTemp = boosConfigManager.getPotionEffect(pre);
-		if (potionTemp == null)
-			return;
-		String[] potion = potionTemp.split("@");
-		PotionEffectType effect = PotionEffectType.getByName(potion[0]);
-		player.addPotionEffect(effect.createEffect(warmUpSeconds*40, Integer.parseInt(potion[1])-1), true);
 	}
 }
