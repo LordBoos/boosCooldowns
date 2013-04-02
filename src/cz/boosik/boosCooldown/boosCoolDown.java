@@ -34,6 +34,7 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 	public static PluginDescriptionFile pdfFile;
 	private static Economy economy = null;
 	private static boolean usingVault = false;
+
 	public static void commandLogger(String player, String command) {
 		log.info("[" + "boosLogger" + "] " + player + " used command "
 				+ command);
@@ -45,6 +46,18 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 
 	public static Logger getLog() {
 		return log;
+	}
+
+	static boolean isPluginOnForPlayer(Player player) {
+		boolean on;
+		if (player.hasPermission("booscooldowns.exception")) {
+			on = false;
+		} else if (player.isOp()) {
+			on = false;
+		} else {
+			on = true;
+		}
+		return on;
 	}
 
 	public static boolean isUsingVault() {
@@ -94,7 +107,7 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 						&& args[0].equalsIgnoreCase("limits")) {
 					try {
 						Player send = (Player) sender;
-						boosCoolDownManager.getLimits(send);
+						boosConfigManager.getLimits(send);
 					} catch (ClassCastException e) {
 						log.warning("You cannot use this command from console!");
 					}
@@ -106,7 +119,7 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 				if (sender.hasPermission("booscooldowns.clearcooldowns")
 						&& args[0].equalsIgnoreCase("clearcooldowns")) {
 					String co = "cooldown";
-					boosCoolDownManager.clearSomething(co, jmeno);
+					boosConfigManager.clearSomething(co, jmeno);
 					boosChat.sendMessageToCommandSender(sender,
 							"&6[" + pdfFile.getName() + "]&e"
 									+ " cooldowns of player " + jmeno
@@ -116,7 +129,7 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 						&& command.equalsIgnoreCase("booscooldowns")
 						&& args[0].equalsIgnoreCase("clearuses")) {
 					String co = "uses";
-					boosCoolDownManager.clearSomething(co, jmeno);
+					boosConfigManager.clearSomething(co, jmeno);
 					boosChat.sendMessageToCommandSender(sender,
 							"&6[" + pdfFile.getName() + "]&e"
 									+ " uses of player " + jmeno + " cleared");
@@ -125,7 +138,7 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 						&& command.equalsIgnoreCase("booscooldowns")
 						&& args[0].equalsIgnoreCase("clearwarmups")) {
 					String co = "warmup";
-					boosCoolDownManager.clearSomething(co, jmeno);
+					boosConfigManager.clearSomething(co, jmeno);
 					boosChat.sendMessageToCommandSender(sender,
 							"&6[" + pdfFile.getName() + "]&e"
 									+ " warmups of player " + jmeno
@@ -139,7 +152,7 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 				if (sender.hasPermission("booscooldowns.clearcooldowns")
 						&& args[0].equalsIgnoreCase("clearcooldowns")) {
 					String co = "cooldown";
-					boosCoolDownManager.clearSomething(co, jmeno, command2);
+					boosConfigManager.clearSomething(co, jmeno, command2);
 					boosChat.sendMessageToCommandSender(sender,
 							"&6[" + pdfFile.getName() + "]&e"
 									+ " cooldown for command " + command2
@@ -148,7 +161,7 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 				} else if (sender.hasPermission("booscooldowns.clearuses")
 						&& args[0].equalsIgnoreCase("clearuses")) {
 					String co = "uses";
-					boosCoolDownManager.clearSomething(co, jmeno, command2);
+					boosConfigManager.clearSomething(co, jmeno, command2);
 					boosChat.sendMessageToCommandSender(sender,
 							"&6[" + pdfFile.getName() + "]&e"
 									+ " uses for command " + command2
@@ -157,12 +170,13 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 				} else if (sender.hasPermission("booscooldowns.clearwarmups")
 						&& args[0].equalsIgnoreCase("clearwarmups")) {
 					String co = "warmup";
-					boosCoolDownManager.clearSomething(co, jmeno, command2);
+					boosConfigManager.clearSomething(co, jmeno, command2);
 					boosChat.sendMessageToCommandSender(sender,
 							"&6[" + pdfFile.getName() + "]&e"
 									+ " warmups for command " + command2
 									+ " of player " + jmeno + " cleared");
 					return true;
+
 				}
 			}
 			if (args.length == 4) {
@@ -170,78 +184,53 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 						&& args[0].equalsIgnoreCase("set")) {
 					String coSetnout = args[1];
 					String co = args[2];
-					int hodnota = 0;
-					try {
-						hodnota = Integer.valueOf(args[3]);
-					} catch (Exception e) {
+					String hodnota = args[3];
+					String regex1 = "(\\d+)(,)(\\d+)(,)(\\d+)(\\.)(\\d+)(,)(-?)(\\d+)(,)(CONFUSION|DAMAGE_RESISTANCE|FAST_DIGGING|FIRE_RESISTANCE|HARM|HEAL|HUNGER|INCREASE_DAMAGE|INVISIBILITY|JUMP|NIGHT_VISION|POISON|REGENERATION|SLOW|SLOW_DIGGING|SPEED|WATER_BREATHING|WEAKNESS|WITHER)(,)(\\d+)";
+					String regex2 = "(\\d+)(,)(\\d+)(,)(\\d+)(\\.)(\\d+)(,)(-?)(\\d+)";
+					if (!hodnota.matches(regex1) && !hodnota.matches(regex2)) {
 						boosChat.sendMessageToCommandSender(sender,
-								"Added value must be number!");
+								"Invalid syntax!");
 						return true;
 					}
-					if (co.startsWith("/")) {
-						if (coSetnout.equals("cooldown")
-								|| coSetnout.equals("cooldown2")
-								|| coSetnout.equals("cooldown3")
-								|| coSetnout.equals("cooldown4")
-								|| coSetnout.equals("cooldown5")
-								|| coSetnout.equals("warmup")
-								|| coSetnout.equals("warmup2")
-								|| coSetnout.equals("warmup3")
-								|| coSetnout.equals("warmup4")
-								|| coSetnout.equals("warmup5")
-								|| coSetnout.equals("limit")
-								|| coSetnout.equals("limit2")
-								|| coSetnout.equals("limit3")
-								|| coSetnout.equals("limit4")
-								|| coSetnout.equals("limit5")
-								|| coSetnout.equals("price")
-								|| coSetnout.equals("price2")
-								|| coSetnout.equals("price3")
-								|| coSetnout.equals("price4")
-								|| coSetnout.equals("price5")) {
-							boosConfigManager.setAddToConfigFile(coSetnout, co,
-									hodnota);
-							boosChat.sendMessageToCommandSender(sender, "&6["
-									+ pdfFile.getName() + "]&e" + " "
-									+ coSetnout + " for command " + co
-									+ " is now set to " + hodnota);
-							return true;
-						} else {
-							boosChat.sendMessageToCommandSender(
-									sender,
-									"&6["
-											+ pdfFile.getName()
-											+ "]&e"
-											+ " You can only set cooldown, cooldown2, cooldown3, cooldown4, cooldown5, warmup, warmup2, warmup3, warmup4, warmup5, limit, limit2, limit3, limit4, limit5, price, price2, price3, price4, price5.");
-							return true;
+					if (co.startsWith("/") || co.equals("*")) {
+						if (co.contains("_")){
+							co = co.replace("_", " ");
 						}
+						boosConfigManager.setAddToConfigFile(coSetnout, co,
+								hodnota);
+						boosChat.sendMessageToCommandSender(sender, "&6["
+								+ pdfFile.getName() + "]&e" + " " + co
+								+ " in group " + coSetnout + " is now set to "
+								+ hodnota);
+						return true;
 					} else {
 						boosChat.sendMessageToCommandSender(sender, "&6["
 								+ pdfFile.getName() + "]&e"
-								+ " Added command have to start with \"/\".");
+								+ " Command has to start with \"/\".");
 						return true;
 					}
 				}
-			}
 
-		} else {
-			boosChat.sendMessageToCommandSender(
-					sender,
-					"&6["
-							+ pdfFile.getName()
-							+ "]&e"
-							+ " access denied, you lack required permission to do this!");
+			} else {
+				boosChat.sendMessageToCommandSender(
+						sender,
+						"&6["
+								+ pdfFile.getName()
+								+ "]&e"
+								+ " access denied, you lack required permission to do this!");
+			}
 		}
 		return false;
+
 	}
 
 	@Override
 	public void onDisable() {
 		if (boosConfigManager.getClearOnRestart() == true) {
-			boosCoolDownManager.clear();
+			boosConfigManager.clear();
 			log.info("[" + pdfFile.getName() + "]" + " cooldowns cleared!");
 		} else {
-			boosCoolDownManager.save();
+			boosConfigManager.saveConfusers();
 			log.info("[" + pdfFile.getName() + "]" + " cooldowns saved!");
 		}
 		log.info("[" + pdfFile.getName() + "]" + " version "
@@ -255,11 +244,9 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 		log.info("[" + pdfFile.getName() + "]" + " version "
 				+ pdfFile.getVersion() + " by " + pdfFile.getAuthors()
 				+ " is enabled!");
-
 		new boosConfigManager(this);
 		boosConfigManager.load();
-		new boosCoolDownManager(this);
-		boosCoolDownManager.load();
+		boosConfigManager.loadConfusers();
 		pm = getServer().getPluginManager();
 		registerListeners();
 		initializeVault();
@@ -268,7 +255,7 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 				boosConfigManager.getSaveInterval() * 1200,
 				boosConfigManager.getSaveInterval() * 1200);
 		if (boosConfigManager.getClearOnRestart()) {
-			boosCoolDownManager.clear();
+			boosConfigManager.clear();
 		}
 		try {
 			MetricsLite metrics = new MetricsLite(this);
@@ -281,7 +268,7 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 
 	private void registerListeners() {
 		HandlerList.unregisterAll(this);
-		pm.registerEvents(new boosCoolDownListener<Object>(this), this);
+		pm.registerEvents(new boosCoolDownListener(this), this);
 		if (boosConfigManager.getCancelWarmUpOnDamage()) {
 			pm.registerEvents(new boosEntityDamageListener(), this);
 		}
@@ -318,8 +305,8 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 
 	@Override
 	public void run() {
-		boosCoolDownManager.save();
-		boosCoolDownManager.load();
+		boosConfigManager.saveConfusers();
+		boosConfigManager.loadConfusers();
 		log.info("[boosCooldowns] Config saved!");
 	}
 

@@ -12,39 +12,41 @@ public class boosWarmUpTimer extends TimerTask {
 		public void run() {
 			if (player.isOnline() && !player.isDead()
 					&& boosWarmUpManager.hasWarmUps(player)) {
-				boosCoolDownManager.setWarmUpOK(player, pre);
+				boosWarmUpManager.setWarmUpOK(player, regexCommand);
 				boosWarmUpManager.removeWarmUpProcess(player.getName() + "@"
-						+ pre);
-				boosCoolDownListener.clearLocWorld(player);
-				player.chat(pre);
+						+ regexCommand);
+				boosWarmUpManager.clearLocWorld(player);
+				player.chat(originalCommand);
 			} else if (player.isOnline() && player.isDead()
 					&& boosWarmUpManager.hasWarmUps(player)) {
-				boosCoolDownManager.removeWarmUp(player, pre);
+				boosWarmUpManager.removeWarmUp(player, regexCommand);
 				boosWarmUpManager.removeWarmUpProcess(player.getName() + "@"
-						+ pre);
-				boosCoolDownListener.clearLocWorld(player);
+						+ regexCommand);
+				boosWarmUpManager.clearLocWorld(player);
 			} else if (!player.isOnline()
 					&& boosWarmUpManager.hasWarmUps(player)) {
-				boosCoolDownManager.removeWarmUp(player, pre);
+				boosWarmUpManager.removeWarmUp(player, regexCommand);
 				boosWarmUpManager.removeWarmUpProcess(player.getName() + "@"
-						+ pre);
-				boosCoolDownListener.clearLocWorld(player);
+						+ regexCommand);
+				boosWarmUpManager.clearLocWorld(player);
 			}
 		}
 	}
+
 	private boosCoolDown bCoolDown;
 	private Player player;
-
-	private String pre;
+	private String originalCommand;
+	private String regexCommand;
 
 	public boosWarmUpTimer() {
 	}
 
 	public boosWarmUpTimer(boosCoolDown bCoolDown, Timer timer, Player player,
-			String pre) {
+			String regexCommand, String originalCommand) {
 		this.bCoolDown = bCoolDown;
 		this.player = player;
-		this.pre = pre;
+		this.regexCommand = regexCommand;
+		this.originalCommand = originalCommand;
 	}
 
 	@Override

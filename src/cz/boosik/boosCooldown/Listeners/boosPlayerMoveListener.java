@@ -8,15 +8,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import util.boosChat;
 import cz.boosik.boosCooldown.boosConfigManager;
-import cz.boosik.boosCooldown.boosCoolDownListener;
 import cz.boosik.boosCooldown.boosWarmUpManager;
 
 public class boosPlayerMoveListener implements Listener {
 	private static boolean hasMoved(Player player) {
 		String curworld = player.getWorld().getName();
-		String cmdworld = boosCoolDownListener.playerworld.get(player);
+		String cmdworld = boosWarmUpManager.playerworld.get(player);
 		Location curloc = player.getLocation();
-		Location cmdloc = boosCoolDownListener.playerloc.get(player);
+		Location cmdloc = boosWarmUpManager.playerloc.get(player);
 		if (!curworld.equals(cmdworld)) {
 			return true;
 		} else if (cmdloc.distanceSquared(curloc) > 2) {
@@ -41,7 +40,7 @@ public class boosPlayerMoveListener implements Listener {
 			if (player != null
 					&& !player.hasPermission("booscooldowns.nocancel.move")) {
 				if (boosWarmUpManager.hasWarmUps(player) && hasMoved(player)) {
-					boosCoolDownListener.clearLocWorld(player);
+					boosWarmUpManager.clearLocWorld(player);
 					boosChat.sendMessageToPlayer(player,
 							boosConfigManager.getWarmUpCancelledByMoveMessage());
 					boosWarmUpManager.cancelWarmUps(player);

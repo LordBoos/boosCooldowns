@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 
@@ -12,19 +13,26 @@ import util.boosChat;
 public class boosWarmUpManager {
 
 	private static ConcurrentHashMap<String, boosWarmUpTimer> playercommands = new ConcurrentHashMap<String, boosWarmUpTimer>();
+	public static ConcurrentHashMap<Player, Location> playerloc = new ConcurrentHashMap<Player, Location>();
+	public static ConcurrentHashMap<Player, String> playerworld = new ConcurrentHashMap<Player, String>();
 
 	static Timer scheduler;
 
-	public static void applyPotionEffect(Player player, String pre,
+	public static void applyPotionEffect(Player player, String regexCommand,
 			int warmUpSeconds) {
-		String potionTemp = boosConfigManager.getPotionEffect(pre);
-		if (potionTemp == null)
+		String potion = boosConfigManager.getPotionEffect(regexCommand, player);
+		if (potion.equals("")) {
 			return;
-		String[] potion = potionTemp.split("@");
-		PotionEffectType effect = PotionEffectType.getByName(potion[0]);
+		}
+		int potionStrength = boosConfigManager.getPotionEffectStrength(
+				regexCommand, player);
+		if (potionStrength == 0) {
+			return;
+		}
+		PotionEffectType effect = PotionEffectType.getByName(potion);
 		player.addPotionEffect(
-				effect.createEffect(warmUpSeconds * 40,
-						Integer.parseInt(potion[1]) - 1), true);
+				effect.createEffect(warmUpSeconds * 40, potionStrength - 1),
+				true);
 	}
 
 	public static void cancelWarmUps(Player player) {
@@ -37,6 +45,11 @@ public class boosWarmUpManager {
 		}
 	}
 
+	public static void clearLocWorld(Player player) {
+		boosWarmUpManager.playerloc.remove(player);
+		boosWarmUpManager.playerworld.remove(player);
+	}
+
 	public static boolean hasWarmUps(Player player) {
 		for (String key : playercommands.keySet()) {
 			if (key.startsWith(player.getName() + "@")) {
@@ -46,17 +59,21 @@ public class boosWarmUpManager {
 		return false;
 	}
 
-	// public static void cancelWarmUps(Player player) {
-	// for (String key : playercommands.keySet()) {
-	// if (key.startsWith(player.getName() + "@")) {
-	// removeWarmUpProcess(key);
-	// }
-	// }
-	// }
+	static boolean checkWarmUpOK(Player player, String regexCommand) {
+		int pre2 = regexCommand.toLowerCase().hashCode();
+		int ok = 0;
+		ok = boosConfigManager.getConfusers().getInt(
+				"users." + player.getName().toLowerCase().hashCode()
+						+ ".warmup." + pre2, ok);
+		if (ok == 1) {
+			return true;
+		}
+		return false;
+	}
 
-	public static boolean isWarmUpProcess(Player player, String pre) {
-		pre = pre.toLowerCase();
-		if (playercommands.containsKey(player.getName() + "@" + pre)) {
+	public static boolean isWarmUpProcess(Player player, String regexCommand) {
+		regexCommand = regexCommand.toLowerCase();
+		if (playercommands.containsKey(player.getName() + "@" + regexCommand)) {
 			return true;
 		}
 		return false;
@@ -70,19 +87,40 @@ public class boosWarmUpManager {
 		}
 	}
 
+	static void removeWarmUp(Player player, String regexCommand) {
+		int pre2 = regexCommand.toLowerCase().hashCode();
+		boosConfigManager.getConfusers().set(
+				"users." + player.getName().toLowerCase().hashCode()
+						+ ".warmup." + pre2, null);
+	}
+
+	static void removeWarmUpOK(Player player, String regexCommand) {
+		int pre2 = regexCommand.toLowerCase().hashCode();
+		boosConfigManager.getConfusers().set(
+				"users." + player.getName().toLowerCase().hashCode()
+						+ ".warmup." + pre2, null);
+	}
+
 	public static void removeWarmUpProcess(String tag) {
 		boosWarmUpManager.playercommands.remove(tag);
 	}
 
+	static void setWarmUpOK(Player player, String regexCommand) {
+		int pre2 = regexCommand.toLowerCase().hashCode();
+		boosConfigManager.getConfusers().set(
+				"users." + player.getName().toLowerCase().hashCode()
+						+ ".warmup." + pre2, 1);
+	}
+
 	public static void startWarmUp(boosCoolDown bCoolDown, Player player,
-			String pre, int warmUpSeconds) {
-		pre = pre.toLowerCase();
+			String regexCommand, String originalCommand, int warmUpSeconds) {
+		regexCommand = regexCommand.toLowerCase();
 		long warmUpMinutes = Math.round(warmUpSeconds / 60);
 		long warmUpHours = Math.round(warmUpMinutes / 60);
-		if (!isWarmUpProcess(player, pre)) {
-			boosCoolDownManager.removeWarmUpOK(player, pre);
+		if (!isWarmUpProcess(player, regexCommand)) {
+			boosWarmUpManager.removeWarmUpOK(player, regexCommand);
 			String msg = boosConfigManager.getWarmUpMessage();
-			msg = msg.replaceAll("&command&", pre);
+			msg = msg.replaceAll("&command&", originalCommand);
 			if (warmUpSeconds >= 60 && 3600 >= warmUpSeconds) {
 				msg = msg.replaceAll("&seconds&", Long.toString(warmUpMinutes));
 				msg = msg.replaceAll("&unit&",
@@ -100,13 +138,14 @@ public class boosWarmUpManager {
 
 			scheduler = new Timer();
 			boosWarmUpTimer scheduleMe = new boosWarmUpTimer(bCoolDown,
-					scheduler, player, pre);
-			playercommands.put(player.getName() + "@" + pre, scheduleMe);
+					scheduler, player, regexCommand, originalCommand);
+			playercommands.put(player.getName() + "@" + regexCommand,
+					scheduleMe);
 			scheduler.schedule(scheduleMe, warmUpSeconds * 1000);
-			applyPotionEffect(player, pre, warmUpSeconds);
+			applyPotionEffect(player, regexCommand, warmUpSeconds);
 		} else {
 			String msg = boosConfigManager.getWarmUpAlreadyStartedMessage();
-			msg = msg.replaceAll("&command&", pre);
+			msg = msg.replaceAll("&command&", originalCommand);
 			boosChat.sendMessageToPlayer(player, msg);
 		}
 	}

@@ -20,20 +20,20 @@ public class boosPlayerDeathListener implements Listener {
 					&& player
 							.hasPermission("booscooldowns.clear.cooldowns.death")) {
 				if (boosConfigManager.getCleanCooldownsOnDeath()) {
-					boosCoolDownManager.clearSomething("cooldown", player
+					boosConfigManager.clearSomething("cooldown", player
 							.getName().toLowerCase());
 				}
 			}
 			if (player != null
 					&& player.hasPermission("booscooldowns.clear.uses.death")) {
 				if (boosConfigManager.getCleanUsesOnDeath()) {
-					boosCoolDownManager.clearSomething("uses", player.getName()
+					boosConfigManager.clearSomething("uses", player.getName()
 							.toLowerCase());
 				}
 			}
 			if (player != null) {
 				if (boosConfigManager.getStartCooldownsOnDeath()) {
-					boosCoolDownManager.startAllCooldowns(player);
+					boosCoolDownManager.startAllCooldowns(player, "");
 				}
 			}
 		}

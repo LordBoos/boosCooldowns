@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -15,8 +16,62 @@ import org.bukkit.entity.Player;
 public class boosConfigManager {
 
 	private static YamlConfiguration conf;
+	private static YamlConfiguration confusers;
 	private static File confFile;
+	private static File confusersFile;
 	static List<String> players = new LinkedList<String>();
+
+	static void clear() {
+		ConfigurationSection userSection = confusers
+				.getConfigurationSection("users");
+		if (userSection == null)
+			return;
+		for (String user : userSection.getKeys(false)) {
+			// clear cooldown
+			ConfigurationSection cooldown = confusers
+					.getConfigurationSection("users." + user + ".cooldown");
+			if (cooldown != null) {
+				for (String key : cooldown.getKeys(false)) {
+					confusers.set("users." + user + ".cooldown." + key, null);
+				}
+			}
+			confusers.set("users." + user + ".cooldown", null);
+
+			// clear warmup
+			ConfigurationSection warmup = confusers
+					.getConfigurationSection("users." + user + ".warmup");
+			if (warmup != null) {
+				for (String key : warmup.getKeys(false)) {
+					confusers.set("users." + user + ".warmup." + key, null);
+				}
+			}
+			confusers.set("users." + user + ".warmup", null);
+
+			confusers.set("users." + user, null);
+		}
+		saveConfusers();
+		loadConfusers();
+	}
+
+	public static void clearSomething(String co, String player) {
+		ConfigurationSection userSection = confusers
+				.getConfigurationSection("users."
+						+ player.toLowerCase().hashCode() + "." + co);
+		if (userSection == null)
+			return;
+		confusers.set("users." + player.toLowerCase().hashCode() + "." + co,
+				null);
+		saveConfusers();
+		loadConfusers();
+	}
+
+	static void clearSomething(String co, String player, String command) {
+		int pre2 = command.toLowerCase().hashCode();
+		confusers.set("users." + player.toLowerCase().hashCode() + "." + co
+				+ "." + pre2, 0);
+		saveConfusers();
+		loadConfusers();
+	}
 
 	public static String getAlias(String message) {
 		return conf.getString("commands.aliases." + message);
@@ -104,23 +159,18 @@ public class boosConfigManager {
 		return conf.getBoolean("options.options.command_logging", false);
 	}
 
+	public static YamlConfiguration getConfusers() {
+		return confusers;
+	}
+
 	static int getCoolDown(String pre, Player player) {
 		int coolDown = 0;
-		String group = getCoolGrp(player);
-		pre = pre.toLowerCase();
-		coolDown = conf.getInt("commands.cooldowns." + group + "." + pre,
-				coolDown);
+		coolDown = Integer.parseInt(getCommandValues(pre, player)[1]);
 		return coolDown;
 	}
 
 	public static boolean getCooldownEnabled() {
 		return conf.getBoolean("options.options.cooldowns_enabled", true);
-	}
-
-	private static Set<String> getCooldownGroups() {
-		Set<String> groups = conf.getConfigurationSection("commands.cooldowns")
-				.getKeys(false);
-		return groups;
 	}
 
 	static String getCoolDownMessage() {
@@ -131,20 +181,16 @@ public class boosConfigManager {
 	}
 
 	public static Set<String> getCooldowns(Player player) {
-		String cool = getCoolGrp(player);
+		String cool = getCommandGroup(player);
 		Set<String> cooldowns = conf.getConfigurationSection(
-				"commands.cooldowns." + cool).getKeys(false);
+				"commands.groups." + cool).getKeys(false);
 		return cooldowns;
 	}
 
-	private static String getCoolGrp(Player player) {
-		String cool = "cooldown";
-		for (String group : getCooldownGroups()) {
-			if (player.hasPermission("booscooldowns." + group)) {
-				cool = group;
-			}
-		}
-		return cool;
+	public static String getInsufficientFundsMessage() {
+		return conf
+				.getString("options.messages.insufficient_funds",
+						"You have insufficient funds! &command& costs %s but you only have %s");
 	}
 
 	public static String getInteractBlockedMessage() {
@@ -153,32 +199,14 @@ public class boosConfigManager {
 				"&6You can't do this when command is warming-up!&f");
 	}
 
-	public static String getLimGrp(Player player) {
-		String lim = "limit";
-		for (String group : getLimitGroups()) {
-			if (player.hasPermission("booscooldowns." + group)) {
-				lim = group;
-			}
-		}
-		return lim;
-	}
-
 	public static int getLimit(String pre, Player player) {
 		int limit = -1;
-		String group = getLimGrp(player);
-		pre = pre.toLowerCase();
-		limit = conf.getInt("commands.limits." + group + "." + pre, limit);
+		limit = Integer.parseInt(getCommandValues(pre, player)[3]);
 		return limit;
 	}
 
 	public static boolean getLimitEnabled() {
 		return conf.getBoolean("options.options.limits_enabled", true);
-	}
-
-	private static Set<String> getLimitGroups() {
-		Set<String> groups = conf.getConfigurationSection("commands.limits")
-				.getKeys(false);
-		return groups;
 	}
 
 	public static String getLimitListMessage() {
@@ -189,9 +217,9 @@ public class boosConfigManager {
 	}
 
 	public static Set<String> getLimits(Player player) {
-		String lim = getLimGrp(player);
+		String lim = getCommandGroup(player);
 		Set<String> limits = conf.getConfigurationSection(
-				"commands.limits." + lim).getKeys(false);
+				"commands.groups." + lim).getKeys(false);
 		return limits;
 	}
 
@@ -223,47 +251,34 @@ public class boosConfigManager {
 				"Price of &command& was %s and you now have %s");
 	}
 
-	public static String getPotionEffect(String pre) {
-		String effect = null;
+	public static String getPotionEffect(String pre, Player player) {
+		String effect = "";
 		pre = pre.toLowerCase();
-		effect = conf.getString("commands.warmupPotionEffects.effect." + pre,
-				effect);
+		String[] command = getCommandValues(pre, player);
+		if (command.length > 4) {
+			effect = getCommandValues(pre, player)[4];
+		}
+		return effect;
+	}
+
+	public static int getPotionEffectStrength(String pre, Player player) {
+		int effect = 0;
+		pre = pre.toLowerCase();
+		String[] command = getCommandValues(pre, player);
+		if (command.length > 4) {
+			effect = Integer.valueOf(getCommandValues(pre, player)[5]);
+		}
 		return effect;
 	}
 
 	public static double getPrice(String pre, Player player) {
 		double price = 0.0;
-		String group = getPriceGrp(player);
-		pre = pre.toLowerCase();
-		price = conf.getDouble("commands.prices." + group + "." + pre, price);
+		price = Double.parseDouble(getCommandValues(pre, player)[2]);
 		return price;
 	}
 
 	public static boolean getPriceEnabled() {
 		return conf.getBoolean("options.options.prices_enabled", true);
-	}
-
-	private static Set<String> getPriceGroups() {
-		Set<String> groups = conf.getConfigurationSection("commands.prices")
-				.getKeys(false);
-		return groups;
-	}
-
-	private static String getPriceGrp(Player player) {
-		String price = "price";
-		for (String group : getPriceGroups()) {
-			if (player.hasPermission("booscooldowns." + group)) {
-				price = group;
-			}
-		}
-		return price;
-	}
-
-	public static Set<String> getPrices(Player player) {
-		String price = getPriceGrp(player);
-		Set<String> prices = conf.getConfigurationSection(
-				"commands.prices." + price).getKeys(false);
-		return prices;
 	}
 
 	public static int getSaveInterval() {
@@ -291,21 +306,10 @@ public class boosConfigManager {
 		return conf.getString("options.units.seconds", "seconds");
 	}
 
-	public static String getWarmGrp(Player player) {
-		String warm = "warmup";
-		for (String group : getWarmupGroups()) {
-			if (player.hasPermission("booscooldowns." + group)) {
-				warm = group;
-			}
-		}
-		return warm;
-	}
-
 	public static int getWarmUp(String pre, Player player) {
 		int warmUp = -1;
-		String group = getWarmGrp(player);
-		pre = pre.toLowerCase();
-		warmUp = conf.getInt("commands.warmups." + group + "." + pre, warmUp);
+		String[] values = getCommandValues(pre, player);
+		warmUp = Integer.parseInt(values[0]);
 		return warmUp;
 	}
 
@@ -328,23 +332,10 @@ public class boosConfigManager {
 		return conf.getBoolean("options.options.warmups_enabled", true);
 	}
 
-	public static Set<String> getWarmupGroups() {
-		Set<String> groups = conf.getConfigurationSection("commands.warmups")
-				.getKeys(false);
-		return groups;
-	}
-
 	static String getWarmUpMessage() {
 		return conf
 				.getString("options.messages.warming_up",
 						"&6Wait&e &seconds& seconds&6 before command&e &command& &6has warmed up.&f");
-	}
-
-	public static Set<String> getWarmups(Player player) {
-		String warm = getWarmGrp(player);
-		Set<String> warmups = conf.getConfigurationSection(
-				"commands.warmups." + warm).getKeys(false);
-		return warmups;
 	}
 
 	static void load() {
@@ -359,28 +350,37 @@ public class boosConfigManager {
 		}
 	}
 
+	static void loadConfusers() {
+		try {
+			confusers.load(confusersFile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+	}
+
 	static void reload() {
 		conf = new YamlConfiguration();
 		load();
 	}
 
-	static void setAddToConfigFile(String coSetnout, String co, int hodnota) {
+	static void saveConfusers() {
+		try {
+			confFile.createNewFile();
+			confusers.save(confusersFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	static void setAddToConfigFile(String coSetnout, String co, String hodnota) {
 		co = co.toLowerCase();
 		coSetnout = coSetnout.toLowerCase();
-		String sekce = null;
-		if (coSetnout.contains("cooldown")) {
-			sekce = "cooldowns";
-		} else if (coSetnout.contains("warmup")) {
-			sekce = "warmups";
-		} else if (coSetnout.contains("limit")) {
-			sekce = "limits";
-		} else if (coSetnout.contains("price")) {
-			sekce = "prices";
-		} else {
-			return;
-		}
 		reload();
-		conf.set("commands." + sekce + "." + coSetnout + "." + co, hodnota);
+		conf.set("commands.groups." + coSetnout + "." + co, hodnota);
 		try {
 			conf.save(confFile);
 		} catch (IOException e) {
@@ -395,15 +395,7 @@ public class boosConfigManager {
 		confFile = new File(boosCoolDown.getDataFolder(), "config.yml");
 		if (confFile.exists()) {
 			conf = new YamlConfiguration();
-			try {
-				conf.load(confFile);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (InvalidConfigurationException e) {
-				e.printStackTrace();
-			}
+			load();
 		} else {
 			this.confFile = new File(boosCoolDown.getDataFolder(), "config.yml");
 			this.conf = new YamlConfiguration();
@@ -449,6 +441,9 @@ public class boosConfigManager {
 					"&6Warm-Up process for&e &command& &6has already started.&f");
 			conf.addDefault("options.messages.paid_error",
 					"&6An error has occured:&e %s");
+			conf.addDefault(
+					"options.messages.insufficient_funds",
+					"&6You have insufficient funds!&e &command& &6costs &e%s &6but you only have &e%s");
 			conf.addDefault("options.messages.paid_for_command",
 					"&6Price of&e &command& &6was&e %s &6and you now have&e %s");
 			conf.addDefault("options.messages.limit_achieved",
@@ -475,29 +470,11 @@ public class boosConfigManager {
 			}
 		}
 		try {
-			conf.addDefault("commands.cooldowns.cooldown./command", 60);
-			conf.addDefault("commands.cooldowns.cooldown./anotherCommand *", 30);
-			conf.addDefault("commands.cooldowns.VIP./home", 40);
-			conf.addDefault("commands.cooldowns.Premium./home", 90);
-			conf.addDefault("commands.cooldowns.Donator./home", 99);
-			conf.addDefault("commands.cooldowns.something./home", 542);
-			conf.addDefault("commands.warmups.warmup.'*'", 1);
-			conf.addDefault("commands.warmups.warmup./anotherCommand *", 0);
-			conf.addDefault("commands.warmups.Donor./home", 40);
-			conf.addDefault("commands.warmups.example./home", 90);
-			conf.addDefault("commands.warmupPotionEffects.effect./home",
-					"WEAKNESS@3");
-			conf.addDefault(
-					"commands.warmupPotionEffects.howto1",
-					"#You can use CONFUSION, DAMAGE_RESISTANCE, FAST_DIGGING, FIRE_RESISTANCE, HARM, HEAL, HUNGER, INCREASE_DAMAGE, INVISIBILITY, JUMP, NIGHT_VISION, POISON, REGENERATION, SLOW, SLOW_DIGGING, SPEED, WATER_BREATHING, WEAKNESS, WITHER");
-			conf.addDefault(
-					"commands.warmupPotionEffects.howto2",
-					"#After effect add @number, for example WEAKNESS@3 will apply weakness III to player for the duration of warmup.");
-			conf.addDefault("commands.prices.price./command *", 10.0);
-			conf.addDefault("commands.prices.price./anotherCommand", 20.0);
-			conf.addDefault("commands.prices.yourGroup./home", 40.0);
-			conf.addDefault("commands.limits.limit./command *", 0);
-			conf.addDefault("commands.limits.limit2./lol", 100);
+			conf.addDefault("commands.groups.default.*", "1,1,0.0,-1");
+			conf.addDefault("commands.groups.default./anothercommand", "0,2,0.0,-1");
+			conf.addDefault("commands.groups.default./yetanothercommand", "5,0,10.0,5,WEAKNESS,3");
+			conf.addDefault("commands.groups.VIP./command *", "5,30,10.0,0");
+			conf.addDefault("commands.groups.VIP./anothercommand", "2,10,5.0,20");
 			conf.addDefault("commands.links.link./lol", "default");
 			conf.addDefault("commands.links.link./example", "default");
 			conf.addDefault("commands.links.link./command", "default");
@@ -517,5 +494,50 @@ public class boosConfigManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		confusersFile = new File(boosCoolDown.getDataFolder(), "users.yml");
+		confusers = new YamlConfiguration();
+		if (confusersFile.exists()) {
+			loadConfusers();
+		} else {
+			try {
+				confusersFile.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private static Set<String> getCommandGroups() {
+		Set<String> groups = conf.getConfigurationSection("commands.groups")
+				.getKeys(false);
+		return groups;
+	}
+
+	public static String getCommandGroup(Player player) {
+		String cmdGroup = "default";
+		for (String group : getCommandGroups()) {
+			if (player.hasPermission("booscooldowns." + group)) {
+				cmdGroup = group;
+			}
+		}
+		return cmdGroup;
+	}
+
+	public static Set<String> getCommands(Player player) {
+		String group = getCommandGroup(player);
+		Set<String> commands = conf.getConfigurationSection(
+				"commands.groups." + group).getKeys(false);
+		return commands;
+	}
+
+	public static String[] getCommandValues(String regexCommand, Player player) {
+		String[] values;
+		String line = "";
+		String group = getCommandGroup(player);
+		line = conf.getString("commands.groups." + group + "." + regexCommand,
+				line);
+		boosCoolDown.log.info("LINE: " + line);
+		values = line.split(",");
+		return values;
 	}
 }
