@@ -100,6 +100,7 @@ public class boosCoolDownListener implements Listener {
 					if (boosConfigManager.getLimitEnabled()){
 						limit = boosConfigManager.getLimit(regexCommad, player);
 					}
+					break;
 				}
 			}
 			this.checkRestrictions(event, player, regexCommad, originalCommand,
