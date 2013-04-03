@@ -190,7 +190,7 @@ public class boosConfigManager {
 	public static String getInsufficientFundsMessage() {
 		return conf
 				.getString("options.messages.insufficient_funds",
-						"You have insufficient funds! &command& costs %s but you only have %s");
+						"&6You have insufficient funds!&e &command& &6costs &e%s &6but you only have &e%s");
 	}
 
 	public static String getInteractBlockedMessage() {
