@@ -536,7 +536,6 @@ public class boosConfigManager {
 		String group = getCommandGroup(player);
 		line = conf.getString("commands.groups." + group + "." + regexCommand,
 				line);
-		boosCoolDown.log.info("LINE: " + line);
 		values = line.split(",");
 		return values;
 	}
