@@ -114,6 +114,9 @@ public class boosCoolDownListener implements Listener {
 		String temp = "globalchat";
 		double price = 0;
 		Player player = event.getPlayer();
+		if (!boosConfigManager.getCommands(player).contains("globalchat")){
+			return;
+		}
 		int cooldownTime = boosConfigManager.getCoolDown(temp, player);
 		if (chatMessage.startsWith("!")) {
 			if (!boosCoolDownManager.checkCoolDownOK(player, temp, temp,
