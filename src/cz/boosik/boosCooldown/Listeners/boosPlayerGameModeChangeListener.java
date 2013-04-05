@@ -11,7 +11,14 @@ import util.boosChat;
 import cz.boosik.boosCooldown.boosConfigManager;
 import cz.boosik.boosCooldown.boosWarmUpManager;
 
+/**
+ * @author Jakub
+ *
+ */
 public class boosPlayerGameModeChangeListener implements Listener {
+	/**
+	 * @param event
+	 */
 	@EventHandler(priority = EventPriority.NORMAL)
 	private void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
 		if (event.isCancelled())

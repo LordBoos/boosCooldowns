@@ -9,9 +9,16 @@ import org.bukkit.event.block.SignChangeEvent;
 import util.boosChat;
 import cz.boosik.boosCooldown.boosConfigManager;
 
+/**
+ * @author Jakub
+ *
+ */
 public class boosSignChangeListener implements Listener {
+	/**
+	 * @param event
+	 */
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onSignChange(SignChangeEvent event) {
+	private void onSignChange(SignChangeEvent event) {
 		if (event.isCancelled())
 			return;
 

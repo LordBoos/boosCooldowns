@@ -1,6 +1,7 @@
 package cz.boosik.boosCooldown;
 
 import java.io.IOException;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import net.milkbowl.vault.Vault;
@@ -29,25 +30,43 @@ import cz.boosik.boosCooldown.Listeners.boosPlayerToggleSprintListener;
 import cz.boosik.boosCooldown.Listeners.boosSignChangeListener;
 import cz.boosik.boosCooldown.Listeners.boosSignInteractListener;
 
+/**
+ * @author Jakub
+ *
+ */
 public class boosCoolDown extends JavaPlugin implements Runnable {
-	public static final Logger log = Logger.getLogger("Minecraft");
-	public static PluginDescriptionFile pdfFile;
+	private static final Logger log = Logger.getLogger("Minecraft");
+	private static PluginDescriptionFile pdfFile;
 	private static Economy economy = null;
 	private static boolean usingVault = false;
 
+	/**
+	 * @param player
+	 * @param command
+	 */
 	public static void commandLogger(String player, String command) {
 		log.info("[" + "boosLogger" + "] " + player + " used command "
 				+ command);
 	}
 
+	/**
+	 * @return
+	 */
 	public static Economy getEconomy() {
 		return economy;
 	}
 
+	/**
+	 * @return
+	 */
 	public static Logger getLog() {
 		return log;
 	}
 
+	/**
+	 * @param player
+	 * @return
+	 */
 	static boolean isPluginOnForPlayer(Player player) {
 		boolean on;
 		if (player.hasPermission("booscooldowns.exception")) {
@@ -60,12 +79,11 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 		return on;
 	}
 
-	public static boolean isUsingVault() {
-		return usingVault;
-	}
-
 	private PluginManager pm;
 
+	/**
+	 * 
+	 */
 	private void initializeVault() {
 		Plugin x = this.getServer().getPluginManager().getPlugin("Vault");
 		if (x != null & x instanceof Vault) {
@@ -89,6 +107,9 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.bukkit.plugin.java.JavaPlugin#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+	 */
 	@Override
 	public boolean onCommand(CommandSender sender, Command c,
 			String commandLabel, String[] args) {
@@ -107,7 +128,12 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 						&& args[0].equalsIgnoreCase("limits")) {
 					try {
 						Player send = (Player) sender;
-						boosConfigManager.getLimits(send);
+						Set<String> commands = boosConfigManager
+								.getCommands(send);
+						for (String comm : commands) {
+							int lim = boosConfigManager.getLimit(comm, send);
+							boosLimitManager.getLimitListMessages(send, comm, lim);
+						}
 					} catch (ClassCastException e) {
 						log.warning("You cannot use this command from console!");
 					}
@@ -193,7 +219,7 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 						return true;
 					}
 					if (co.startsWith("/") || co.equals("*")) {
-						if (co.contains("_")){
+						if (co.contains("_")) {
 							co = co.replace("_", " ");
 						}
 						boosConfigManager.setAddToConfigFile(coSetnout, co,
@@ -224,6 +250,9 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.bukkit.plugin.java.JavaPlugin#onDisable()
+	 */
 	@Override
 	public void onDisable() {
 		if (boosConfigManager.getClearOnRestart() == true) {
@@ -237,6 +266,9 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 				+ pdfFile.getVersion() + " disabled!");
 	}
 
+	/* (non-Javadoc)
+	 * @see org.bukkit.plugin.java.JavaPlugin#onEnable()
+	 */
 	@Override
 	public void onEnable() {
 		pdfFile = this.getDescription();
@@ -266,6 +298,9 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 
 	}
 
+	/**
+	 * 
+	 */
 	private void registerListeners() {
 		HandlerList.unregisterAll(this);
 		pm.registerEvents(new boosCoolDownListener(this), this);
@@ -298,11 +333,17 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 		}
 	}
 
+	/**
+	 * 
+	 */
 	private void reload() {
 		boosConfigManager.reload();
 		registerListeners();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		boosConfigManager.saveConfusers();
@@ -310,6 +351,9 @@ public class boosCoolDown extends JavaPlugin implements Runnable {
 		log.info("[boosCooldowns] Config saved!");
 	}
 
+	/**
+	 * @return
+	 */
 	private boolean setupEconomy() {
 		if (usingVault) {
 			RegisteredServiceProvider<Economy> economyProvider = getServer()

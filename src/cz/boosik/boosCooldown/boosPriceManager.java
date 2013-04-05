@@ -9,11 +9,23 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import util.boosChat;
 
+/**
+ * @author Jakub
+ *
+ */
 public class boosPriceManager {
 	private static Economy economy = boosCoolDown.getEconomy();
-	static String msg = "";
+	private static String msg = "";
 
-	public static boolean payForCommand(Player player, String regexCommand,
+	/**
+	 * @param player
+	 * @param regexCommand
+	 * @param originalCommand
+	 * @param price
+	 * @param name
+	 * @return
+	 */
+	static boolean payForCommand(Player player, String regexCommand,
 			String originalCommand, double price, String name) {
 		if (economy == null) {
 			return true;
@@ -46,6 +58,13 @@ public class boosPriceManager {
 		}
 	}
 
+	/**
+	 * @param event
+	 * @param player
+	 * @param regexCommand
+	 * @param originalCommand
+	 * @param price
+	 */
 	static void payForCommand(PlayerCommandPreprocessEvent event,
 			Player player, String regexCommand, String originalCommand,
 			double price) {

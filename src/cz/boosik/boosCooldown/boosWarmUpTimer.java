@@ -8,6 +8,9 @@ import org.bukkit.entity.Player;
 public class boosWarmUpTimer extends TimerTask {
 
 	public class boosWarmUpRunnable implements Runnable {
+		/* (non-Javadoc)
+		 * @see java.lang.Runnable#run()
+		 */
 		@Override
 		public void run() {
 			if (player.isOnline() && !player.isDead()
@@ -38,9 +41,19 @@ public class boosWarmUpTimer extends TimerTask {
 	private String originalCommand;
 	private String regexCommand;
 
+	/**
+	 * 
+	 */
 	public boosWarmUpTimer() {
 	}
 
+	/**
+	 * @param bCoolDown
+	 * @param timer
+	 * @param player
+	 * @param regexCommand
+	 * @param originalCommand
+	 */
 	public boosWarmUpTimer(boosCoolDown bCoolDown, Timer timer, Player player,
 			String regexCommand, String originalCommand) {
 		this.bCoolDown = bCoolDown;
@@ -49,6 +62,9 @@ public class boosWarmUpTimer extends TimerTask {
 		this.originalCommand = originalCommand;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.util.TimerTask#run()
+	 */
 	@Override
 	public void run() {
 		bCoolDown.getServer().getScheduler()

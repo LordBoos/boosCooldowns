@@ -5,9 +5,15 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
 import org.bukkit.entity.Player;
+
 import util.boosChat;
 
+/**
+ * @author Jakub
+ *
+ */
 public class boosCoolDownManager {
 	static void cancelCooldown(Player player, String regexCommand) {
 		int pre2 = regexCommand.toLowerCase().hashCode();
@@ -16,7 +22,14 @@ public class boosCoolDownManager {
 						+ ".cooldown." + pre2, null);
 	}
 
-	private static boolean cd(Player player, String regexCommand,
+	/**
+	 * @param player
+	 * @param regexCommand
+	 * @param originalCommand
+	 * @param coolDownSeconds
+	 * @return
+	 */
+	static boolean cd(Player player, String regexCommand,
 			String originalCommand, int coolDownSeconds) {
 		Date lastTime = getTime(player, regexCommand);
 		String link = boosConfigManager.getLink(regexCommand);
@@ -77,6 +90,13 @@ public class boosCoolDownManager {
 		}
 	}
 
+	/**
+	 * @param player
+	 * @param regexCommand
+	 * @param originalCommand
+	 * @param time
+	 * @return
+	 */
 	static boolean coolDown(Player player, String regexCommand,
 			String originalCommand, int time) {
 		regexCommand = regexCommand.toLowerCase();
@@ -89,6 +109,9 @@ public class boosCoolDownManager {
 		return false;
 	}
 
+	/**
+	 * @return
+	 */
 	static Date getCurrTime() {
 		String currTime = "";
 		Calendar cal = Calendar.getInstance();
@@ -104,6 +127,11 @@ public class boosCoolDownManager {
 		}
 	}
 
+	/**
+	 * @param player
+	 * @param regexCommand
+	 * @return
+	 */
 	static Date getTime(Player player, String regexCommand) {
 		int pre2 = regexCommand.toLowerCase().hashCode();
 		String confTime = "";
@@ -125,6 +153,13 @@ public class boosCoolDownManager {
 		return null;
 	}
 
+	/**
+	 * @param player
+	 * @param regexCommand
+	 * @param originalCommand
+	 * @param time
+	 * @return
+	 */
 	static boolean checkCoolDownOK(Player player, String regexCommand,
 			String originalCommand, int time) {
 		regexCommand = regexCommand.toLowerCase();
@@ -170,7 +205,12 @@ public class boosCoolDownManager {
 		return true;
 	}
 
-	public static long secondsBetween(Calendar startDate, Calendar endDate) {
+	/**
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	static long secondsBetween(Calendar startDate, Calendar endDate) {
 		long secondsBetween = 0;
 
 		while (startDate.before(endDate)) {
@@ -180,6 +220,10 @@ public class boosCoolDownManager {
 		return secondsBetween;
 	}
 
+	/**
+	 * @param player
+	 * @param regexCommand
+	 */
 	static void setTime(Player player, String regexCommand) {
 		int pre2 = regexCommand.toLowerCase().hashCode();
 		String currTime = "";
@@ -191,6 +235,10 @@ public class boosCoolDownManager {
 						+ ".cooldown." + pre2, currTime);
 	}
 
+	/**
+	 * @param player
+	 * @param message
+	 */
 	public static void startAllCooldowns(Player player, String message) {
 		for (String a : boosConfigManager.getCooldowns(player)) {
 			int cooldownTime = boosConfigManager.getCoolDown(a, player);

@@ -1,21 +1,40 @@
 package cz.boosik.boosCooldown;
 
 import java.util.Set;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+
 import util.boosChat;
 
+/**
+ * @author Jakub
+ *
+ */
 public class boosCoolDownListener implements Listener {
 	private static boosCoolDown plugin;
 
+	/**
+	 * @param instance
+	 */
 	public boosCoolDownListener(boosCoolDown instance) {
 		plugin = instance;
 	}
 
+	/**
+	 * @param event
+	 * @param player
+	 * @param regexCommad
+	 * @param originalCommand
+	 * @param warmupTime
+	 * @param cooldownTime
+	 * @param price
+	 * @param limit
+	 */
 	private void checkRestrictions(PlayerCommandPreprocessEvent event,
 			Player player, String regexCommad, String originalCommand,
 			int warmupTime, int cooldownTime, double price, int limit) {
@@ -53,6 +72,9 @@ public class boosCoolDownListener implements Listener {
 		}
 	}
 
+	/**
+	 * @param event
+	 */
 	@EventHandler(priority = EventPriority.LOWEST)
 	private void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		if (event.isCancelled()) {
@@ -86,18 +108,18 @@ public class boosCoolDownListener implements Listener {
 				String group2 = group.replace("*", ".+");
 				if (originalCommand.matches(group2)) {
 					regexCommad = group;
-					if (boosConfigManager.getWarmupEnabled()){
+					if (boosConfigManager.getWarmupEnabled()) {
 						warmupTime = boosConfigManager.getWarmUp(regexCommad,
 								player);
 					}
-					if (boosConfigManager.getCooldownEnabled()){
-						cooldownTime = boosConfigManager.getCoolDown(regexCommad,
-								player);
+					if (boosConfigManager.getCooldownEnabled()) {
+						cooldownTime = boosConfigManager.getCoolDown(
+								regexCommad, player);
 					}
-					if (boosConfigManager.getPriceEnabled()){
+					if (boosConfigManager.getPriceEnabled()) {
 						price = boosConfigManager.getPrice(regexCommad, player);
 					}
-					if (boosConfigManager.getLimitEnabled()){
+					if (boosConfigManager.getLimitEnabled()) {
 						limit = boosConfigManager.getLimit(regexCommad, player);
 					}
 					break;
@@ -108,13 +130,16 @@ public class boosCoolDownListener implements Listener {
 		}
 	}
 
+	/**
+	 * @param event
+	 */
 	@EventHandler(priority = EventPriority.LOW)
 	private void onPlayerChat(AsyncPlayerChatEvent event) {
 		String chatMessage = event.getMessage();
 		String temp = "globalchat";
 		double price = 0;
 		Player player = event.getPlayer();
-		if (!boosConfigManager.getCommands(player).contains("globalchat")){
+		if (!boosConfigManager.getCommands(player).contains("globalchat")) {
 			return;
 		}
 		int cooldownTime = boosConfigManager.getCoolDown(temp, player);
@@ -135,6 +160,14 @@ public class boosCoolDownListener implements Listener {
 		}
 	}
 
+	/**
+	 * @param event
+	 * @param player
+	 * @param regexCommad
+	 * @param originalCommand
+	 * @param warmupTime
+	 * @param cooldownTime
+	 */
 	private void start(PlayerCommandPreprocessEvent event, Player player,
 			String regexCommad, String originalCommand, int warmupTime,
 			int cooldownTime) {

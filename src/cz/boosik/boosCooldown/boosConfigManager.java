@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -13,14 +12,20 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+/**
+ * @author Jakub
+ *
+ */
 public class boosConfigManager {
 
 	private static YamlConfiguration conf;
 	private static YamlConfiguration confusers;
 	private static File confFile;
 	private static File confusersFile;
-	static List<String> players = new LinkedList<String>();
-
+	
+	/**
+	 * 
+	 */
 	static void clear() {
 		ConfigurationSection userSection = confusers
 				.getConfigurationSection("users");
@@ -53,6 +58,10 @@ public class boosConfigManager {
 		loadConfusers();
 	}
 
+	/**
+	 * @param co
+	 * @param player
+	 */
 	public static void clearSomething(String co, String player) {
 		ConfigurationSection userSection = confusers
 				.getConfigurationSection("users."
@@ -65,6 +74,11 @@ public class boosConfigManager {
 		loadConfusers();
 	}
 
+	/**
+	 * @param co
+	 * @param player
+	 * @param command
+	 */
 	static void clearSomething(String co, String player, String command) {
 		int pre2 = command.toLowerCase().hashCode();
 		confusers.set("users." + player.toLowerCase().hashCode() + "." + co
@@ -73,106 +87,224 @@ public class boosConfigManager {
 		loadConfusers();
 	}
 
-	public static String getAlias(String message) {
+	/**
+	 * @param message
+	 * @return
+	 */
+	static String getAlias(String message) {
 		return conf.getString("commands.aliases." + message);
 	}
 
-	public static Set<String> getAliases() {
+	/**
+	 * @return
+	 */
+	static Set<String> getAliases() {
 		Set<String> aliases = conf.getConfigurationSection("commands.aliases")
 				.getKeys(false);
 		return aliases;
 	}
 
-	public static boolean getBlockInteractDuringWarmup() {
+	/**
+	 * @return
+	 */
+	static boolean getBlockInteractDuringWarmup() {
 		return conf.getBoolean("options.options.block_interact_during_warmup",
 				false);
 	}
 
+	/**
+	 * @return
+	 */
 	public static String getCancelWarmupByGameModeChangeMessage() {
 		return conf.getString(
 				"options.messages.warmup_cancelled_by_gamemode_change",
 				"&6Warm-ups have been cancelled due to changing gamemode.&f");
 	}
 
-	public static boolean getCancelWarmUpOnDamage() {
+	/**
+	 * @return
+	 */
+	static boolean getCancelWarmUpOnDamage() {
 		return conf
 				.getBoolean("options.options.cancel_warmup_on_damage", false);
 	}
 
-	public static boolean getCancelWarmUpOnGameModeChange() {
+	/**
+	 * @return
+	 */
+	static boolean getCancelWarmUpOnGameModeChange() {
 		return conf.getBoolean(
 				"options.options.cancel_warmup_on_gamemode_change", false);
 	}
 
-	public static boolean getCancelWarmupOnMove() {
+	/**
+	 * @return
+	 */
+	static boolean getCancelWarmupOnMove() {
 		return conf.getBoolean("options.options.cancel_warmup_on_move", false);
 	}
 
-	public static boolean getCancelWarmupOnSneak() {
+	/**
+	 * @return
+	 */
+	static boolean getCancelWarmupOnSneak() {
 		return conf.getBoolean("options.options.cancel_warmup_on_sneak", false);
 	}
 
+	/**
+	 * @return
+	 */
 	public static String getCancelWarmupOnSneakMessage() {
 		return conf.getString("options.messages.warmup_cancelled_by_sneak",
 				"&6Warm-ups have been cancelled due to sneaking.&f");
 	}
 
-	public static boolean getCancelWarmupOnSprint() {
+	/**
+	 * @return
+	 */
+	static boolean getCancelWarmupOnSprint() {
 		return conf
 				.getBoolean("options.options.cancel_warmup_on_sprint", false);
 	}
 
+	/**
+	 * @return
+	 */
 	public static String getCancelWarmupOnSprintMessage() {
 		return conf.getString("options.messages.warmup_cancelled_by_sprint",
 				"&6Warm-ups have been cancelled due to sprinting.&f");
 	}
 
+	/**
+	 * @return
+	 */
 	public static String getCannotCreateSignMessage() {
 		return conf.getString("options.messages.cannot_create_sign",
 				"&6You are not allowed to create this kind of signs!&f");
 	}
 
+	/**
+	 * @return
+	 */
 	public static String getCannotUseSignMessage() {
 		return conf.getString("options.messages.cannot_use_sign",
 				"&6You are not allowed to use this sign!&f");
 	}
 
+	/**
+	 * @return
+	 */
 	public static boolean getCleanCooldownsOnDeath() {
 		return conf.getBoolean("options.options.clear_cooldowns_on_death",
 				false);
 	}
 
+	/**
+	 * @return
+	 */
 	public static boolean getCleanUsesOnDeath() {
 		return conf.getBoolean("options.options.clear_uses_on_death", false);
 	}
 
+	/**
+	 * @return
+	 */
 	static boolean getClearOnRestart() {
 		return conf.getBoolean("options.options.clear_on_restart", false);
 	}
 
-	public static String getCommandBlockedMessage() {
+	/**
+	 * @return
+	 */
+	static String getCommandBlockedMessage() {
 		return conf.getString("options.messages.limit_achieved",
 				"&6You cannot use this command anymore!&f");
 	}
 
-	public static boolean getCommandLogging() {
+	/**
+	 * @param player
+	 * @return
+	 */
+	static String getCommandGroup(Player player) {
+		String cmdGroup = "default";
+		for (String group : getCommandGroups()) {
+			if (player.hasPermission("booscooldowns." + group)) {
+				cmdGroup = group;
+			}
+		}
+		return cmdGroup;
+	}
+
+	/**
+	 * @return
+	 */
+	static Set<String> getCommandGroups() {
+		Set<String> groups = conf.getConfigurationSection("commands.groups")
+				.getKeys(false);
+		return groups;
+	}
+
+	/**
+	 * @return
+	 */
+	static boolean getCommandLogging() {
 		return conf.getBoolean("options.options.command_logging", false);
 	}
 
-	public static YamlConfiguration getConfusers() {
+	/**
+	 * @param player
+	 * @return
+	 */
+	static Set<String> getCommands(Player player) {
+		String group = getCommandGroup(player);
+		Set<String> commands = conf.getConfigurationSection(
+				"commands.groups." + group).getKeys(false);
+		return commands;
+	}
+
+	/**
+	 * @param regexCommand
+	 * @param player
+	 * @return
+	 */
+	static String[] getCommandValues(String regexCommand, Player player) {
+		String[] values;
+		String line = "";
+		String group = getCommandGroup(player);
+		line = conf.getString("commands.groups." + group + "." + regexCommand,
+				line);
+		values = line.split(",");
+		return values;
+	}
+
+	/**
+	 * @return
+	 */
+	static YamlConfiguration getConfusers() {
 		return confusers;
 	}
 
+	/**
+	 * @param pre
+	 * @param player
+	 * @return
+	 */
 	static int getCoolDown(String pre, Player player) {
 		int coolDown = 0;
 		coolDown = Integer.parseInt(getCommandValues(pre, player)[1]);
 		return coolDown;
 	}
 
-	public static boolean getCooldownEnabled() {
+	/**
+	 * @return
+	 */
+	static boolean getCooldownEnabled() {
 		return conf.getBoolean("options.options.cooldowns_enabled", true);
 	}
 
+	/**
+	 * @return
+	 */
 	static String getCoolDownMessage() {
 		return conf
 				.getString(
@@ -180,78 +312,115 @@ public class boosConfigManager {
 						"&6Wait&e &seconds& seconds&6 before you can use command&e &command& &6again.&f");
 	}
 
-	public static Set<String> getCooldowns(Player player) {
+	/**
+	 * @param player
+	 * @return
+	 */
+	static Set<String> getCooldowns(Player player) {
 		String cool = getCommandGroup(player);
 		Set<String> cooldowns = conf.getConfigurationSection(
 				"commands.groups." + cool).getKeys(false);
 		return cooldowns;
 	}
 
-	public static String getInsufficientFundsMessage() {
+	/**
+	 * @return
+	 */
+	static String getInsufficientFundsMessage() {
 		return conf
-				.getString("options.messages.insufficient_funds",
+				.getString(
+						"options.messages.insufficient_funds",
 						"&6You have insufficient funds!&e &command& &6costs &e%s &6but you only have &e%s");
 	}
 
+	/**
+	 * @return
+	 */
 	public static String getInteractBlockedMessage() {
 		return conf.getString(
 				"options.messages.interact_blocked_during_warmup",
 				"&6You can't do this when command is warming-up!&f");
 	}
 
-	public static int getLimit(String pre, Player player) {
+	/**
+	 * @param pre
+	 * @param player
+	 * @return
+	 */
+	static int getLimit(String pre, Player player) {
 		int limit = -1;
 		limit = Integer.parseInt(getCommandValues(pre, player)[3]);
 		return limit;
 	}
 
-	public static boolean getLimitEnabled() {
+	/**
+	 * @return
+	 */
+	static boolean getLimitEnabled() {
 		return conf.getBoolean("options.options.limits_enabled", true);
 	}
 
-	public static String getLimitListMessage() {
+	/**
+	 * @return
+	 */
+	static String getLimitListMessage() {
 		return conf
 				.getString(
 						"options.messages.limit_list",
 						"&6Limit for command &e&command&&6 is &e&limit&&6. You can still use it &e&times&&6 times.&f");
 	}
 
-	public static Set<String> getLimits(Player player) {
-		String lim = getCommandGroup(player);
-		Set<String> limits = conf.getConfigurationSection(
-				"commands.groups." + lim).getKeys(false);
-		return limits;
-	}
-
-	public static boolean getLimitsEnabled() {
+	/**
+	 * @return
+	 */
+	static boolean getLimitsEnabled() {
 		return conf.getBoolean("options.options.limits_enabled", true);
 	}
 
-	public static String getLink(String pre) {
+	/**
+	 * @param pre
+	 * @return
+	 */
+	static String getLink(String pre) {
 		String link = null;
 		pre = pre.toLowerCase();
 		link = conf.getString("commands.links.link." + pre, link);
 		return link;
 	}
 
-	public static List<String> getLinkList(String link) {
+	/**
+	 * @param link
+	 * @return
+	 */
+	static List<String> getLinkList(String link) {
 		List<String> linkGroup;
 		link = link.toLowerCase();
 		linkGroup = conf.getStringList("commands.links.linkGroups." + link);
 		return linkGroup;
 	}
 
-	public static String getPaidErrorMessage() {
+	/**
+	 * @return
+	 */
+	static String getPaidErrorMessage() {
 		return conf.getString("options.messages.paid_error",
 				"An error has occured: %s");
 	}
 
-	public static String getPaidForCommandMessage() {
+	/**
+	 * @return
+	 */
+	static String getPaidForCommandMessage() {
 		return conf.getString("options.messages.paid_for_command",
 				"Price of &command& was %s and you now have %s");
 	}
 
-	public static String getPotionEffect(String pre, Player player) {
+	/**
+	 * @param pre
+	 * @param player
+	 * @return
+	 */
+	static String getPotionEffect(String pre, Player player) {
 		String effect = "";
 		pre = pre.toLowerCase();
 		String[] command = getCommandValues(pre, player);
@@ -261,7 +430,12 @@ public class boosConfigManager {
 		return effect;
 	}
 
-	public static int getPotionEffectStrength(String pre, Player player) {
+	/**
+	 * @param pre
+	 * @param player
+	 * @return
+	 */
+	static int getPotionEffectStrength(String pre, Player player) {
 		int effect = 0;
 		pre = pre.toLowerCase();
 		String[] command = getCommandValues(pre, player);
@@ -271,73 +445,122 @@ public class boosConfigManager {
 		return effect;
 	}
 
-	public static double getPrice(String pre, Player player) {
+	/**
+	 * @param pre
+	 * @param player
+	 * @return
+	 */
+	static double getPrice(String pre, Player player) {
 		double price = 0.0;
 		price = Double.parseDouble(getCommandValues(pre, player)[2]);
 		return price;
 	}
 
-	public static boolean getPriceEnabled() {
+	/**
+	 * @return
+	 */
+	static boolean getPriceEnabled() {
 		return conf.getBoolean("options.options.prices_enabled", true);
 	}
 
-	public static int getSaveInterval() {
+	/**
+	 * @return
+	 */
+	static int getSaveInterval() {
 		return conf.getInt("options.options.save_interval_in_minutes", 15);
 	}
 
-	public static boolean getSignCommands() {
+	/**
+	 * @return
+	 */
+	static boolean getSignCommands() {
 		return conf.getBoolean("options.options.command_signs", false);
 	}
 
+	/**
+	 * @return
+	 */
 	public static boolean getStartCooldownsOnDeath() {
 		return conf.getBoolean("options.options.start_cooldowns_on_death",
 				false);
 	}
 
+	/**
+	 * @return
+	 */
 	static String getUnitHoursMessage() {
 		return conf.getString("options.units.hours", "hours");
 	}
 
+	/**
+	 * @return
+	 */
 	static String getUnitMinutesMessage() {
 		return conf.getString("options.units.minutes", "minutes");
 	}
 
+	/**
+	 * @return
+	 */
 	static String getUnitSecondsMessage() {
 		return conf.getString("options.units.seconds", "seconds");
 	}
 
-	public static int getWarmUp(String pre, Player player) {
+	/**
+	 * @param pre
+	 * @param player
+	 * @return
+	 */
+	static int getWarmUp(String pre, Player player) {
 		int warmUp = -1;
 		String[] values = getCommandValues(pre, player);
 		warmUp = Integer.parseInt(values[0]);
 		return warmUp;
 	}
 
+	/**
+	 * @return
+	 */
 	static String getWarmUpAlreadyStartedMessage() {
 		return conf.getString("options.messages.warmup_already_started",
 				"&6Warm-Up process for&e &command& &6has already started.&f");
 	}
 
+	/**
+	 * @return
+	 */
 	public static String getWarmUpCancelledByDamageMessage() {
 		return conf.getString("options.messages.warmup_cancelled_by_damage",
 				"&6Warm-ups have been cancelled due to receiving damage.&f");
 	}
 
+	/**
+	 * @return
+	 */
 	public static String getWarmUpCancelledByMoveMessage() {
 		return conf.getString("options.messages.warmup_cancelled_by_move",
 				"&6Warm-ups have been cancelled due to moving.&f");
 	}
 
-	public static boolean getWarmupEnabled() {
+	/**
+	 * @return
+	 */
+	static boolean getWarmupEnabled() {
 		return conf.getBoolean("options.options.warmups_enabled", true);
 	}
 
+	/**
+	 * @return
+	 */
 	static String getWarmUpMessage() {
 		return conf
 				.getString("options.messages.warming_up",
 						"&6Wait&e &seconds& seconds&6 before command&e &command& &6has warmed up.&f");
 	}
 
+	/**
+	 * 
+	 */
 	static void load() {
 		try {
 			conf.load(confFile);
@@ -350,6 +573,9 @@ public class boosConfigManager {
 		}
 	}
 
+	/**
+	 * 
+	 */
 	static void loadConfusers() {
 		try {
 			confusers.load(confusersFile);
@@ -362,11 +588,17 @@ public class boosConfigManager {
 		}
 	}
 
+	/**
+	 * 
+	 */
 	static void reload() {
 		conf = new YamlConfiguration();
 		load();
 	}
 
+	/**
+	 * 
+	 */
 	static void saveConfusers() {
 		try {
 			confFile.createNewFile();
@@ -376,6 +608,11 @@ public class boosConfigManager {
 		}
 	}
 
+	/**
+	 * @param coSetnout
+	 * @param co
+	 * @param hodnota
+	 */
 	static void setAddToConfigFile(String coSetnout, String co, String hodnota) {
 		co = co.toLowerCase();
 		coSetnout = coSetnout.toLowerCase();
@@ -389,9 +626,11 @@ public class boosConfigManager {
 		reload();
 	}
 
-	// test
+	/**
+	 * @param boosCoolDown
+	 */
 	@SuppressWarnings("static-access")
-	public boosConfigManager(boosCoolDown boosCoolDown) {
+	boosConfigManager(boosCoolDown boosCoolDown) {
 		confFile = new File(boosCoolDown.getDataFolder(), "config.yml");
 		if (confFile.exists()) {
 			conf = new YamlConfiguration();
@@ -471,10 +710,13 @@ public class boosConfigManager {
 		}
 		try {
 			conf.addDefault("commands.groups.default.*", "1,1,0.0,-1");
-			conf.addDefault("commands.groups.default./anothercommand", "0,2,0.0,-1");
-			conf.addDefault("commands.groups.default./yetanothercommand", "5,0,10.0,5,WEAKNESS,3");
+			conf.addDefault("commands.groups.default./anothercommand",
+					"0,2,0.0,-1");
+			conf.addDefault("commands.groups.default./yetanothercommand",
+					"5,0,10.0,5,WEAKNESS,3");
 			conf.addDefault("commands.groups.VIP./command *", "5,30,10.0,0");
-			conf.addDefault("commands.groups.VIP./anothercommand", "2,10,5.0,20");
+			conf.addDefault("commands.groups.VIP./anothercommand",
+					"2,10,5.0,20");
 			conf.addDefault("commands.links.link./lol", "default");
 			conf.addDefault("commands.links.link./example", "default");
 			conf.addDefault("commands.links.link./command", "default");
@@ -505,38 +747,5 @@ public class boosConfigManager {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	private static Set<String> getCommandGroups() {
-		Set<String> groups = conf.getConfigurationSection("commands.groups")
-				.getKeys(false);
-		return groups;
-	}
-
-	public static String getCommandGroup(Player player) {
-		String cmdGroup = "default";
-		for (String group : getCommandGroups()) {
-			if (player.hasPermission("booscooldowns." + group)) {
-				cmdGroup = group;
-			}
-		}
-		return cmdGroup;
-	}
-
-	public static Set<String> getCommands(Player player) {
-		String group = getCommandGroup(player);
-		Set<String> commands = conf.getConfigurationSection(
-				"commands.groups." + group).getKeys(false);
-		return commands;
-	}
-
-	public static String[] getCommandValues(String regexCommand, Player player) {
-		String[] values;
-		String line = "";
-		String group = getCommandGroup(player);
-		line = conf.getString("commands.groups." + group + "." + regexCommand,
-				line);
-		values = line.split(",");
-		return values;
 	}
 }

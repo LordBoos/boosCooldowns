@@ -10,7 +10,14 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import cz.boosik.boosCooldown.boosConfigManager;
 import cz.boosik.boosCooldown.boosCoolDownManager;
 
+/**
+ * @author Jakub
+ *
+ */
 public class boosPlayerDeathListener implements Listener {
+	/**
+	 * @param event
+	 */
 	@EventHandler(priority = EventPriority.NORMAL)
 	private void onPlayerDeath(PlayerDeathEvent event) {
 		Entity entity = event.getEntity();

@@ -10,7 +10,14 @@ import util.boosChat;
 import cz.boosik.boosCooldown.boosConfigManager;
 import cz.boosik.boosCooldown.boosWarmUpManager;
 
+/**
+ * @author Jakub
+ *
+ */
 public class boosPlayerToggleSprintListener implements Listener {
+	/**
+	 * @param event
+	 */
 	@EventHandler(priority = EventPriority.NORMAL)
 	private void onPlayerToggleSprint(PlayerToggleSprintEvent event) {
 		if (event.isCancelled())

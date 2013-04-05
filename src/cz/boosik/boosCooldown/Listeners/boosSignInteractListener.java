@@ -13,13 +13,23 @@ import util.boosChat;
 import cz.boosik.boosCooldown.boosConfigManager;
 import cz.boosik.boosCooldown.boosCoolDown;
 
+/**
+ * @author Jakub
+ *
+ */
 public class boosSignInteractListener implements Listener {
 	private final boosCoolDown plugin;
 
+	/**
+	 * @param instance
+	 */
 	public boosSignInteractListener(boosCoolDown instance) {
 		plugin = instance;
 	}
 
+	/**
+	 * @param event
+	 */
 	@EventHandler(priority = EventPriority.NORMAL)
 	private void onSignInteract(PlayerInteractEvent event) {
 		String msg;
