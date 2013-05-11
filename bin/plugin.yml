@@ -1,6 +1,6 @@
 name: boosCooldowns
 main: cz.boosik.boosCooldown.boosCoolDown
-version: 3.6.3
+version: 3.6.4
 authors: [LordBoos (ingame name boosik)]
 softdepend: [Vault]
 description: >
