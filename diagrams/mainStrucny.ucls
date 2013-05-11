@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class-diagram version="1.1.2" icons="true" always-add-relationships="true" generalizations="true" realizations="true" 
-  associations="true" dependencies="true" nesting-relationships="true">  
+<class-diagram version="1.1.2" icons="true" automaticImage="PNG" always-add-relationships="true" generalizations="true" 
+  realizations="true" associations="true" dependencies="true" nesting-relationships="true">  
   <class id="1" language="java" name="cz.boosik.boosCooldown.BoosCoolDown" project="boosCooldowns" 
     file="/boosCooldowns/src/cz/boosik/boosCooldown/BoosCoolDown.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="187" y="349"/>    
@@ -29,7 +29,7 @@
     </display>  
   </interface>  
   <class id="4" language="java" name="org.bukkit.plugin.java.JavaPlugin" project="boosCooldowns" 
-    file="C:/Users/Jakub/git/bukkit-1.5.1-R0.1-20130328.013018-15.jar" binary="true" corner="BOTTOM_RIGHT">    
+    file="/boosCooldowns/src/libs/bukkit-1.5.1-R0.1-20130328.013018-15.jar" binary="true" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="8" y="350"/>    
     <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -38,7 +38,7 @@
     </display>  
   </class>  
   <interface id="5" language="java" name="net.milkbowl.vault.economy.Economy" project="boosCooldowns" 
-    file="D:/Games/Minecraft/server/plugins/Vault.jar" binary="true" corner="BOTTOM_RIGHT">    
+    file="/boosCooldowns/src/libs/Vault.jar" binary="true" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="408" y="238"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -47,7 +47,7 @@
     </display>  
   </interface>  
   <class id="6" language="java" name="org.bukkit.configuration.file.YamlConfiguration" project="boosCooldowns" 
-    file="C:/Users/Jakub/git/bukkit-1.5.1-R0.1-20130328.013018-15.jar" binary="true" corner="BOTTOM_RIGHT">    
+    file="/boosCooldowns/src/libs/bukkit-1.5.1-R0.1-20130328.013018-15.jar" binary="true" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="408" y="449"/>    
     <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -56,7 +56,7 @@
     </display>  
   </class>  
   <interface id="7" language="java" name="org.bukkit.plugin.PluginManager" project="boosCooldowns" 
-    file="C:/Users/Jakub/git/bukkit-1.5.1-R0.1-20130328.013018-15.jar" binary="true" corner="BOTTOM_RIGHT">    
+    file="/boosCooldowns/src/libs/bukkit-1.5.1-R0.1-20130328.013018-15.jar" binary="true" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="8" y="238"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -65,7 +65,7 @@
     </display>  
   </interface>  
   <class id="8" language="java" name="org.bukkit.plugin.PluginDescriptionFile" project="boosCooldowns" 
-    file="C:/Users/Jakub/git/bukkit-1.5.1-R0.1-20130328.013018-15.jar" binary="true" corner="BOTTOM_RIGHT">    
+    file="/boosCooldowns/src/libs/bukkit-1.5.1-R0.1-20130328.013018-15.jar" binary="true" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="8" y="449"/>    
     <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -83,33 +83,33 @@
     </display>  
   </class>  
   <association id="10">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="11" name="economy">        
-        <position height="18" width="52" x="239" y="283"/>      
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="11" name="confusers">        
+        <position height="18" width="58" x="257" y="428"/>      
       </attribute>      
       <multiplicity id="12" minimum="0" maximum="1">        
-        <position height="16" width="23" x="299" y="289"/>      
+        <position height="16" width="23" x="316" y="430"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
+    <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <dependency id="13">    
+  <association id="13">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="14" name="pdfFile">        
+        <position height="18" width="40" x="35" y="385"/>      
+      </attribute>      
+      <multiplicity id="15" minimum="0" maximum="1">        
+        <position height="16" width="23" x="81" y="387"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="16">    
     <end type="SOURCE" refId="1"/>    
     <end type="TARGET" refId="2"/>  
   </dependency>  
-  <association id="14">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="15" name="pm">        
-        <position height="18" width="22" x="64" y="284"/>      
-      </attribute>      
-      <multiplicity id="16" minimum="0" maximum="1">        
-        <position height="16" width="23" x="97" y="277"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
   <association id="17">    
     <end type="SOURCE" refId="4" navigable="false">      
       <attribute id="18" name="description"/>      
@@ -118,82 +118,86 @@
     <end type="TARGET" refId="8" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <realization id="20">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="3"/>  
-  </realization>  
-  <dependency id="21">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="1"/>  
-  </dependency>  
-  <association id="22">    
+  <association id="20">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="21" name="log"/>      
+      <multiplicity id="22" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="23">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="24" name="pm">        
+        <position height="18" width="22" x="64" y="284"/>      
+      </attribute>      
+      <multiplicity id="25" minimum="0" maximum="1">        
+        <position height="16" width="23" x="97" y="277"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="26">    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="23" name="conf">        
+      <attribute id="27" name="conf">        
         <position height="18" width="30" x="282" y="454"/>      
       </attribute>      
-      <multiplicity id="24" minimum="0" maximum="1">        
+      <multiplicity id="28" minimum="0" maximum="1">        
         <position height="16" width="23" x="312" y="456"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="25">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="26" name="confusers">        
-        <position height="18" width="58" x="257" y="428"/>      
+  <association id="29">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="30" name="economy">        
+        <position height="18" width="52" x="239" y="283"/>      
       </attribute>      
-      <multiplicity id="27" minimum="0" maximum="1">        
-        <position height="16" width="23" x="316" y="430"/>      
+      <multiplicity id="31" minimum="0" maximum="1">        
+        <position height="16" width="23" x="299" y="289"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
+    <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="28">    
+  <dependency id="32">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <association id="33">    
     <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="29" name="parent">        
+      <attribute id="34" name="parent">        
         <position height="18" width="39" x="446" y="325"/>      
       </attribute>      
-      <multiplicity id="30" minimum="0" maximum="1">        
+      <multiplicity id="35" minimum="0" maximum="1">        
         <position height="16" width="23" x="472" y="338"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="9" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="31">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="32" name="log"/>      
-      <multiplicity id="33" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="34">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="35" name="pdfFile">        
-        <position height="18" width="40" x="35" y="385"/>      
-      </attribute>      
-      <multiplicity id="36" minimum="0" maximum="1">        
-        <position height="16" width="23" x="81" y="387"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="37">    
+  <association id="36">    
     <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="38" name="global">        
+      <attribute id="37" name="global">        
         <position height="18" width="38" x="420" y="388"/>      
       </attribute>      
-      <multiplicity id="39" minimum="0" maximum="1">        
+      <multiplicity id="38" minimum="0" maximum="1">        
         <position height="16" width="23" x="456" y="389"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="9" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
+  <generalization id="39">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <realization id="40">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="3"/>  
+  </realization>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true"/>    
