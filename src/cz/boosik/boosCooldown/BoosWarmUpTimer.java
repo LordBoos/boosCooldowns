@@ -24,7 +24,7 @@ public class BoosWarmUpTimer extends TimerTask {
 	 * @param timer
 	 * @param player
 	 *            specifický hráè
-	 * @param regexCommad
+	 * @param regexCommand
 	 *            pøíkaz z konfiguraèního souboru, který vyhovuje originálnímu
 	 *            pøíkazu
 	 * @param originalCommand
