@@ -191,8 +191,8 @@
                   <constraint>
                     <height>40</height>
                     <width>140</width>
-                    <x>306</x>
-                    <y>169</y>
+                    <x>331</x>
+                    <y>171</y>
                   </constraint>
                   <sourceConnections>
                     <net.java.amateras.uml.usecasediagram.model.UsecaseIncludeModel reference="../../.."/>
