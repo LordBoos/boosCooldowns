@@ -74,16 +74,7 @@
       <operations public="false" package="false" protected="false" private="false"/>    
     </display>  
   </class>  
-  <interface id="8" language="java" name="org.bukkit.event.Listener" project="boosCooldowns" 
-    file="/boosCooldowns/src/libs/bukkit-1.5.1-R0.1-20130328.013018-15.jar" binary="true" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="366" y="293"/>    
-    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
-      visibility="true">      
-      <attributes public="false" package="false" protected="false" private="false"/>      
-      <operations public="false" package="false" protected="false" private="false"/>    
-    </display>  
-  </interface>  
-  <class id="9" language="java" name="cz.boosik.boosCooldown.BoosCoolDown" project="boosCooldowns" 
+  <class id="8" language="java" name="cz.boosik.boosCooldown.BoosCoolDown" project="boosCooldowns" 
     file="/boosCooldowns/src/cz/boosik/boosCooldown/BoosCoolDown.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="815" y="293"/>    
     <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" accessors="true" 
@@ -92,73 +83,39 @@
       <operations public="false" package="false" protected="false" private="false"/>    
     </display>  
   </class>  
-  <dependency id="10">    
+  <dependency id="9">    
     <bendpoint x="790" y="382"/>    
-    <end type="SOURCE" refId="9"/>    
+    <end type="SOURCE" refId="8"/>    
     <end type="TARGET" refId="5"/>  
   </dependency>  
-  <dependency id="11">    
+  <dependency id="10">    
     <bendpoint x="793" y="338"/>    
-    <end type="SOURCE" refId="9"/>    
+    <end type="SOURCE" refId="8"/>    
     <end type="TARGET" refId="1"/>  
   </dependency>  
-  <realization id="12">    
-    <bendpoint x="392" y="207"/>    
-    <end type="SOURCE" refId="3"/>    
-    <end type="TARGET" refId="8"/>  
-  </realization>  
-  <realization id="13">    
-    <bendpoint x="405" y="383"/>    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="8"/>  
-  </realization>  
-  <dependency id="14">    
-    <bendpoint x="791" y="250"/>    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="4"/>  
-  </dependency>  
-  <realization id="15">    
-    <bendpoint x="392" y="249"/>    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="8"/>  
-  </realization>  
-  <realization id="16">    
-    <bendpoint x="379" y="428"/>    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="8"/>  
-  </realization>  
-  <dependency id="17">    
-    <bendpoint x="792" y="428"/>    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="6"/>  
-  </dependency>  
-  <realization id="18">    
-    <bendpoint x="406" y="338"/>    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="8"/>  
-  </realization>  
-  <realization id="19">    
-    <bendpoint x="382" y="162"/>    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="8"/>  
-  </realization>  
-  <realization id="20">    
-    <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="8"/>  
-  </realization>  
-  <dependency id="21">    
-    <end type="SOURCE" refId="9"/>    
+  <dependency id="11">    
+    <end type="SOURCE" refId="8"/>    
     <end type="TARGET" refId="7"/>  
   </dependency>  
-  <dependency id="22">    
+  <dependency id="12">    
     <bendpoint x="786" y="207"/>    
-    <end type="SOURCE" refId="9"/>    
+    <end type="SOURCE" refId="8"/>    
     <end type="TARGET" refId="3"/>  
   </dependency>  
-  <dependency id="23">    
+  <dependency id="13">    
     <bendpoint x="780" y="161"/>    
-    <end type="SOURCE" refId="9"/>    
+    <end type="SOURCE" refId="8"/>    
     <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="14">    
+    <bendpoint x="791" y="250"/>    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <dependency id="15">    
+    <bendpoint x="792" y="428"/>    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="6"/>  
   </dependency>  
   <classifier-display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
     accessors="true" visibility="true">    
