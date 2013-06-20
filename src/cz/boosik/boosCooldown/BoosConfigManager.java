@@ -581,10 +581,13 @@ public class BoosConfigManager {
 			conf.load(confFile);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			BoosCoolDown.getLog().severe("[boosCooldowns] Configuration file not found!");
 		} catch (IOException e) {
 			e.printStackTrace();
+			BoosCoolDown.getLog().severe("[boosCooldowns] Could not read configuration file!");
 		} catch (InvalidConfigurationException e) {
 			e.printStackTrace();
+			BoosCoolDown.getLog().severe("[boosCooldowns] Configuration file is invalid!");
 		}
 	}
 
@@ -596,10 +599,13 @@ public class BoosConfigManager {
 			confusers.load(confusersFile);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			BoosCoolDown.getLog().severe("[boosCooldowns] Storage file not found!");
 		} catch (IOException e) {
 			e.printStackTrace();
+			BoosCoolDown.getLog().severe("[boosCooldowns] Could not read storage file!");
 		} catch (InvalidConfigurationException e) {
 			e.printStackTrace();
+			BoosCoolDown.getLog().severe("[boosCooldowns] Storage file is invalid!");
 		}
 	}
 
@@ -620,6 +626,7 @@ public class BoosConfigManager {
 			confusers.save(confusersFile);
 		} catch (IOException e) {
 			e.printStackTrace();
+			BoosCoolDown.getLog().severe("[boosCooldowns] Could not save storage file!");	
 		}
 	}
 
@@ -645,6 +652,8 @@ public class BoosConfigManager {
 			conf.save(confFile);
 		} catch (IOException e) {
 			e.printStackTrace();
+			BoosCoolDown.getLog().severe("[boosCooldowns] Could not save configuration file!");
+			
 		}
 		reload();
 	}
@@ -670,6 +679,7 @@ public class BoosConfigManager {
 			conf.addDefault("options.options.cooldowns_enabled", true);
 			conf.addDefault("options.options.prices_enabled", true);
 			conf.addDefault("options.options.limits_enabled", true);
+			conf.addDefault("options.options.auto_save_enabled_CAN_CAUSE_BIG_LAGS", false);
 			conf.addDefault("options.options.save_interval_in_minutes", 15);
 			conf.addDefault("options.options.cancel_warmup_on_damage", false);
 			conf.addDefault("options.options.cancel_warmup_on_move", false);
@@ -725,15 +735,7 @@ public class BoosConfigManager {
 					"&6You are not allowed to use this sign!&f");
 		}
 		if (confFile.exists()) {
-			try {
-				conf.load(confFile);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (InvalidConfigurationException e) {
-				e.printStackTrace();
-			}
+			load();
 		}
 		try {
 			conf.addDefault("commands.groups.default.*", "1,1,0.0,-1");
@@ -772,7 +774,12 @@ public class BoosConfigManager {
 				confusersFile.createNewFile();
 			} catch (IOException e) {
 				e.printStackTrace();
+				BoosCoolDown.getLog().severe("[boosCooldowns] Could not save storage file!");
 			}
 		}
+	}
+
+	static boolean getAutoSave() {
+		return conf.getBoolean("options.options.auto_save_enabled_CAN_CAUSE_BIG_LAGS", false);
 	}
 }

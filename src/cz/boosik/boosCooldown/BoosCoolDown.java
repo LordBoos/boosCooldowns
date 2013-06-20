@@ -27,6 +27,8 @@ import cz.boosik.boosCooldown.Listeners.BoosPlayerInteractListener;
 import cz.boosik.boosCooldown.Listeners.BoosPlayerMoveListener;
 import cz.boosik.boosCooldown.Listeners.BoosPlayerToggleSneakListener;
 import cz.boosik.boosCooldown.Listeners.BoosPlayerToggleSprintListener;
+import cz.boosik.boosCooldown.Listeners.BoosSignChangeListener;
+import cz.boosik.boosCooldown.Listeners.BoosSignInteractListener;
 
 /**
  * Hlavní tøída pluginu. Tøída je potomkem JavaPlugin a implementuje Runnable.
@@ -306,9 +308,11 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 		registerListeners();
 		initializeVault();
 		BukkitScheduler scheduler = this.getServer().getScheduler();
+		if (BoosConfigManager.getAutoSave()){
 		scheduler.scheduleSyncRepeatingTask(this, this,
 				BoosConfigManager.getSaveInterval() * 1200,
 				BoosConfigManager.getSaveInterval() * 1200);
+		}
 		if (BoosConfigManager.getClearOnRestart()) {
 			BoosConfigManager.clear();
 		}
@@ -351,6 +355,10 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 		}
 		if (BoosConfigManager.getCancelWarmupOnSprint()) {
 			pm.registerEvents(new BoosPlayerToggleSprintListener(), this);
+		}
+		if (BoosConfigManager.getSignCommands()) {
+			pm.registerEvents(new BoosSignChangeListener(), this);
+			pm.registerEvents(new BoosSignInteractListener(this), this);
 		}
 	}
 
