@@ -106,7 +106,7 @@ public class BoosCoolDownListener implements Listener {
 		}
 		Player player = event.getPlayer();
 		String originalCommand = event.getMessage().replace("\\", "\\\\");
-		originalCommand.trim().replaceAll(" +", " ").toLowerCase();
+		originalCommand = originalCommand.trim().replaceAll(" +", " ").toLowerCase();
 		String regexCommad = "";
 		Set<String> aliases = BoosConfigManager.getAliases();
 		Set<String> commands = BoosConfigManager.getCommands(player);
