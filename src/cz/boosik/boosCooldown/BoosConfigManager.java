@@ -282,15 +282,15 @@ public class BoosConfigManager {
 	 * @param player
 	 * @return
 	 */
-	static String[] getCommandValues(String regexCommand, Player player) {
-		String[] values;
-		String line = "";
-		String group = getCommandGroup(player);
-		line = conf.getString("commands.groups." + group + "." + regexCommand,
-				line);
-		values = line.split(",");
-		return values;
-	}
+//	static String[] getCommandValues(String regexCommand, Player player) {
+//		String[] values;
+//		String line = "";
+//		String group = getCommandGroup(player);
+//		line = conf.getString("commands.groups." + group + "." + regexCommand,
+//				line);
+//		values = line.split(",");
+//		return values;
+//	}
 
 	/**
 	 * @return
@@ -300,13 +300,14 @@ public class BoosConfigManager {
 	}
 
 	/**
-	 * @param pre
+	 * @param regexCommand
 	 * @param player
 	 * @return
 	 */
-	static int getCoolDown(String pre, Player player) {
-		int coolDown = 0;
-		coolDown = Integer.parseInt(getCommandValues(pre, player)[1]);
+	static int getCoolDown(String regexCommand, Player player) {
+		int coolDown;
+		String group = getCommandGroup(player);
+		coolDown = conf.getInt("commands.groups." + group + "." + regexCommand + ".cooldown", 0);
 		return coolDown;
 	}
 
@@ -358,13 +359,14 @@ public class BoosConfigManager {
 	}
 
 	/**
-	 * @param pre
+	 * @param regexCommand
 	 * @param player
 	 * @return
 	 */
-	static int getLimit(String pre, Player player) {
-		int limit = -1;
-		limit = Integer.parseInt(getCommandValues(pre, player)[3]);
+	static int getLimit(String regexCommand, Player player) {
+		int limit;
+		String group = getCommandGroup(player);
+		limit = conf.getInt("commands.groups." + group + "." + regexCommand + ".limit", -1);
 		return limit;
 	}
 
@@ -431,43 +433,50 @@ public class BoosConfigManager {
 	}
 
 	/**
-	 * @param pre
+	 * @param regexCommand
 	 * @param player
 	 * @return
 	 */
-	static String getPotionEffect(String pre, Player player) {
+	static String getPotionEffect(String regexCommand, Player player) {
 		String effect = "";
-		pre = pre.toLowerCase();
-		String[] command = getCommandValues(pre, player);
-		if (command.length > 4) {
-			effect = getCommandValues(pre, player)[4];
+		String temp;
+		String[] command;
+		String group = getCommandGroup(player);
+		temp = conf.getString("commands.groups." + group + "." + regexCommand + ".limit", "");
+		command = temp.split(",");
+		if(command.length==2){
+			effect = command[0];
 		}
 		return effect;
 	}
 
 	/**
-	 * @param pre
+	 * @param regexCommand
 	 * @param player
 	 * @return
 	 */
-	static int getPotionEffectStrength(String pre, Player player) {
+	static int getPotionEffectStrength(String regexCommand, Player player) {
 		int effect = 0;
-		pre = pre.toLowerCase();
-		String[] command = getCommandValues(pre, player);
-		if (command.length > 4) {
-			effect = Integer.valueOf(getCommandValues(pre, player)[5]);
+		String temp;
+		String[] command;
+		String group = getCommandGroup(player);
+		temp = conf.getString("commands.groups." + group + "." + regexCommand + ".limit", "");
+		command = temp.split(",");
+		if(command.length==2){
+			effect = Integer.valueOf(command[1]);
 		}
 		return effect;
 	}
 
 	/**
-	 * @param pre
+	 * @param regexCommand
 	 * @param player
 	 * @return
 	 */
-	static double getPrice(String pre, Player player) {
-		double price = 0.0;
-		price = Double.parseDouble(getCommandValues(pre, player)[2]);
+	static double getPrice(String regexCommand, Player player) {
+		double price;
+		String group = getCommandGroup(player);
+		price = conf.getDouble("commands.groups." + group + "." + regexCommand + ".price", 0.0);
 		return price;
 	}
 
@@ -522,14 +531,14 @@ public class BoosConfigManager {
 	}
 
 	/**
-	 * @param pre
+	 * @param regexCommand
 	 * @param player
 	 * @return
 	 */
-	static int getWarmUp(String pre, Player player) {
-		int warmUp = -1;
-		String[] values = getCommandValues(pre, player);
-		warmUp = Integer.parseInt(values[0]);
+	static int getWarmUp(String regexCommand, Player player) {
+		int warmUp;
+		String group = getCommandGroup(player);
+		warmUp = conf.getInt("commands.groups." + group + "." + regexCommand + ".warmup", 0);
 		return warmUp;
 	}
 
@@ -738,14 +747,25 @@ public class BoosConfigManager {
 			load();
 		}
 		try {
-			conf.addDefault("commands.groups.default.*", "1,1,0.0,-1");
-			conf.addDefault("commands.groups.default./anothercommand",
-					"0,2,0.0,-1");
-			conf.addDefault("commands.groups.default./yetanothercommand",
-					"5,0,10.0,5,WEAKNESS,3");
-			conf.addDefault("commands.groups.VIP./command *", "5,30,10.0,0");
-			conf.addDefault("commands.groups.VIP./anothercommand",
-					"2,10,5.0,20");
+			conf.addDefault("commands.groups.default./command parameter.cooldown",
+					2);
+			conf.addDefault("commands.groups.default./commandwithparameters *.cooldown",
+					5);
+			conf.addDefault("commands.groups.default./anothercommand.cooldown",
+					2);
+			conf.addDefault("commands.groups.default./yetanothercommand.warmup",
+					5);
+			conf.addDefault("commands.groups.default./yetanothercommand.price",
+					10.0);
+			conf.addDefault("commands.groups.default./yetanothercommand.limit",
+					5);
+			conf.addDefault("commands.groups.default./yetanothercommand.potion",
+					"WEAKNESS,3");
+			conf.addDefault("commands.groups.default.*.warmup", 1);
+			conf.addDefault("commands.groups.default.*.cooldown", 1);
+			conf.addDefault("commands.groups.default.*.price", 0.0);
+			conf.addDefault("commands.groups.default.*.limit", -1);
+			conf.addDefault("commands.groups.vip./command *.warmup", 5);
 			conf.addDefault("commands.links.link./lol", "default");
 			conf.addDefault("commands.links.link./example", "default");
 			conf.addDefault("commands.links.link./command", "default");
