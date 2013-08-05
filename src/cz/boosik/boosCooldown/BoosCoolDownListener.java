@@ -53,7 +53,7 @@ public class BoosCoolDownListener implements Listener {
 	 */
 	private void checkRestrictions(PlayerCommandPreprocessEvent event,
 			Player player, String regexCommad, String originalCommand,
-			int warmupTime, int cooldownTime, double price, int limit) {
+			int warmupTime, int cooldownTime, double price, String item, int count, int limit) {
 		boolean blocked = BoosLimitManager.blocked(player, regexCommad,
 				originalCommand, limit);
 		if (!blocked) {
@@ -73,6 +73,14 @@ public class BoosCoolDownListener implements Listener {
 			if (!event.isCancelled()) {
 				BoosPriceManager.payForCommand(event, player, regexCommad,
 						originalCommand, price);
+			}
+			if (!event.isCancelled()) {
+				BoosItemCostManager.payItemForCommand(event, player, regexCommad,
+						originalCommand, item, count);
+			}
+			if (!event.isCancelled()) {
+				String msg = String.format(BoosConfigManager.getMessage(regexCommad, player));
+				boosChat.sendMessageToPlayer(player, msg);
 			}
 		} else {
 			event.setCancelled(true);
@@ -111,6 +119,8 @@ public class BoosCoolDownListener implements Listener {
 		Set<String> aliases = BoosConfigManager.getAliases();
 		Set<String> commands = BoosConfigManager.getCommands(player);
 		boolean on = true;
+		String item = "";
+		int count = 0;
 		int warmupTime = 0;
 		double price = 0;
 		int limit = -1;
@@ -150,6 +160,10 @@ public class BoosCoolDownListener implements Listener {
 					if (BoosConfigManager.getPriceEnabled()) {
 						price = BoosConfigManager.getPrice(regexCommad, player);
 					}
+					if (BoosConfigManager.getItemCostEnabled()) {
+						item = BoosConfigManager.getItemCostItem(regexCommad, player);
+						count = BoosConfigManager.getItemCostCount(regexCommad, player);
+					}
 					if (BoosConfigManager.getLimitEnabled()) {
 						limit = BoosConfigManager.getLimit(regexCommad, player);
 					}
@@ -157,7 +171,7 @@ public class BoosCoolDownListener implements Listener {
 				}
 			}
 			this.checkRestrictions(event, player, regexCommad, originalCommand,
-					warmupTime, cooldownTime, price, limit);
+					warmupTime, cooldownTime, price, item, count, limit);
 		}
 	}
 

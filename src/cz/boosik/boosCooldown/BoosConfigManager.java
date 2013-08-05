@@ -357,6 +357,42 @@ public class BoosConfigManager {
 				"options.messages.interact_blocked_during_warmup",
 				"&6You can't do this when command is warming-up!&f");
 	}
+	
+	/**
+	 * @param regexCommand
+	 * @param player
+	 * @return
+	 */
+	static String getItemCostItem(String regexCommand, Player player) {
+		String item = "";
+		String temp;
+		String[] command;
+		String group = getCommandGroup(player);
+		temp = conf.getString("commands.groups." + group + "." + regexCommand + ".itemcost", "");
+		command = temp.split(",");
+		if(command.length==2){
+			item = command[0];
+		}
+		return item;
+	}
+
+	/**
+	 * @param regexCommand
+	 * @param player
+	 * @return
+	 */
+	static int getItemCostCount(String regexCommand, Player player) {
+		int count = 0;
+		String temp;
+		String[] command;
+		String group = getCommandGroup(player);
+		temp = conf.getString("commands.groups." + group + "." + regexCommand + ".itemcost", "");
+		command = temp.split(",");
+		if(command.length==2){
+			count = Integer.valueOf(command[1]);
+		}
+		return count;
+	}
 
 	/**
 	 * @param regexCommand
@@ -414,6 +450,18 @@ public class BoosConfigManager {
 		link = link.toLowerCase();
 		linkGroup = conf.getStringList("commands.links.linkGroups." + link);
 		return linkGroup;
+	}
+	
+	/**
+	 * @param regexCommand
+	 * @param player
+	 * @return
+	 */
+	static String getMessage(String regexCommand, Player player) {
+		String message = "";
+		String group = getCommandGroup(player);
+		message = conf.getString("commands.groups." + group + "." + regexCommand + ".message", "");
+		return message;
 	}
 
 	/**
@@ -687,6 +735,7 @@ public class BoosConfigManager {
 			conf.addDefault("options.options.warmups_enabled", true);
 			conf.addDefault("options.options.cooldowns_enabled", true);
 			conf.addDefault("options.options.prices_enabled", true);
+			conf.addDefault("options.options.item_cost_enabled", true);
 			conf.addDefault("options.options.limits_enabled", true);
 			conf.addDefault("options.options.auto_save_enabled_CAN_CAUSE_BIG_LAGS", false);
 			conf.addDefault("options.options.save_interval_in_minutes", 15);
@@ -731,6 +780,12 @@ public class BoosConfigManager {
 					"&6You have insufficient funds!&e &command& &6costs &e%s &6but you only have &e%s");
 			conf.addDefault("options.messages.paid_for_command",
 					"&6Price of&e &command& &6was&e %s &6and you now have&e %s");
+			conf.addDefault("options.messages.paid_items_for_command",
+					"Price of &command& was %s");
+			conf
+			.addDefault(
+					"options.messages.insufficient_items",
+					"&6You have not enough items!&e &command& &6needs &e%s");
 			conf.addDefault("options.messages.limit_achieved",
 					"&6You cannot use this command anymore!&f");
 			conf.addDefault(
@@ -761,6 +816,8 @@ public class BoosConfigManager {
 					5);
 			conf.addDefault("commands.groups.default./yetanothercommand.potion",
 					"WEAKNESS,3");
+			conf.addDefault("commands.groups.default./test.message", "You just used /test!");
+			conf.addDefault("commands.groups.default./test.itemcost", "STONE,10");
 			conf.addDefault("commands.groups.default.*.warmup", 1);
 			conf.addDefault("commands.groups.default.*.cooldown", 1);
 			conf.addDefault("commands.groups.default.*.price", 0.0);
@@ -801,5 +858,21 @@ public class BoosConfigManager {
 
 	static boolean getAutoSave() {
 		return conf.getBoolean("options.options.auto_save_enabled_CAN_CAUSE_BIG_LAGS", false);
+	}
+
+	public static String getPaidItemsForCommandMessage() {
+		return conf.getString("options.messages.paid_items_for_command",
+				"&6Price of&e &command& &6was &e%s");
+	}
+
+	public static String getInsufficientItemsMessage() {
+		return conf
+				.getString(
+						"options.messages.insufficient_items",
+						"&6You have not enough items!&e &command& &6needs &e%s");
+	}
+
+	public static boolean getItemCostEnabled() {
+		return conf.getBoolean("options.options.item_cost_enabled", true);
 	}
 }

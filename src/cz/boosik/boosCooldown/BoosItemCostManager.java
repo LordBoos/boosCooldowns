@@ -1,21 +1,19 @@
 package cz.boosik.boosCooldown;
-
-import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.economy.EconomyResponse;
-
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import util.boosChat;
 
 /**
- * Tøída obsahuje veškeré metody potøebné k øízení poplatkù pomocí vìcí za pøíkazy.
+ * Tøída obsahuje veškeré metody potøebné k øízení poplatkù za pøíkazy.
  * 
  * @author Jakub Koláø
  * 
  */
-public class BoosPriceManager {
-	private static Economy economy = BoosCoolDown.getEconomy();
+public class BoosItemCostManager {
 	private static String msg = "";
 
 	/**
@@ -28,6 +26,7 @@ public class BoosPriceManager {
 	 *            pøíkaz z konfigurace vyhovující originálnímu pøíkazu
 	 * @param originalCommand
 	 *            originální pøíkaz použitý hráèem
+	 * @param item 
 	 * @param price
 	 *            cena použití pøíkazu
 	 * @param name
@@ -36,34 +35,27 @@ public class BoosPriceManager {
 	 *         nalezen ekonomický plugin; false pokud došlo k chybì nebo hráè
 	 *         nemìl dostatek financí
 	 */
-	static boolean payForCommand(Player player, String regexCommand,
-			String originalCommand, double price, String name) {
-		if (economy == null) {
-			return true;
+	static boolean payItemForCommand(Player player, String regexCommand,
+			String originalCommand, String item, int count, String name) {
+		Material material = Material.getMaterial(item);
+		Inventory inventory = player.getInventory();
+		Boolean trans = false;
+		if(inventory.contains(material, count)){
+			ItemStack itemstack = new ItemStack(material, count);
+			inventory.removeItem(itemstack);
+			trans = true;
 		}
-		EconomyResponse r = economy.withdrawPlayer(name, price);
-		if (r.transactionSuccess()) {
-			msg = String.format(BoosConfigManager.getPaidForCommandMessage(),
-					economy.format(r.amount), economy.format(r.balance));
+		if (trans) {
+			msg = String.format(BoosConfigManager.getPaidItemsForCommandMessage(),
+					count, item);
 			msg = msg.replaceAll("&command&", originalCommand);
 			boosChat.sendMessageToPlayer(player, msg);
 			return true;
 		} else {
-			if (r.errorMessage.equals("Insufficient funds")) {
-				String unit;
-				if (price == 1) {
-					unit = economy.currencyNameSingular();
-				} else {
-					unit = economy.currencyNamePlural();
-				}
 				msg = String.format(
-						BoosConfigManager.getInsufficientFundsMessage(), (price
-								+ " " + unit), economy.format(r.balance));
+						BoosConfigManager.getInsufficientItemsMessage(), (count
+								+ " " + item));
 				msg = msg.replaceAll("&command&", originalCommand);
-			} else {
-				msg = String.format(BoosConfigManager.getPaidErrorMessage(),
-						r.errorMessage);
-			}
 			boosChat.sendMessageToPlayer(player, msg);
 			return false;
 		}
@@ -82,18 +74,19 @@ public class BoosPriceManager {
 	 *            pøíkaz z konfigurace vyhovující originálnímu pøíkazu
 	 * @param originalCommand
 	 *            originální pøíkaz použitý hráèem
+	 * @param item 
 	 * @param price
 	 *            cena použití pøíkazu
 	 */
-	static void payForCommand(PlayerCommandPreprocessEvent event,
+	static void payItemForCommand(PlayerCommandPreprocessEvent event,
 			Player player, String regexCommand, String originalCommand,
-			double price) {
+			String item, int count) {
 		String name = player.getName();
-		if (price > 0) {
-			if (!player.hasPermission("booscooldowns.noprice")
-					&& !player.hasPermission("booscooldowns.noprice."
+		if (count > 0) {
+			if (!player.hasPermission("booscooldowns.noitemcost")
+					&& !player.hasPermission("booscooldowns.noitemcost."
 							+ originalCommand)) {
-				if (payForCommand(player, regexCommand, originalCommand, price,
+				if (payItemForCommand(player, regexCommand, originalCommand, item, count,
 						name)) {
 					return;
 				} else {

@@ -232,13 +232,6 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 					String coSetnout = args[1];
 					String co = args[2];
 					String hodnota = args[3];
-					String regex1 = "(\\d+)(,)(\\d+)(,)(\\d+)(\\.)(\\d+)(,)(-?)(\\d+)(,)(CONFUSION|DAMAGE_RESISTANCE|FAST_DIGGING|FIRE_RESISTANCE|HARM|HEAL|HUNGER|INCREASE_DAMAGE|INVISIBILITY|JUMP|NIGHT_VISION|POISON|REGENERATION|SLOW|SLOW_DIGGING|SPEED|WATER_BREATHING|WEAKNESS|WITHER)(,)(\\d+)";
-					String regex2 = "(\\d+)(,)(\\d+)(,)(\\d+)(\\.)(\\d+)(,)(-?)(\\d+)";
-					if (!hodnota.matches(regex1) && !hodnota.matches(regex2)) {
-						boosChat.sendMessageToCommandSender(sender,
-								"Invalid syntax!");
-						return true;
-					}
 					if (co.startsWith("/") || co.equals("*")) {
 						if (co.contains("_")) {
 							co = co.replace("_", " ");
@@ -264,7 +257,7 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 						"&6["
 								+ pdfFile.getName()
 								+ "]&e"
-								+ " access denied, you lack required permission to do this!");
+								+ " Invalid command or access denied!");
 			}
 		}
 		return false;
