@@ -47,7 +47,7 @@ public class BoosItemCostManager {
 		}
 		if (trans) {
 			msg = String.format(BoosConfigManager.getPaidItemsForCommandMessage(),
-					count, item);
+					count+" "+ item);
 			msg = msg.replaceAll("&command&", originalCommand);
 			boosChat.sendMessageToPlayer(player, msg);
 			return true;

@@ -781,7 +781,7 @@ public class BoosConfigManager {
 			conf.addDefault("options.messages.paid_for_command",
 					"&6Price of&e &command& &6was&e %s &6and you now have&e %s");
 			conf.addDefault("options.messages.paid_items_for_command",
-					"Price of &command& was %s");
+					"&6Price of&e &command& &6was &e%s");
 			conf
 			.addDefault(
 					"options.messages.insufficient_items",
