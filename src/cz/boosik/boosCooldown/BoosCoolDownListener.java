@@ -80,7 +80,9 @@ public class BoosCoolDownListener implements Listener {
 			}
 			if (!event.isCancelled()) {
 				String msg = String.format(BoosConfigManager.getMessage(regexCommad, player));
-				boosChat.sendMessageToPlayer(player, msg);
+				if (!msg.equals("")) {
+					boosChat.sendMessageToPlayer(player, msg);
+				}
 			}
 		} else {
 			event.setCancelled(true);
