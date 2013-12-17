@@ -1,4 +1,5 @@
 package cz.boosik.boosCooldown;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -26,7 +27,7 @@ public class BoosItemCostManager {
 	 *            pøíkaz z konfigurace vyhovující originálnímu pøíkazu
 	 * @param originalCommand
 	 *            originální pøíkaz použitý hráèem
-	 * @param item 
+	 * @param item
 	 * @param price
 	 *            cena použití pøíkazu
 	 * @param name
@@ -40,23 +41,24 @@ public class BoosItemCostManager {
 		Material material = Material.getMaterial(item);
 		Inventory inventory = player.getInventory();
 		Boolean trans = false;
-		if(inventory.contains(material, count)){
+		if (inventory.contains(material, count)) {
 			ItemStack itemstack = new ItemStack(material, count);
 			inventory.removeItem(itemstack);
 			trans = true;
 		}
 		if (trans) {
-			msg = String.format(BoosConfigManager.getPaidItemsForCommandMessage(),
-					count+" "+ item);
+			msg = String.format(
+					BoosConfigManager.getPaidItemsForCommandMessage(), count
+							+ " " + item);
 			msg = msg.replaceAll("&command&", originalCommand);
 			boosChat.sendMessageToPlayer(player, msg);
 			return true;
 		} else {
-				msg = String.format(
-						BoosConfigManager.getInsufficientItemsMessage(), (count
-								+ " " + item));
-				msg = msg.replaceAll("&command&", originalCommand);
-			boosChat.sendMessageToPlayer(player, msg);
+			// msg = String.format(
+			// BoosConfigManager.getInsufficientItemsMessage(), (count
+			// + " " + item));
+			// msg = msg.replaceAll("&command&", originalCommand);
+			// boosChat.sendMessageToPlayer(player, msg);
 			return false;
 		}
 	}
@@ -74,7 +76,7 @@ public class BoosItemCostManager {
 	 *            pøíkaz z konfigurace vyhovující originálnímu pøíkazu
 	 * @param originalCommand
 	 *            originální pøíkaz použitý hráèem
-	 * @param item 
+	 * @param item
 	 * @param price
 	 *            cena použití pøíkazu
 	 */
@@ -86,8 +88,8 @@ public class BoosItemCostManager {
 			if (!player.hasPermission("booscooldowns.noitemcost")
 					&& !player.hasPermission("booscooldowns.noitemcost."
 							+ originalCommand)) {
-				if (payItemForCommand(player, regexCommand, originalCommand, item, count,
-						name)) {
+				if (payItemForCommand(player, regexCommand, originalCommand,
+						item, count, name)) {
 					return;
 				} else {
 					BoosCoolDownManager.cancelCooldown(player, regexCommand);
@@ -96,5 +98,17 @@ public class BoosItemCostManager {
 				}
 			}
 		}
+	}
+
+	public static boolean has(Player player, String item, int count) {
+		if (item.equals("")) {
+			return true;
+		}
+		Material material = Material.getMaterial(item);
+		Inventory inventory = player.getInventory();
+		if (inventory.contains(material, count)) {
+			return true;
+		}
+		return false;
 	}
 }

@@ -50,16 +50,16 @@ public class BoosPriceManager {
 			return true;
 		} else {
 			if (r.errorMessage.equals("Insufficient funds")) {
-				String unit;
-				if (price == 1) {
-					unit = economy.currencyNameSingular();
-				} else {
-					unit = economy.currencyNamePlural();
-				}
-				msg = String.format(
-						BoosConfigManager.getInsufficientFundsMessage(), (price
-								+ " " + unit), economy.format(r.balance));
-				msg = msg.replaceAll("&command&", originalCommand);
+//				String unit;
+//				if (price == 1) {
+//					unit = economy.currencyNameSingular();
+//				} else {
+//					unit = economy.currencyNamePlural();
+//				}
+//				msg = String.format(
+//						BoosConfigManager.getInsufficientFundsMessage(), (price
+//								+ " " + unit), economy.format(r.balance));
+//				msg = msg.replaceAll("&command&", originalCommand);
 			} else {
 				msg = String.format(BoosConfigManager.getPaidErrorMessage(),
 						r.errorMessage);
@@ -103,5 +103,9 @@ public class BoosPriceManager {
 				}
 			}
 		}
+	}
+
+	public static boolean has(Player player, double price) {
+		return economy.has(player.getName(), price);
 	}
 }

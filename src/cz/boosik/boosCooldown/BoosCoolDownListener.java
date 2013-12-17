@@ -11,11 +11,11 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import util.boosChat;
 
 /**
- * Hlavní posluchaè, kterı naslouchá události pouití pøíkazu hráèem.
- * Kontroluje, jestli jsou pro pøíkaz nastaveny omezení a na základì tohoto
- * spouští èasovaèe a volá metody spojené s poplatky a limity.
+ * Hlavnï¿½ posluchaï¿½, kterï¿½ naslouchï¿½ udï¿½losti pouï¿½itï¿½ pï¿½ï¿½kazu hrï¿½ï¿½em.
+ * Kontroluje, jestli jsou pro pï¿½ï¿½kaz nastaveny omezenï¿½ a na zï¿½kladï¿½ tohoto
+ * spouï¿½tï¿½ ï¿½asovaï¿½e a volï¿½ metody spojenï¿½ s poplatky a limity.
  * 
- * @author Jakub Koláø
+ * @author Jakub Kolï¿½ï¿½
  * 
  */
 public class BoosCoolDownListener implements Listener {
@@ -29,31 +29,32 @@ public class BoosCoolDownListener implements Listener {
 	}
 
 	/**
-	 * Metoda zkontroluje pomocí volání dalších metod, jestli pøikaz kterı hráè
-	 * pouil je nìjakım zpùsobem omezenı a na základì toho je buï událost
-	 * pouití pøíkazu stornována, nebo ne.
+	 * Metoda zkontroluje pomocï¿½ volï¿½nï¿½ dalï¿½ï¿½ch metod, jestli pï¿½ikaz kterï¿½ hrï¿½ï¿½
+	 * pouï¿½il je nï¿½jakï¿½m zpï¿½sobem omezenï¿½ a na zï¿½kladï¿½ toho je buï¿½ udï¿½lost
+	 * pouï¿½itï¿½ pï¿½ï¿½kazu stornovï¿½na, nebo ne.
 	 * 
 	 * @param event
-	 *            událost PlayerCommandPreprocessEvent
+	 *            udï¿½lost PlayerCommandPreprocessEvent
 	 * @param player
-	 *            hráè kterı spustil tuto událost
+	 *            hrï¿½ï¿½ kterï¿½ spustil tuto udï¿½lost
 	 * @param regexCommad
-	 *            pøíkaz z konfiguraèního souboru, kterı vyhovuje originálnímu
-	 *            pøíkazu
+	 *            pï¿½ï¿½kaz z konfiguraï¿½nï¿½ho souboru, kterï¿½ vyhovuje originï¿½lnï¿½mu
+	 *            pï¿½ï¿½kazu
 	 * @param originalCommand
-	 *            originální pøíkaz kterı hráè pouil
+	 *            originï¿½lnï¿½ pï¿½ï¿½kaz kterï¿½ hrï¿½ï¿½ pouï¿½il
 	 * @param warmupTime
-	 *            warmup doba nastavená pro regexCommand
+	 *            warmup doba nastavenï¿½ pro regexCommand
 	 * @param cooldownTime
-	 *            cooldown doba nastavená pro regexCommand
+	 *            cooldown doba nastavenï¿½ pro regexCommand
 	 * @param price
-	 *            cena nastavená pro regexCommand
+	 *            cena nastavenï¿½ pro regexCommand
 	 * @param limit
-	 *            limit nastavenı pro regexCommand
+	 *            limit nastavenï¿½ pro regexCommand
 	 */
 	private void checkRestrictions(PlayerCommandPreprocessEvent event,
 			Player player, String regexCommad, String originalCommand,
-			int warmupTime, int cooldownTime, double price, String item, int count, int limit) {
+			int warmupTime, int cooldownTime, double price, String item,
+			int count, int limit) {
 		boolean blocked = BoosLimitManager.blocked(player, regexCommad,
 				originalCommand, limit);
 		if (!blocked) {
@@ -70,16 +71,47 @@ public class BoosCoolDownListener implements Listener {
 					event.setCancelled(true);
 				}
 			}
-			if (!event.isCancelled()) {
-				BoosPriceManager.payForCommand(event, player, regexCommad,
-						originalCommand, price);
+			if (BoosPriceManager.has(player, price)
+					& BoosItemCostManager.has(player, item, count)) {
+				if (!event.isCancelled()) {
+					BoosPriceManager.payForCommand(event, player, regexCommad,
+							originalCommand, price);
+				}
+				if (!event.isCancelled()) {
+					BoosItemCostManager.payItemForCommand(event, player,
+							regexCommad, originalCommand, item, count);
+				}
+			} else {
+				if (!BoosPriceManager.has(player, price) & !BoosWarmUpManager.isWarmUpProcess(player, regexCommad)) {
+					String unit;
+					String msg = "";
+					if (price == 1) {
+						unit = BoosCoolDown.getEconomy().currencyNameSingular();
+					} else {
+						unit = BoosCoolDown.getEconomy().currencyNamePlural();
+					}
+					msg = String.format(
+							BoosConfigManager.getInsufficientFundsMessage(),
+							(price + " " + unit),
+							BoosCoolDown.getEconomy().format(
+									BoosCoolDown.getEconomy().getBalance(
+											player.getName())));
+					msg = msg.replaceAll("&command&", originalCommand);
+					boosChat.sendMessageToPlayer(player, msg);
+				}
+				if (!BoosItemCostManager.has(player, item, count) & !BoosWarmUpManager.isWarmUpProcess(player, regexCommad)) {
+					String msg = "";
+					msg = String.format(
+							BoosConfigManager.getInsufficientItemsMessage(),
+							(count + " " + item));
+					msg = msg.replaceAll("&command&", originalCommand);
+					boosChat.sendMessageToPlayer(player, msg);
+				}
+				event.setCancelled(true);
 			}
 			if (!event.isCancelled()) {
-				BoosItemCostManager.payItemForCommand(event, player, regexCommad,
-						originalCommand, item, count);
-			}
-			if (!event.isCancelled()) {
-				String msg = String.format(BoosConfigManager.getMessage(regexCommad, player));
+				String msg = String.format(BoosConfigManager.getMessage(
+						regexCommad, player));
 				if (!msg.equals("")) {
 					boosChat.sendMessageToPlayer(player, msg);
 				}
@@ -99,15 +131,15 @@ public class BoosCoolDownListener implements Listener {
 	}
 
 	/**
-	 * Posluchaè, kterı naslouchá události pouití pøíkazu a spouští se ještì
-	 * pøed tím, ne je vykonán efekt tohto pøíkazu. Metoda zjišuje, jestli
-	 * pøíkaz není alias jiného pøíkazu a také jestli se pøíkaz kterı hráè
-	 * pouil shoduje s pøíkazem nastavenım v konfiguraci. Pokud se shoduje, pak
-	 * jsou naèteny informace o warmup dobì, cooldown dobì, poplatku a limitu.
-	 * Tyto hodnoty jsou poté pøedány metodì checkRestrictions();.
+	 * Posluchaï¿½, kterï¿½ naslouchï¿½ udï¿½losti pouï¿½itï¿½ pï¿½ï¿½kazu a spouï¿½tï¿½ se jeï¿½tï¿½
+	 * pï¿½ed tï¿½m, neï¿½ je vykonï¿½n efekt tohto pï¿½ï¿½kazu. Metoda zjiï¿½ï¿½uje, jestli
+	 * pï¿½ï¿½kaz nenï¿½ alias jinï¿½ho pï¿½ï¿½kazu a takï¿½ jestli se pï¿½ï¿½kaz kterï¿½ hrï¿½ï¿½
+	 * pouï¿½il shoduje s pï¿½ï¿½kazem nastavenï¿½m v konfiguraci. Pokud se shoduje, pak
+	 * jsou naï¿½teny informace o warmup dobï¿½, cooldown dobï¿½, poplatku a limitu.
+	 * Tyto hodnoty jsou potï¿½ pï¿½edï¿½ny metodï¿½ checkRestrictions();.
 	 * 
 	 * @param event
-	 *            událost PlayerCommandPreprocessEvent
+	 *            udï¿½lost PlayerCommandPreprocessEvent
 	 */
 	@EventHandler(priority = EventPriority.LOWEST)
 	private void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
@@ -116,7 +148,9 @@ public class BoosCoolDownListener implements Listener {
 		}
 		Player player = event.getPlayer();
 		String originalCommand = event.getMessage().replace("\\", "\\\\");
-		originalCommand = originalCommand.trim().replaceAll(" +", " ").toLowerCase();
+		originalCommand = originalCommand.replace("$", "S");
+		originalCommand = originalCommand.trim().replaceAll(" +", " ")
+				.toLowerCase();
 		String regexCommad = "";
 		Set<String> aliases = BoosConfigManager.getAliases();
 		Set<String> commands = BoosConfigManager.getCommands(player);
@@ -163,8 +197,10 @@ public class BoosCoolDownListener implements Listener {
 						price = BoosConfigManager.getPrice(regexCommad, player);
 					}
 					if (BoosConfigManager.getItemCostEnabled()) {
-						item = BoosConfigManager.getItemCostItem(regexCommad, player);
-						count = BoosConfigManager.getItemCostCount(regexCommad, player);
+						item = BoosConfigManager.getItemCostItem(regexCommad,
+								player);
+						count = BoosConfigManager.getItemCostCount(regexCommad,
+								player);
 					}
 					if (BoosConfigManager.getLimitEnabled()) {
 						limit = BoosConfigManager.getLimit(regexCommad, player);
@@ -178,22 +214,22 @@ public class BoosCoolDownListener implements Listener {
 	}
 
 	/**
-	 * Metoda spouští warmup a cooldown èasovaèe, pøípadnì je ukonèuje, pokud
-	 * ji tyto èasovaèe skonèili.
+	 * Metoda spouï¿½tï¿½ warmup a cooldown ï¿½asovaï¿½e, pï¿½ï¿½padnï¿½ je ukonï¿½uje, pokud
+	 * jiï¿½ tyto ï¿½asovaï¿½e skonï¿½ili.
 	 * 
 	 * @param event
-	 *            událost PlayerCommandPreprocessEvent
+	 *            udï¿½lost PlayerCommandPreprocessEvent
 	 * @param player
-	 *            hráè kterı spustil tuto událost
+	 *            hrï¿½ï¿½ kterï¿½ spustil tuto udï¿½lost
 	 * @param regexCommad
-	 *            pøíkaz z konfiguraèního souboru, kterı vyhovuje originálnímu
-	 *            pøíkazu
+	 *            pï¿½ï¿½kaz z konfiguraï¿½nï¿½ho souboru, kterï¿½ vyhovuje originï¿½lnï¿½mu
+	 *            pï¿½ï¿½kazu
 	 * @param originalCommand
-	 *            originální pøíkaz kterı hráè pouil
+	 *            originï¿½lnï¿½ pï¿½ï¿½kaz kterï¿½ hrï¿½ï¿½ pouï¿½il
 	 * @param warmupTime
-	 *            warmup doba nastavená pro regexCommand
+	 *            warmup doba nastavenï¿½ pro regexCommand
 	 * @param cooldownTime
-	 *            cooldown doba nastavená pro regexCommand
+	 *            cooldown doba nastavenï¿½ pro regexCommand
 	 */
 	private void start(PlayerCommandPreprocessEvent event, Player player,
 			String regexCommad, String originalCommand, int warmupTime,
