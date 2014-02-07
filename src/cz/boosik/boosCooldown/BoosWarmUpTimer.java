@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
  * Tøída starající se o samotné èasovaèe warmupù pomocí TimerTask
  * 
  * @author Jakub Koláø
- *
+ * 
  */
 public class BoosWarmUpTimer extends TimerTask {
 

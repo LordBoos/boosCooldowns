@@ -11,7 +11,7 @@ import cz.boosik.boosCooldown.BoosConfigManager;
 
 /**
  * @author Jakub Koláø
- *
+ * 
  */
 public class BoosSignChangeListener implements Listener {
 	/**

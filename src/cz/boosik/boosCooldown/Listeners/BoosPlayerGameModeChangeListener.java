@@ -26,10 +26,10 @@ public class BoosPlayerGameModeChangeListener implements Listener {
 	/**
 	 * Metoda zjišuje jestli je entita která spustila tuto událost hráè. Pokud
 	 * je entita hráè, hráè není null a nedisponuje oprávnìním
-	 * booscooldowns.nocancel.gamemodechange a pokud tento hráè disponuje aktivními
-	 * warmup èasovaèi, pak je hráèi odeslána zpráva, která ho informuje o
-	 * ukonèení všech warmup èasovaèù a následnì tyto èasovaèe ukonèuje pomocí
-	 * metody cancelWarmUps();.
+	 * booscooldowns.nocancel.gamemodechange a pokud tento hráè disponuje
+	 * aktivními warmup èasovaèi, pak je hráèi odeslána zpráva, která ho
+	 * informuje o ukonèení všech warmup èasovaèù a následnì tyto èasovaèe
+	 * ukonèuje pomocí metody cancelWarmUps();.
 	 * 
 	 * @param event
 	 *            událost PlayerGameModeChangeEvent

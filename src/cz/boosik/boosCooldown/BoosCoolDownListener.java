@@ -11,9 +11,10 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import util.boosChat;
 
 /**
- * Hlavn� poslucha�, kter� naslouch� ud�losti pou�it� p��kazu hr��em.
- * Kontroluje, jestli jsou pro p��kaz nastaveny omezen� a na z�klad� tohoto
- * spou�t� �asova�e a vol� metody spojen� s poplatky a limity.
+ * Hlavn� poslucha�, kter� naslouch� ud�losti pou�it� p��kazu
+ * hr��em. Kontroluje, jestli jsou pro p��kaz nastaveny omezen� a na
+ * z�klad� tohoto spou�t� �asova�e a vol� metody spojen� s
+ * poplatky a limity.
  * 
  * @author Jakub Kol��
  * 
@@ -29,17 +30,18 @@ public class BoosCoolDownListener implements Listener {
 	}
 
 	/**
-	 * Metoda zkontroluje pomoc� vol�n� dal��ch metod, jestli p�ikaz kter� hr��
-	 * pou�il je n�jak�m zp�sobem omezen� a na z�klad� toho je bu� ud�lost
-	 * pou�it� p��kazu stornov�na, nebo ne.
+	 * Metoda zkontroluje pomoc� vol�n� dal��ch metod, jestli p�ikaz
+	 * kter� hr�� pou�il je n�jak�m zp�sobem omezen� a na
+	 * z�klad� toho je bu� ud�lost pou�it� p��kazu stornov�na,
+	 * nebo ne.
 	 * 
 	 * @param event
 	 *            ud�lost PlayerCommandPreprocessEvent
 	 * @param player
 	 *            hr�� kter� spustil tuto ud�lost
 	 * @param regexCommad
-	 *            p��kaz z konfigura�n�ho souboru, kter� vyhovuje origin�ln�mu
-	 *            p��kazu
+	 *            p��kaz z konfigura�n�ho souboru, kter� vyhovuje
+	 *            origin�ln�mu p��kazu
 	 * @param originalCommand
 	 *            origin�ln� p��kaz kter� hr�� pou�il
 	 * @param warmupTime
@@ -54,7 +56,7 @@ public class BoosCoolDownListener implements Listener {
 	private void checkRestrictions(PlayerCommandPreprocessEvent event,
 			Player player, String regexCommad, String originalCommand,
 			int warmupTime, int cooldownTime, double price, String item,
-			int count, int limit) {
+			int count, int limit, int xpPrice) {
 		boolean blocked = BoosLimitManager.blocked(player, regexCommad,
 				originalCommand, limit);
 		if (!blocked) {
@@ -65,14 +67,17 @@ public class BoosCoolDownListener implements Listener {
 					start(event, player, regexCommad, originalCommand,
 							warmupTime, cooldownTime);
 				}
-			} else if (BoosPriceManager.has(player, price) & BoosItemCostManager.has(player, item, count)){
+			} else if (BoosPriceManager.has(player, price)
+					& BoosItemCostManager.has(player, item, count)
+					& BoosXpCostManager.has(player, xpPrice)) {
 				if (BoosCoolDownManager.coolDown(player, regexCommad,
 						originalCommand, cooldownTime)) {
 					event.setCancelled(true);
 				}
 			}
 			if (BoosPriceManager.has(player, price)
-					& BoosItemCostManager.has(player, item, count)) {
+					& BoosItemCostManager.has(player, item, count)
+					& BoosXpCostManager.has(player, xpPrice)) {
 				if (!event.isCancelled()) {
 					BoosPriceManager.payForCommand(event, player, regexCommad,
 							originalCommand, price);
@@ -81,8 +86,14 @@ public class BoosCoolDownListener implements Listener {
 					BoosItemCostManager.payItemForCommand(event, player,
 							regexCommad, originalCommand, item, count);
 				}
+				if (!event.isCancelled()) {
+					BoosXpCostManager.payXPForCommand(event, player,
+							regexCommad, originalCommand, xpPrice);
+				}
 			} else {
-				if (!BoosPriceManager.has(player, price) & !BoosWarmUpManager.isWarmUpProcess(player, regexCommad)) {
+				if (!BoosPriceManager.has(player, price)
+						& !BoosWarmUpManager.isWarmUpProcess(player,
+								regexCommad)) {
 					String unit;
 					String msg = "";
 					if (price == 1) {
@@ -99,11 +110,23 @@ public class BoosCoolDownListener implements Listener {
 					msg = msg.replaceAll("&command&", originalCommand);
 					boosChat.sendMessageToPlayer(player, msg);
 				}
-				if (!BoosItemCostManager.has(player, item, count) & !BoosWarmUpManager.isWarmUpProcess(player, regexCommad)) {
+				if (!BoosItemCostManager.has(player, item, count)
+						& !BoosWarmUpManager.isWarmUpProcess(player,
+								regexCommad)) {
 					String msg = "";
 					msg = String.format(
 							BoosConfigManager.getInsufficientItemsMessage(),
 							(count + " " + item));
+					msg = msg.replaceAll("&command&", originalCommand);
+					boosChat.sendMessageToPlayer(player, msg);
+				}
+				if (!BoosXpCostManager.has(player, xpPrice)
+						& !BoosWarmUpManager.isWarmUpProcess(player,
+								regexCommad)) {
+					String msg = "";
+					msg = String.format(
+							BoosConfigManager.getInsufficientXpMessage(),
+							(xpPrice));
 					msg = msg.replaceAll("&command&", originalCommand);
 					boosChat.sendMessageToPlayer(player, msg);
 				}
@@ -131,12 +154,14 @@ public class BoosCoolDownListener implements Listener {
 	}
 
 	/**
-	 * Poslucha�, kter� naslouch� ud�losti pou�it� p��kazu a spou�t� se je�t�
-	 * p�ed t�m, ne� je vykon�n efekt tohto p��kazu. Metoda zji��uje, jestli
-	 * p��kaz nen� alias jin�ho p��kazu a tak� jestli se p��kaz kter� hr��
-	 * pou�il shoduje s p��kazem nastaven�m v konfiguraci. Pokud se shoduje, pak
-	 * jsou na�teny informace o warmup dob�, cooldown dob�, poplatku a limitu.
-	 * Tyto hodnoty jsou pot� p�ed�ny metod� checkRestrictions();.
+	 * Poslucha�, kter� naslouch� ud�losti pou�it� p��kazu a
+	 * spou�t� se je�t� p�ed t�m, ne� je vykon�n efekt tohto
+	 * p��kazu. Metoda zji��uje, jestli p��kaz nen� alias jin�ho
+	 * p��kazu a tak� jestli se p��kaz kter� hr�� pou�il
+	 * shoduje s p��kazem nastaven�m v konfiguraci. Pokud se shoduje, pak
+	 * jsou na�teny informace o warmup dob�, cooldown dob�, poplatku a
+	 * limitu. Tyto hodnoty jsou pot� p�ed�ny metod�
+	 * checkRestrictions();.
 	 * 
 	 * @param event
 	 *            ud�lost PlayerCommandPreprocessEvent
@@ -161,6 +186,7 @@ public class BoosCoolDownListener implements Listener {
 		double price = 0;
 		int limit = -1;
 		int cooldownTime = 0;
+		int xpPrice = 0;
 		on = BoosCoolDown.isPluginOnForPlayer(player);
 		try {
 			if (aliases.contains(originalCommand)) {
@@ -196,6 +222,10 @@ public class BoosCoolDownListener implements Listener {
 					if (BoosConfigManager.getPriceEnabled()) {
 						price = BoosConfigManager.getPrice(regexCommad, player);
 					}
+					if (BoosConfigManager.getXpPriceEnabled()) {
+						price = BoosConfigManager.getXpPrice(regexCommad,
+								player);
+					}
 					if (BoosConfigManager.getItemCostEnabled()) {
 						item = BoosConfigManager.getItemCostItem(regexCommad,
 								player);
@@ -209,21 +239,22 @@ public class BoosCoolDownListener implements Listener {
 				}
 			}
 			this.checkRestrictions(event, player, regexCommad, originalCommand,
-					warmupTime, cooldownTime, price, item, count, limit);
+					warmupTime, cooldownTime, price, item, count, limit,
+					xpPrice);
 		}
 	}
 
 	/**
-	 * Metoda spou�t� warmup a cooldown �asova�e, p��padn� je ukon�uje, pokud
-	 * ji� tyto �asova�e skon�ili.
+	 * Metoda spou�t� warmup a cooldown �asova�e, p��padn� je
+	 * ukon�uje, pokud ji� tyto �asova�e skon�ili.
 	 * 
 	 * @param event
 	 *            ud�lost PlayerCommandPreprocessEvent
 	 * @param player
 	 *            hr�� kter� spustil tuto ud�lost
 	 * @param regexCommad
-	 *            p��kaz z konfigura�n�ho souboru, kter� vyhovuje origin�ln�mu
-	 *            p��kazu
+	 *            p��kaz z konfigura�n�ho souboru, kter� vyhovuje
+	 *            origin�ln�mu p��kazu
 	 * @param originalCommand
 	 *            origin�ln� p��kaz kter� hr�� pou�il
 	 * @param warmupTime

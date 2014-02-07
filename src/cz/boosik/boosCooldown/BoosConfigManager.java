@@ -282,15 +282,15 @@ public class BoosConfigManager {
 	 * @param player
 	 * @return
 	 */
-//	static String[] getCommandValues(String regexCommand, Player player) {
-//		String[] values;
-//		String line = "";
-//		String group = getCommandGroup(player);
-//		line = conf.getString("commands.groups." + group + "." + regexCommand,
-//				line);
-//		values = line.split(",");
-//		return values;
-//	}
+	// static String[] getCommandValues(String regexCommand, Player player) {
+	// String[] values;
+	// String line = "";
+	// String group = getCommandGroup(player);
+	// line = conf.getString("commands.groups." + group + "." + regexCommand,
+	// line);
+	// values = line.split(",");
+	// return values;
+	// }
 
 	/**
 	 * @return
@@ -307,7 +307,8 @@ public class BoosConfigManager {
 	static int getCoolDown(String regexCommand, Player player) {
 		int coolDown;
 		String group = getCommandGroup(player);
-		coolDown = conf.getInt("commands.groups." + group + "." + regexCommand + ".cooldown", 0);
+		coolDown = conf.getInt("commands.groups." + group + "." + regexCommand
+				+ ".cooldown", 0);
 		return coolDown;
 	}
 
@@ -357,7 +358,7 @@ public class BoosConfigManager {
 				"options.messages.interact_blocked_during_warmup",
 				"&6You can't do this when command is warming-up!&f");
 	}
-	
+
 	/**
 	 * @param regexCommand
 	 * @param player
@@ -368,9 +369,10 @@ public class BoosConfigManager {
 		String temp;
 		String[] command;
 		String group = getCommandGroup(player);
-		temp = conf.getString("commands.groups." + group + "." + regexCommand + ".itemcost", "");
+		temp = conf.getString("commands.groups." + group + "." + regexCommand
+				+ ".itemcost", "");
 		command = temp.split(",");
-		if(command.length==2){
+		if (command.length == 2) {
 			item = command[0];
 		}
 		return item;
@@ -386,9 +388,10 @@ public class BoosConfigManager {
 		String temp;
 		String[] command;
 		String group = getCommandGroup(player);
-		temp = conf.getString("commands.groups." + group + "." + regexCommand + ".itemcost", "");
+		temp = conf.getString("commands.groups." + group + "." + regexCommand
+				+ ".itemcost", "");
 		command = temp.split(",");
-		if(command.length==2){
+		if (command.length == 2) {
 			count = Integer.valueOf(command[1]);
 		}
 		return count;
@@ -402,7 +405,8 @@ public class BoosConfigManager {
 	static int getLimit(String regexCommand, Player player) {
 		int limit;
 		String group = getCommandGroup(player);
-		limit = conf.getInt("commands.groups." + group + "." + regexCommand + ".limit", -1);
+		limit = conf.getInt("commands.groups." + group + "." + regexCommand
+				+ ".limit", -1);
 		return limit;
 	}
 
@@ -451,7 +455,7 @@ public class BoosConfigManager {
 		linkGroup = conf.getStringList("commands.links.linkGroups." + link);
 		return linkGroup;
 	}
-	
+
 	/**
 	 * @param regexCommand
 	 * @param player
@@ -460,7 +464,8 @@ public class BoosConfigManager {
 	static String getMessage(String regexCommand, Player player) {
 		String message = "";
 		String group = getCommandGroup(player);
-		message = conf.getString("commands.groups." + group + "." + regexCommand + ".message", "");
+		message = conf.getString("commands.groups." + group + "."
+				+ regexCommand + ".message", "");
 		return message;
 	}
 
@@ -490,9 +495,10 @@ public class BoosConfigManager {
 		String temp;
 		String[] command;
 		String group = getCommandGroup(player);
-		temp = conf.getString("commands.groups." + group + "." + regexCommand + ".limit", "");
+		temp = conf.getString("commands.groups." + group + "." + regexCommand
+				+ ".limit", "");
 		command = temp.split(",");
-		if(command.length==2){
+		if (command.length == 2) {
 			effect = command[0];
 		}
 		return effect;
@@ -508,9 +514,10 @@ public class BoosConfigManager {
 		String temp;
 		String[] command;
 		String group = getCommandGroup(player);
-		temp = conf.getString("commands.groups." + group + "." + regexCommand + ".limit", "");
+		temp = conf.getString("commands.groups." + group + "." + regexCommand
+				+ ".limit", "");
 		command = temp.split(",");
-		if(command.length==2){
+		if (command.length == 2) {
 			effect = Integer.valueOf(command[1]);
 		}
 		return effect;
@@ -524,7 +531,8 @@ public class BoosConfigManager {
 	static double getPrice(String regexCommand, Player player) {
 		double price;
 		String group = getCommandGroup(player);
-		price = conf.getDouble("commands.groups." + group + "." + regexCommand + ".price", 0.0);
+		price = conf.getDouble("commands.groups." + group + "." + regexCommand
+				+ ".price", 0.0);
 		return price;
 	}
 
@@ -586,7 +594,8 @@ public class BoosConfigManager {
 	static int getWarmUp(String regexCommand, Player player) {
 		int warmUp;
 		String group = getCommandGroup(player);
-		warmUp = conf.getInt("commands.groups." + group + "." + regexCommand + ".warmup", 0);
+		warmUp = conf.getInt("commands.groups." + group + "." + regexCommand
+				+ ".warmup", 0);
 		return warmUp;
 	}
 
@@ -638,13 +647,16 @@ public class BoosConfigManager {
 			conf.load(confFile);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			BoosCoolDown.getLog().severe("[boosCooldowns] Configuration file not found!");
+			BoosCoolDown.getLog().severe(
+					"[boosCooldowns] Configuration file not found!");
 		} catch (IOException e) {
 			e.printStackTrace();
-			BoosCoolDown.getLog().severe("[boosCooldowns] Could not read configuration file!");
+			BoosCoolDown.getLog().severe(
+					"[boosCooldowns] Could not read configuration file!");
 		} catch (InvalidConfigurationException e) {
 			e.printStackTrace();
-			BoosCoolDown.getLog().severe("[boosCooldowns] Configuration file is invalid!");
+			BoosCoolDown.getLog().severe(
+					"[boosCooldowns] Configuration file is invalid!");
 		}
 	}
 
@@ -656,13 +668,16 @@ public class BoosConfigManager {
 			confusers.load(confusersFile);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			BoosCoolDown.getLog().severe("[boosCooldowns] Storage file not found!");
+			BoosCoolDown.getLog().severe(
+					"[boosCooldowns] Storage file not found!");
 		} catch (IOException e) {
 			e.printStackTrace();
-			BoosCoolDown.getLog().severe("[boosCooldowns] Could not read storage file!");
+			BoosCoolDown.getLog().severe(
+					"[boosCooldowns] Could not read storage file!");
 		} catch (InvalidConfigurationException e) {
 			e.printStackTrace();
-			BoosCoolDown.getLog().severe("[boosCooldowns] Storage file is invalid!");
+			BoosCoolDown.getLog().severe(
+					"[boosCooldowns] Storage file is invalid!");
 		}
 	}
 
@@ -683,7 +698,8 @@ public class BoosConfigManager {
 			confusers.save(confusersFile);
 		} catch (IOException e) {
 			e.printStackTrace();
-			BoosCoolDown.getLog().severe("[boosCooldowns] Could not save storage file!");	
+			BoosCoolDown.getLog().severe(
+					"[boosCooldowns] Could not save storage file!");
 		}
 	}
 
@@ -700,17 +716,19 @@ public class BoosConfigManager {
 	 * @param hodnota
 	 *            hodnota která se má pøidat pro specifikovaný pøíkaz
 	 */
-	static void setAddToConfigFile(String coSetnout, String co, String hodnota) {
-		co = co.toLowerCase();
-		coSetnout = coSetnout.toLowerCase();
+	static void setAddToConfigFile(String group, String command, String what,
+			String value) {
+		group = group.toLowerCase();
+		command = command.toLowerCase();
 		reload();
-		conf.set("commands.groups." + coSetnout + "." + co, hodnota);
+		conf.set("commands.groups." + group + "." + command + "." + what, value);
 		try {
 			conf.save(confFile);
 		} catch (IOException e) {
 			e.printStackTrace();
-			BoosCoolDown.getLog().severe("[boosCooldowns] Could not save configuration file!");
-			
+			BoosCoolDown.getLog().severe(
+					"[boosCooldowns] Could not save configuration file!");
+
 		}
 		reload();
 	}
@@ -736,8 +754,11 @@ public class BoosConfigManager {
 			conf.addDefault("options.options.cooldowns_enabled", true);
 			conf.addDefault("options.options.prices_enabled", true);
 			conf.addDefault("options.options.item_cost_enabled", true);
+			conf.addDefault("options.options.xp_cost_enabled", true);
 			conf.addDefault("options.options.limits_enabled", true);
-			conf.addDefault("options.options.auto_save_enabled_CAN_CAUSE_BIG_LAGS", false);
+			conf.addDefault(
+					"options.options.auto_save_enabled_CAN_CAUSE_BIG_LAGS",
+					false);
 			conf.addDefault("options.options.save_interval_in_minutes", 15);
 			conf.addDefault("options.options.cancel_warmup_on_damage", false);
 			conf.addDefault("options.options.cancel_warmup_on_move", false);
@@ -782,10 +803,12 @@ public class BoosConfigManager {
 					"&6Price of&e &command& &6was&e %s &6and you now have&e %s");
 			conf.addDefault("options.messages.paid_items_for_command",
 					"&6Price of&e &command& &6was &e%s");
-			conf
-			.addDefault(
-					"options.messages.insufficient_items",
+			conf.addDefault("options.messages.paid_xp_for_command",
+					"&6Price of&e &command& &6was &e%s levels");
+			conf.addDefault("options.messages.insufficient_items",
 					"&6You have not enough items!&e &command& &6needs &e%s");
+			conf.addDefault("options.messages.insufficient_xp",
+					"&6You have not enough XP!&e &command& &6needs &e%s");
 			conf.addDefault("options.messages.limit_achieved",
 					"&6You cannot use this command anymore!&f");
 			conf.addDefault(
@@ -802,22 +825,28 @@ public class BoosConfigManager {
 			load();
 		}
 		try {
-			conf.addDefault("commands.groups.default./command parameter.cooldown",
-					2);
-			conf.addDefault("commands.groups.default./commandwithparameters *.cooldown",
+			conf.addDefault(
+					"commands.groups.default./command parameter.cooldown", 2);
+			conf.addDefault(
+					"commands.groups.default./commandwithparameters *.cooldown",
 					5);
 			conf.addDefault("commands.groups.default./anothercommand.cooldown",
 					2);
-			conf.addDefault("commands.groups.default./yetanothercommand.warmup",
-					5);
+			conf.addDefault(
+					"commands.groups.default./yetanothercommand.warmup", 5);
 			conf.addDefault("commands.groups.default./yetanothercommand.price",
 					10.0);
 			conf.addDefault("commands.groups.default./yetanothercommand.limit",
 					5);
-			conf.addDefault("commands.groups.default./yetanothercommand.potion",
+			conf.addDefault(
+					"commands.groups.default./yetanothercommand.potion",
 					"WEAKNESS,3");
-			conf.addDefault("commands.groups.default./test.message", "You just used /test!");
-			conf.addDefault("commands.groups.default./test.itemcost", "STONE,10");
+			conf.addDefault("commands.groups.default./test.message",
+					"You just used /test!");
+			conf.addDefault("commands.groups.default./test.itemcost",
+					"STONE,10");
+			conf.addDefault("commands.groups.default./test.xpcost",
+					"6");
 			conf.addDefault("commands.groups.default.*.warmup", 1);
 			conf.addDefault("commands.groups.default.*.cooldown", 1);
 			conf.addDefault("commands.groups.default.*.price", 0.0);
@@ -851,13 +880,15 @@ public class BoosConfigManager {
 				confusersFile.createNewFile();
 			} catch (IOException e) {
 				e.printStackTrace();
-				BoosCoolDown.getLog().severe("[boosCooldowns] Could not save storage file!");
+				BoosCoolDown.getLog().severe(
+						"[boosCooldowns] Could not save storage file!");
 			}
 		}
 	}
 
 	static boolean getAutoSave() {
-		return conf.getBoolean("options.options.auto_save_enabled_CAN_CAUSE_BIG_LAGS", false);
+		return conf.getBoolean(
+				"options.options.auto_save_enabled_CAN_CAUSE_BIG_LAGS", false);
 	}
 
 	public static String getPaidItemsForCommandMessage() {
@@ -866,13 +897,33 @@ public class BoosConfigManager {
 	}
 
 	public static String getInsufficientItemsMessage() {
-		return conf
-				.getString(
-						"options.messages.insufficient_items",
-						"&6You have not enough items!&e &command& &6needs &e%s");
+		return conf.getString("options.messages.insufficient_items",
+				"&6You have not enough items!&e &command& &6needs &e%s");
 	}
 
 	public static boolean getItemCostEnabled() {
 		return conf.getBoolean("options.options.item_cost_enabled", true);
+	}
+
+	public static String getPaidXPForCommandMessage() {
+		return conf.getString("options.messages.paid_xp_for_command",
+				"&6Price of&e &command& &6was &e%s");
+	}
+
+	public static int getXpPrice(String regexCommand, Player player) {
+		int price;
+		String group = getCommandGroup(player);
+		price = conf.getInt("commands.groups." + group + "." + regexCommand
+				+ ".xpcost", 0);
+		return price;
+	}
+
+	public static boolean getXpPriceEnabled() {
+		return conf.getBoolean("options.options.xp_cost_enabled", true);
+	}
+
+	public static String getInsufficientXpMessage() {
+		return conf.getString("options.messages.insufficient_xp",
+				"&6You have not enough XP!&e &command& &6needs &e%s");
 	}
 }

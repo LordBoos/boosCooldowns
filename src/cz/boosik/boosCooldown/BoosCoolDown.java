@@ -229,19 +229,47 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 			if (args.length == 4) {
 				if (sender.hasPermission("booscooldowns.set")
 						&& args[0].equalsIgnoreCase("set")) {
-					String coSetnout = args[1];
-					String co = args[2];
-					String hodnota = args[3];
-					if (co.startsWith("/") || co.equals("*")) {
-						if (co.contains("_")) {
-							co = co.replace("_", " ");
+					String what = args[1];
+					String comm = args[2];
+					String value = args[3];
+					String group = "default";
+					if (comm.startsWith("/") || comm.equals("*")) {
+						if (comm.contains("_")) {
+							comm = comm.replace("_", " ");
 						}
-						BoosConfigManager.setAddToConfigFile(coSetnout, co,
-								hodnota);
+						BoosConfigManager.setAddToConfigFile(group, command,
+								what, value);
 						boosChat.sendMessageToCommandSender(sender, "&6["
-								+ pdfFile.getName() + "]&e" + " " + co
-								+ " in group " + coSetnout + " is now set to "
-								+ hodnota);
+								+ pdfFile.getName() + "]&e " + what
+								+ " for command" + comm + " in group " + group
+								+ " is now set to " + value);
+						return true;
+					} else {
+						boosChat.sendMessageToCommandSender(sender, "&6["
+								+ pdfFile.getName() + "]&e"
+								+ " Command has to start with \"/\".");
+						return true;
+					}
+				}
+
+			}
+			if (args.length == 5) {
+				if (sender.hasPermission("booscooldowns.set")
+						&& args[0].equalsIgnoreCase("set")) {
+					String what = args[1];
+					String comm = args[2];
+					String value = args[3];
+					String group = args[4];
+					if (comm.startsWith("/") || comm.equals("*")) {
+						if (comm.contains("_")) {
+							comm = comm.replace("_", " ");
+						}
+						BoosConfigManager.setAddToConfigFile(group, command,
+								what, value);
+						boosChat.sendMessageToCommandSender(sender, "&6["
+								+ pdfFile.getName() + "]&e " + what
+								+ " for command" + comm + " in group " + group
+								+ " is now set to " + value);
 						return true;
 					} else {
 						boosChat.sendMessageToCommandSender(sender, "&6["
@@ -252,11 +280,8 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 				}
 
 			} else {
-				boosChat.sendMessageToCommandSender(
-						sender,
-						"&6["
-								+ pdfFile.getName()
-								+ "]&e"
+				boosChat.sendMessageToCommandSender(sender,
+						"&6[" + pdfFile.getName() + "]&e"
 								+ " Invalid command or access denied!");
 			}
 		}
@@ -301,10 +326,10 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 		registerListeners();
 		initializeVault();
 		BukkitScheduler scheduler = this.getServer().getScheduler();
-		if (BoosConfigManager.getAutoSave()){
-		scheduler.scheduleSyncRepeatingTask(this, this,
-				BoosConfigManager.getSaveInterval() * 1200,
-				BoosConfigManager.getSaveInterval() * 1200);
+		if (BoosConfigManager.getAutoSave()) {
+			scheduler.scheduleSyncRepeatingTask(this, this,
+					BoosConfigManager.getSaveInterval() * 1200,
+					BoosConfigManager.getSaveInterval() * 1200);
 		}
 		if (BoosConfigManager.getClearOnRestart()) {
 			BoosConfigManager.clear();

@@ -15,7 +15,7 @@ import cz.boosik.boosCooldown.BoosCoolDown;
 
 /**
  * @author Jakub
- *
+ * 
  */
 public class BoosSignInteractListener implements Listener {
 	private final BoosCoolDown plugin;

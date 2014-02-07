@@ -1,6 +1,6 @@
 name: boosCooldowns
 main: cz.boosik.boosCooldown.BoosCoolDown
-version: 3.7.5
+version: 3.8.0
 authors: [LordBoos (ingame name boosik)]
 softdepend: [Vault]
 description: >
@@ -22,6 +22,8 @@ permissions:
             booscooldowns.nocooldown: true
             booscooldowns.nowarmup: true
             booscooldowns.nolimit: true
+            booscooldowns.noitemcost: true
+            booscooldowns.noxpcost: true
     booscooldowns.nocancel.move:
         description: Players warmups will not be canceled by moving, even if it's turned on.
         default: false
@@ -45,6 +47,18 @@ permissions:
         default: false
     booscooldowns.noprice./command:
         description: Command "/command" will not be affected by price for users with this permission.
+        default: false
+    booscooldowns.noitemcost:
+        description: Players commands will always be free of charge (items).
+        default: false
+    booscooldowns.noitemcost./command:
+        description: Command "/command" will not be affected by item cost for users with this permission.
+        default: false
+    booscooldowns.noxpcost:
+        description: Players commands will always be free of charge (XP).
+        default: false
+    booscooldowns.noxpcost./command:
+        description: Command "/command" will not be affected by xp cost for users with this permission.
         default: false
     booscooldowns.nocooldown:
         description: Player wont be affected by cooldowns.

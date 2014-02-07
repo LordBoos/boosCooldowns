@@ -41,7 +41,7 @@ public class BoosPlayerMoveListener implements Listener {
 		Location cmdloc = BoosWarmUpManager.getPlayerloc().get(player);
 		if (!curworld.equals(cmdworld)) {
 			return true;
-		} else if (cmdloc.distanceSquared(curloc) > 2) {
+		} else if (cmdloc.distance(curloc) > 1) {
 			return true;
 		}
 
@@ -51,13 +51,12 @@ public class BoosPlayerMoveListener implements Listener {
 	private int tempTimer = 0;
 
 	/**
-	 * Pokud hráè není null a nedisponuje oprávnìním
-	 * booscooldowns.nocancel.move a pokud tento hráè disponuje aktivními
-	 * warmup èasovaèi, pak je hráèi odeslána zpráva, která ho informuje o
-	 * ukonèení všech warmup èasovaèù a následnì tyto èasovaèe ukonèuje pomocí
-	 * metody cancelWarmUps();. Metoda obsahuje jednoduchı èasovaè, kterı
-	 * zajišuje, e funkce nebudou provádìny pøi kadém volání této metody (20x
-	 * za vteøinu).
+	 * Pokud hráè není null a nedisponuje oprávnìním booscooldowns.nocancel.move
+	 * a pokud tento hráè disponuje aktivními warmup èasovaèi, pak je hráèi
+	 * odeslána zpráva, která ho informuje o ukonèení všech warmup èasovaèù a
+	 * následnì tyto èasovaèe ukonèuje pomocí metody cancelWarmUps();. Metoda
+	 * obsahuje jednoduchı èasovaè, kterı zajišuje, e funkce nebudou provádìny
+	 * pøi kadém volání této metody (20x za vteøinu).
 	 * 
 	 * @param event
 	 *            událost PlayerMoveEvent
