@@ -846,7 +846,7 @@ public class BoosConfigManager {
 			conf.addDefault("commands.groups.default./test.itemcost",
 					"STONE,10");
 			conf.addDefault("commands.groups.default./test.xpcost",
-					"6");
+					6);
 			conf.addDefault("commands.groups.default.*.warmup", 1);
 			conf.addDefault("commands.groups.default.*.cooldown", 1);
 			conf.addDefault("commands.groups.default.*.price", 0.0);
