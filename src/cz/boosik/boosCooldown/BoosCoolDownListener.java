@@ -65,7 +65,7 @@ public class BoosCoolDownListener implements Listener {
 					start(event, player, regexCommad, originalCommand,
 							warmupTime, cooldownTime);
 				}
-			} else {
+			} else if (BoosPriceManager.has(player, price) & BoosItemCostManager.has(player, item, count)){
 				if (BoosCoolDownManager.coolDown(player, regexCommad,
 						originalCommand, cooldownTime)) {
 					event.setCancelled(true);

@@ -9,9 +9,9 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import util.boosChat;
 
 /**
- * Tøída obsahuje veškeré metody potøebné k øízení poplatkù pomocí vìcí za pøíkazy.
+ * Tï¿½ï¿½da obsahuje veï¿½kerï¿½ metody potï¿½ebnï¿½ k ï¿½ï¿½zenï¿½ poplatkï¿½ pomocï¿½ vï¿½cï¿½ za pï¿½ï¿½kazy.
  * 
- * @author Jakub Koláø
+ * @author Jakub Kolï¿½ï¿½
  * 
  */
 public class BoosPriceManager {
@@ -19,22 +19,22 @@ public class BoosPriceManager {
 	private static String msg = "";
 
 	/**
-	 * Metoda zajišuje funkci platby za pøíkaz. Vrací hodnotu v závislosti na
-	 * úspìšnosti platby.
+	 * Metoda zajiï¿½ï¿½uje funkci platby za pï¿½ï¿½kaz. Vracï¿½ hodnotu v zï¿½vislosti na
+	 * ï¿½spï¿½nosti platby.
 	 * 
 	 * @param player
-	 *            specifikovanı hráè
+	 *            specifikovanï¿½ hrï¿½ï¿½
 	 * @param regexCommand
-	 *            pøíkaz z konfigurace vyhovující originálnímu pøíkazu
+	 *            pï¿½ï¿½kaz z konfigurace vyhovujï¿½cï¿½ originï¿½lnï¿½mu pï¿½ï¿½kazu
 	 * @param originalCommand
-	 *            originální pøíkaz pouitı hráèem
+	 *            originï¿½lnï¿½ pï¿½ï¿½kaz pouï¿½itï¿½ hrï¿½ï¿½em
 	 * @param price
-	 *            cena pouití pøíkazu
+	 *            cena pouï¿½itï¿½ pï¿½ï¿½kazu
 	 * @param name
-	 *            jméno specifického hráèe
-	 * @return true pokud byl úspìšnì zaplacen poplatek, nebo pokud nebyl
-	 *         nalezen ekonomickı plugin; false pokud došlo k chybì nebo hráè
-	 *         nemìl dostatek financí
+	 *            jmï¿½no specifickï¿½ho hrï¿½ï¿½e
+	 * @return true pokud byl ï¿½spï¿½nï¿½ zaplacen poplatek, nebo pokud nebyl
+	 *         nalezen ekonomickï¿½ plugin; false pokud doï¿½lo k chybï¿½ nebo hrï¿½ï¿½
+	 *         nemï¿½l dostatek financï¿½
 	 */
 	static boolean payForCommand(Player player, String regexCommand,
 			String originalCommand, double price, String name) {
@@ -70,20 +70,20 @@ public class BoosPriceManager {
 	}
 
 	/**
-	 * Metoda ukonèuje/neukonèuje událost pouití pøíkazu v závislosti na tom,
-	 * jakou hodnotu vrátila metoda payForCommand(Player player, String
+	 * Metoda ukonï¿½uje/neukonï¿½uje udï¿½lost pouï¿½itï¿½ pï¿½ï¿½kazu v zï¿½vislosti na tom,
+	 * jakou hodnotu vrï¿½tila metoda payForCommand(Player player, String
 	 * regexCommand, String originalCommand, double price, String name);.
 	 * 
 	 * @param event
-	 *            událost PlayerCommandPreprocessEvent
+	 *            udï¿½lost PlayerCommandPreprocessEvent
 	 * @param player
-	 *            specifickı hráè
+	 *            specifickï¿½ hrï¿½ï¿½
 	 * @param regexCommand
-	 *            pøíkaz z konfigurace vyhovující originálnímu pøíkazu
+	 *            pï¿½ï¿½kaz z konfigurace vyhovujï¿½cï¿½ originï¿½lnï¿½mu pï¿½ï¿½kazu
 	 * @param originalCommand
-	 *            originální pøíkaz pouitı hráèem
+	 *            originï¿½lnï¿½ pï¿½ï¿½kaz pouï¿½itï¿½ hrï¿½ï¿½em
 	 * @param price
-	 *            cena pouití pøíkazu
+	 *            cena pouï¿½itï¿½ pï¿½ï¿½kazu
 	 */
 	static void payForCommand(PlayerCommandPreprocessEvent event,
 			Player player, String regexCommand, String originalCommand,
@@ -106,6 +106,10 @@ public class BoosPriceManager {
 	}
 
 	public static boolean has(Player player, double price) {
-		return economy.has(player.getName(), price);
+		if(economy == null){
+			return true;
+		}else {
+			return economy.has(player.getName(), price);
+		}
 	}
 }
