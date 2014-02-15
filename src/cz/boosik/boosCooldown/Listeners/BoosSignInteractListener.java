@@ -30,7 +30,7 @@ public class BoosSignInteractListener implements Listener {
 	/**
 	 * @param event
 	 */
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	private void onSignInteract(PlayerInteractEvent event) {
 		String msg;
 		if (event.isCancelled())

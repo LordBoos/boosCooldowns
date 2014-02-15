@@ -61,11 +61,8 @@ public class BoosPlayerMoveListener implements Listener {
 	 * @param event
 	 *            událost PlayerMoveEvent
 	 */
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	private void onPlayerMove(PlayerMoveEvent event) {
-		if (event.isCancelled()) {
-			return;
-		}
 		if (tempTimer < 20) {
 			tempTimer = tempTimer + 1;
 			return;

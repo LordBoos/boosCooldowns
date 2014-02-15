@@ -35,11 +35,8 @@ public class BoosPlayerInteractListener implements Listener {
 	 * @param event
 	 *            událost PlayerInteractEvent
 	 */
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	private void onPlayerInteract(PlayerInteractEvent event) {
-		if (event.isCancelled())
-			return;
-
 		Entity entity = event.getPlayer();
 		if (entity != null && entity instanceof Player) {
 			Player player = (Player) entity;

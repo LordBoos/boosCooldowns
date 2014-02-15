@@ -29,7 +29,7 @@ public class BoosPlayerDeathListener implements Listener {
 	 * @param event
 	 *            událost PlayerDeathEvent
 	 */
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	private void onPlayerDeath(PlayerDeathEvent event) {
 		Entity entity = event.getEntity();
 		if (entity != null && entity instanceof Player) {

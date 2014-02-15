@@ -17,11 +17,8 @@ public class BoosSignChangeListener implements Listener {
 	/**
 	 * @param event
 	 */
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	private void onSignChange(SignChangeEvent event) {
-		if (event.isCancelled())
-			return;
-
 		Player player = event.getPlayer();
 		String line1 = event.getLine(0);
 		String line2 = event.getLine(1);

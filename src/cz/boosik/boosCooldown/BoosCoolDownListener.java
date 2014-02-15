@@ -166,11 +166,8 @@ public class BoosCoolDownListener implements Listener {
 	 * @param event
 	 *            ud�lost PlayerCommandPreprocessEvent
 	 */
-	@EventHandler(priority = EventPriority.LOWEST)
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	private void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-		if (event.isCancelled()) {
-			return;
-		}
 		Player player = event.getPlayer();
 		String originalCommand = event.getMessage().replace("\\", "\\\\");
 		originalCommand = originalCommand.replace("$", "S");

@@ -34,11 +34,8 @@ public class BoosPlayerGameModeChangeListener implements Listener {
 	 * @param event
 	 *            událost PlayerGameModeChangeEvent
 	 */
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	private void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
-		if (event.isCancelled())
-			return;
-
 		Entity entity = event.getPlayer();
 		if (entity != null && entity instanceof Player) {
 			Player player = (Player) entity;

@@ -32,11 +32,8 @@ public class BoosPlayerToggleSprintListener implements Listener {
 	 * @param event
 	 *            událost PlayerToggleSprintEvent
 	 */
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	private void onPlayerToggleSprint(PlayerToggleSprintEvent event) {
-		if (event.isCancelled())
-			return;
-
 		Player player = event.getPlayer();
 		if (player != null
 				&& !player.hasPermission("booscooldowns.nocancel.sprint")) {

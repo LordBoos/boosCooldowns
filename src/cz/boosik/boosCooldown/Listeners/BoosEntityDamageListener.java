@@ -34,11 +34,8 @@ public class BoosEntityDamageListener implements Listener {
 	 * @param event
 	 *            událost EntityDamageEvent
 	 */
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	private void onEntityDamage(EntityDamageEvent event) {
-		if (event.isCancelled())
-			return;
-
 		Entity entity = event.getEntity();
 		if (entity != null && entity instanceof Player) {
 			Player player = (Player) entity;

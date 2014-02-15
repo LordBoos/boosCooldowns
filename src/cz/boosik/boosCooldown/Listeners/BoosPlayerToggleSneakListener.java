@@ -32,11 +32,8 @@ public class BoosPlayerToggleSneakListener implements Listener {
 	 * @param event
 	 *            událost PlayerToggleSneakEvent
 	 */
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	private void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
-		if (event.isCancelled())
-			return;
-
 		Player player = event.getPlayer();
 		if (player != null
 				&& !player.hasPermission("booscooldowns.nocancel.sneak")) {
