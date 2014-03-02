@@ -220,7 +220,7 @@ public class BoosCoolDownListener implements Listener {
 						price = BoosConfigManager.getPrice(regexCommad, player);
 					}
 					if (BoosConfigManager.getXpPriceEnabled()) {
-						price = BoosConfigManager.getXpPrice(regexCommad,
+						xpPrice = BoosConfigManager.getXpPrice(regexCommad,
 								player);
 					}
 					if (BoosConfigManager.getItemCostEnabled()) {

@@ -496,7 +496,7 @@ public class BoosConfigManager {
 		String[] command;
 		String group = getCommandGroup(player);
 		temp = conf.getString("commands.groups." + group + "." + regexCommand
-				+ ".limit", "");
+				+ ".potion", "");
 		command = temp.split(",");
 		if (command.length == 2) {
 			effect = command[0];
@@ -515,7 +515,7 @@ public class BoosConfigManager {
 		String[] command;
 		String group = getCommandGroup(player);
 		temp = conf.getString("commands.groups." + group + "." + regexCommand
-				+ ".limit", "");
+				+ ".potion", "");
 		command = temp.split(",");
 		if (command.length == 2) {
 			effect = Integer.valueOf(command[1]);
