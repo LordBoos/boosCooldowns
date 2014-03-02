@@ -237,7 +237,7 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 						if (comm.contains("_")) {
 							comm = comm.replace("_", " ");
 						}
-						BoosConfigManager.setAddToConfigFile(group, command,
+						BoosConfigManager.setAddToConfigFile(group, comm,
 								what, value);
 						boosChat.sendMessageToCommandSender(sender, "&6["
 								+ pdfFile.getName() + "]&e " + what
@@ -264,7 +264,7 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 						if (comm.contains("_")) {
 							comm = comm.replace("_", " ");
 						}
-						BoosConfigManager.setAddToConfigFile(group, command,
+						BoosConfigManager.setAddToConfigFile(group, comm,
 								what, value);
 						boosChat.sendMessageToCommandSender(sender, "&6["
 								+ pdfFile.getName() + "]&e " + what
