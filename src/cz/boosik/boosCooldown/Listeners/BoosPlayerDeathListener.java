@@ -68,8 +68,7 @@ public class BoosPlayerDeathListener implements Listener {
 		if (player != null
 				&& player.hasPermission("booscooldowns.clear.uses.death")) {
 			if (BoosConfigManager.getCleanUsesOnDeath()) {
-				BoosConfigManager.clearSomething("uses", player.getName()
-						.toLowerCase());
+				BoosConfigManager.clearSomething("uses", player.getUniqueId());
 			}
 		}
 	}
@@ -87,8 +86,7 @@ public class BoosPlayerDeathListener implements Listener {
 		if (player != null
 				&& player.hasPermission("booscooldowns.clear.cooldowns.death")) {
 			if (BoosConfigManager.getCleanCooldownsOnDeath()) {
-				BoosConfigManager.clearSomething("cooldown", player.getName()
-						.toLowerCase());
+				BoosConfigManager.clearSomething("cooldown", player.getUniqueId());
 			}
 		}
 	}

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -68,16 +69,16 @@ public class BoosConfigManager {
 	 * 
 	 * @param co
 	 *            sekce databáze (warmup, cooldown, uses)
-	 * @param player
+	 * @param uuid
 	 *            jméno hráèe pro kretého se má vymazat èást databáze
 	 */
-	public static void clearSomething(String co, String player) {
+	public static void clearSomething(String co, UUID uuid) {
 		ConfigurationSection userSection = confusers
 				.getConfigurationSection("users."
-						+ player.toLowerCase().hashCode() + "." + co);
+						+ uuid + "." + co);
 		if (userSection == null)
 			return;
-		confusers.set("users." + player.toLowerCase().hashCode() + "." + co,
+		confusers.set("users." + uuid + "." + co,
 				null);
 		saveConfusers();
 		loadConfusers();
@@ -89,14 +90,14 @@ public class BoosConfigManager {
 	 * 
 	 * @param co
 	 *            sekce databáze (warmup, cooldown, uses)
-	 * @param player
+	 * @param uuid
 	 *            jméno hráèe pro kretého se má vymazat èást databáze
 	 * @param command
 	 *            pøíkaz pro který se mají vymazat hodnoty
 	 */
-	static void clearSomething(String co, String player, String command) {
+	static void clearSomething(String co, UUID uuid, String command) {
 		int pre2 = command.toLowerCase().hashCode();
-		confusers.set("users." + player.toLowerCase().hashCode() + "." + co
+		confusers.set("users." + uuid + "." + co
 				+ "." + pre2, 0);
 		saveConfusers();
 		loadConfusers();
@@ -845,8 +846,7 @@ public class BoosConfigManager {
 					"You just used /test!");
 			conf.addDefault("commands.groups.default./test.itemcost",
 					"STONE,10");
-			conf.addDefault("commands.groups.default./test.xpcost",
-					6);
+			conf.addDefault("commands.groups.default./test.xpcost", 6);
 			conf.addDefault("commands.groups.default.*.warmup", 1);
 			conf.addDefault("commands.groups.default.*.cooldown", 1);
 			conf.addDefault("commands.groups.default.*.price", 0.0);

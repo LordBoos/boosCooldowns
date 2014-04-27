@@ -29,8 +29,8 @@ public class BoosCoolDownManager {
 	static void cancelCooldown(Player player, String regexCommand) {
 		int pre2 = regexCommand.toLowerCase().hashCode();
 		BoosConfigManager.getConfusers().set(
-				"users." + player.getName().toLowerCase().hashCode()
-						+ ".cooldown." + pre2, null);
+				"users." + player.getUniqueId() + ".cooldown."
+						+ pre2, null);
 	}
 
 	/**

@@ -2,11 +2,13 @@ package cz.boosik.boosCooldown;
 
 import java.io.IOException;
 import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -163,10 +165,12 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 			}
 			if (args.length == 2) {
 				String jmeno = args[1];
+				Player player = Bukkit.getPlayerExact(jmeno);
+				UUID uuid = player.getUniqueId();
 				if (sender.hasPermission("booscooldowns.clearcooldowns")
 						&& args[0].equalsIgnoreCase("clearcooldowns")) {
 					String co = "cooldown";
-					BoosConfigManager.clearSomething(co, jmeno);
+					BoosConfigManager.clearSomething(co, uuid);
 					boosChat.sendMessageToCommandSender(sender,
 							"&6[" + pdfFile.getName() + "]&e"
 									+ " cooldowns of player " + jmeno
@@ -176,7 +180,7 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 						&& command.equalsIgnoreCase("booscooldowns")
 						&& args[0].equalsIgnoreCase("clearuses")) {
 					String co = "uses";
-					BoosConfigManager.clearSomething(co, jmeno);
+					BoosConfigManager.clearSomething(co, uuid);
 					boosChat.sendMessageToCommandSender(sender,
 							"&6[" + pdfFile.getName() + "]&e"
 									+ " uses of player " + jmeno + " cleared");
@@ -185,7 +189,7 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 						&& command.equalsIgnoreCase("booscooldowns")
 						&& args[0].equalsIgnoreCase("clearwarmups")) {
 					String co = "warmup";
-					BoosConfigManager.clearSomething(co, jmeno);
+					BoosConfigManager.clearSomething(co, uuid);
 					boosChat.sendMessageToCommandSender(sender,
 							"&6[" + pdfFile.getName() + "]&e"
 									+ " warmups of player " + jmeno
@@ -195,20 +199,22 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 			}
 			if (args.length == 3) {
 				String jmeno = args[1];
+				Player player = Bukkit.getPlayerExact(jmeno);
+				UUID uuid = player.getUniqueId();
 				String command2 = args[2].trim();
 				if (sender.hasPermission("booscooldowns.clearcooldowns")
 						&& args[0].equalsIgnoreCase("clearcooldowns")) {
 					String co = "cooldown";
-					BoosConfigManager.clearSomething(co, jmeno, command2);
+					BoosConfigManager.clearSomething(co, uuid, command2);
 					boosChat.sendMessageToCommandSender(sender,
 							"&6[" + pdfFile.getName() + "]&e"
 									+ " cooldown for command " + command2
-									+ " of player " + jmeno + " cleared");
+									+ " of player " + uuid + " cleared");
 					return true;
 				} else if (sender.hasPermission("booscooldowns.clearuses")
 						&& args[0].equalsIgnoreCase("clearuses")) {
 					String co = "uses";
-					BoosConfigManager.clearSomething(co, jmeno, command2);
+					BoosConfigManager.clearSomething(co, uuid, command2);
 					boosChat.sendMessageToCommandSender(sender,
 							"&6[" + pdfFile.getName() + "]&e"
 									+ " uses for command " + command2
@@ -217,7 +223,7 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 				} else if (sender.hasPermission("booscooldowns.clearwarmups")
 						&& args[0].equalsIgnoreCase("clearwarmups")) {
 					String co = "warmup";
-					BoosConfigManager.clearSomething(co, jmeno, command2);
+					BoosConfigManager.clearSomething(co, uuid, command2);
 					boosChat.sendMessageToCommandSender(sender,
 							"&6[" + pdfFile.getName() + "]&e"
 									+ " warmups for command " + command2
@@ -237,8 +243,8 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 						if (comm.contains("_")) {
 							comm = comm.replace("_", " ");
 						}
-						BoosConfigManager.setAddToConfigFile(group, comm,
-								what, value);
+						BoosConfigManager.setAddToConfigFile(group, comm, what,
+								value);
 						boosChat.sendMessageToCommandSender(sender, "&6["
 								+ pdfFile.getName() + "]&e " + what
 								+ " for command" + comm + " in group " + group
@@ -264,8 +270,8 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 						if (comm.contains("_")) {
 							comm = comm.replace("_", " ");
 						}
-						BoosConfigManager.setAddToConfigFile(group, comm,
-								what, value);
+						BoosConfigManager.setAddToConfigFile(group, comm, what,
+								value);
 						boosChat.sendMessageToCommandSender(sender, "&6["
 								+ pdfFile.getName() + "]&e " + what
 								+ " for command" + comm + " in group " + group

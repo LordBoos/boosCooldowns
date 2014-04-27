@@ -60,20 +60,20 @@ public class BoosWarmUpTimer extends TimerTask {
 			if (player.isOnline() && !player.isDead()
 					&& BoosWarmUpManager.hasWarmUps(player)) {
 				BoosWarmUpManager.setWarmUpOK(player, regexCommand);
-				BoosWarmUpManager.removeWarmUpProcess(player.getName() + "@"
+				BoosWarmUpManager.removeWarmUpProcess(player.getUniqueId() + "@"
 						+ regexCommand);
 				BoosWarmUpManager.clearLocWorld(player);
 				player.chat(originalCommand);
 			} else if (player.isOnline() && player.isDead()
 					&& BoosWarmUpManager.hasWarmUps(player)) {
 				BoosWarmUpManager.removeWarmUp(player, regexCommand);
-				BoosWarmUpManager.removeWarmUpProcess(player.getName() + "@"
+				BoosWarmUpManager.removeWarmUpProcess(player.getUniqueId() + "@"
 						+ regexCommand);
 				BoosWarmUpManager.clearLocWorld(player);
 			} else if (!player.isOnline()
 					&& BoosWarmUpManager.hasWarmUps(player)) {
 				BoosWarmUpManager.removeWarmUp(player, regexCommand);
-				BoosWarmUpManager.removeWarmUpProcess(player.getName() + "@"
+				BoosWarmUpManager.removeWarmUpProcess(player.getUniqueId() + "@"
 						+ regexCommand);
 				BoosWarmUpManager.clearLocWorld(player);
 			}

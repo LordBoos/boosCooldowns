@@ -58,7 +58,7 @@ public class BoosLimitManager {
 		int regexCommand2 = regexCommand.toLowerCase().hashCode();
 		int uses = 0;
 		uses = BoosConfigManager.getConfusers().getInt(
-				"users." + player.getName().toLowerCase().hashCode() + ".uses."
+				"users." + player.getUniqueId() + ".uses."
 						+ regexCommand2, uses);
 		return uses;
 	}
