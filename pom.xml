@@ -38,13 +38,15 @@
   </dependencies>
   <build>
     <finalName>boosCooldowns</finalName>
-    <sourceDirectory>src</sourceDirectory>
+    <sourceDirectory>${basedir}/src/main/java/</sourceDirectory>
     <resources>
       <resource>
-        <directory>src</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
+        <targetPath>.</targetPath>
+        <filtering>true</filtering>
+        <directory>${basedir}/src/main/resources/</directory>
+        <includes>
+          <include>plugin.yml</include>
+        </includes>
       </resource>
     </resources>
     <plugins>
