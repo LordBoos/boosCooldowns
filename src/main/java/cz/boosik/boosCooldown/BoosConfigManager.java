@@ -14,10 +14,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 /**
- * Tøída zajišující veškeré metody, které se starají o konfiguraci pluginu a o
- * databázi.
+ * Tï¿½ï¿½da zajiï¿½ï¿½ujï¿½cï¿½ veï¿½kerï¿½ metody, kterï¿½ se starajï¿½ o konfiguraci pluginu a o
+ * databï¿½zi.
  * 
- * @author Jakub Koláø
+ * @author Jakub Kolï¿½ï¿½
  * 
  */
 public class BoosConfigManager {
@@ -28,8 +28,8 @@ public class BoosConfigManager {
 	private static File confusersFile;
 
 	/**
-	 * Metoda zajišující smazání veškerıch aktivních cooldown a warmup èasovaèù
-	 * všech hráèù.
+	 * Metoda zajiï¿½ï¿½ujï¿½cï¿½ smazï¿½nï¿½ veï¿½kerï¿½ch aktivnï¿½ch cooldown a warmup ï¿½asovaï¿½ï¿½
+	 * vï¿½ech hrï¿½ï¿½ï¿½.
 	 */
 	static void clear() {
 		ConfigurationSection userSection = confusers
@@ -64,13 +64,13 @@ public class BoosConfigManager {
 	}
 
 	/**
-	 * Metoda vymae veškeré hodnoty specifického hráèe ve specifické sekci
-	 * databáze.
+	 * Metoda vymaï¿½e veï¿½kerï¿½ hodnoty specifickï¿½ho hrï¿½ï¿½e ve specifickï¿½ sekci
+	 * databï¿½ze.
 	 * 
 	 * @param co
-	 *            sekce databáze (warmup, cooldown, uses)
+	 *            sekce databï¿½ze (warmup, cooldown, uses)
 	 * @param uuid
-	 *            jméno hráèe pro kretého se má vymazat èást databáze
+	 *            jmï¿½no hrï¿½ï¿½e pro kretï¿½ho se mï¿½ vymazat ï¿½ï¿½st databï¿½ze
 	 */
 	public static void clearSomething(String co, UUID uuid) {
 		ConfigurationSection userSection = confusers
@@ -85,15 +85,15 @@ public class BoosConfigManager {
 	}
 
 	/**
-	 * Metoda vymae hodnoty specifického pøíkazu, specifického hráèe ve
-	 * specifické sekci databáze.
+	 * Metoda vymaï¿½e hodnoty specifickï¿½ho pï¿½ï¿½kazu, specifickï¿½ho hrï¿½ï¿½e ve
+	 * specifickï¿½ sekci databï¿½ze.
 	 * 
 	 * @param co
-	 *            sekce databáze (warmup, cooldown, uses)
+	 *            sekce databï¿½ze (warmup, cooldown, uses)
 	 * @param uuid
-	 *            jméno hráèe pro kretého se má vymazat èást databáze
+	 *            jmï¿½no hrï¿½ï¿½e pro kretï¿½ho se mï¿½ vymazat ï¿½ï¿½st databï¿½ze
 	 * @param command
-	 *            pøíkaz pro kterı se mají vymazat hodnoty
+	 *            pï¿½ï¿½kaz pro kterï¿½ se majï¿½ vymazat hodnoty
 	 */
 	static void clearSomething(String co, UUID uuid, String command) {
 		int pre2 = command.toLowerCase().hashCode();
@@ -641,7 +641,7 @@ public class BoosConfigManager {
 	}
 
 	/**
-	 * Metoda naète konfiguraèní soubor z disku do pamìti.
+	 * Metoda naï¿½te konfiguraï¿½nï¿½ soubor z disku do pamï¿½ti.
 	 */
 	static void load() {
 		try {
@@ -662,7 +662,7 @@ public class BoosConfigManager {
 	}
 
 	/**
-	 * Metoda naète soubor databáze z disku do pamìti.
+	 * Metoda naï¿½te soubor databï¿½ze z disku do pamï¿½ti.
 	 */
 	static void loadConfusers() {
 		try {
@@ -683,7 +683,7 @@ public class BoosConfigManager {
 	}
 
 	/**
-	 * Metoda znovu naète konfiguraèní soubor z disku do pamìti.
+	 * Metoda znovu naï¿½te konfiguraï¿½nï¿½ soubor z disku do pamï¿½ti.
 	 */
 	static void reload() {
 		conf = new YamlConfiguration();
@@ -691,7 +691,7 @@ public class BoosConfigManager {
 	}
 
 	/**
-	 * Metoda uloí soubor databáze z pamìti na disk.
+	 * Metoda uloï¿½ï¿½ soubor databï¿½ze z pamï¿½ti na disk.
 	 */
 	static void saveConfusers() {
 		try {
@@ -705,28 +705,34 @@ public class BoosConfigManager {
 	}
 
 	/**
-	 * Metoda pøidává záznamy do konfiguraèního souboru, kterı poté uloí na
-	 * disk a znovu jej naète z disku do pamìti.
+	 * Metoda pï¿½idï¿½vï¿½ zï¿½znamy do konfiguraï¿½nï¿½ho souboru, kterï¿½ potï¿½ uloï¿½ï¿½ na
+	 * disk a znovu jej naï¿½te z disku do pamï¿½ti.
 	 * 
 	 * @param coSetnout
-	 *            název skupiny pro kterou se má pøidat záznam do konfiguraèního
+	 *            nï¿½zev skupiny pro kterou se mï¿½ pï¿½idat zï¿½znam do konfiguraï¿½nï¿½ho
 	 *            souboru
 	 * @param co
-	 *            pøíkaz, pro kterı se má pøidat hodnota do konfiguraèního
+	 *            pï¿½ï¿½kaz, pro kterï¿½ se mï¿½ pï¿½idat hodnota do konfiguraï¿½nï¿½ho
 	 *            souboru
 	 * @param hodnota
-	 *            hodnota která se má pøidat pro specifikovanı pøíkaz
+	 *            hodnota kterï¿½ se mï¿½ pï¿½idat pro specifikovanï¿½ pï¿½ï¿½kaz
 	 */
 	static void setAddToConfigFile(String group, String command, String what,
 			String value) {
 		group = group.toLowerCase();
 		command = command.toLowerCase();
-		reload();
-		conf.set("commands.groups." + group + "." + command + "." + what, value);
+		int value2;
+		try {
+			value2 = Integer.parseInt(value);
+			reload();
+			conf.set("commands.groups." + group + "." + command + "." + what, value2);
+		} catch (NumberFormatException e1) {
+			reload();
+			conf.set("commands.groups." + group + "." + command + "." + what, value);
+		}
 		try {
 			conf.save(confFile);
 		} catch (IOException e) {
-			e.printStackTrace();
 			BoosCoolDown.getLog().severe(
 					"[boosCooldowns] Could not save configuration file!");
 
@@ -735,9 +741,9 @@ public class BoosConfigManager {
 	}
 
 	/**
-	 * Metoda vytváøejíci konfiguraèní a databázovı sobour, pokud tyto soubory
-	 * ji neexistují. Pokud soubory ji existují, jsou naèteny z disku do
-	 * pamìti.
+	 * Metoda vytvï¿½ï¿½ejï¿½ci konfiguraï¿½nï¿½ a databï¿½zovï¿½ sobour, pokud tyto soubory
+	 * jiï¿½ neexistujï¿½. Pokud soubory jiï¿½ existujï¿½, jsou naï¿½teny z disku do
+	 * pamï¿½ti.
 	 * 
 	 * @param boosCoolDown
 	 */

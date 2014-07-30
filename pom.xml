@@ -2,10 +2,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>cz.boosik</groupId>
   <artifactId>boosCooldowns</artifactId>
-  <version>3.8.2</version>
+  <version>3.8.4</version>
   <name>boosCooldowns</name>
   <packaging>jar</packaging>
   <url>http://maven.apache.org</url>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
   <pluginRepositories>
     <pluginRepository>
       <id>maven2-repository.dev.java.net</id>
@@ -28,12 +32,12 @@
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.7.9-R0.2</version>
+      <version>LATEST</version>
     </dependency>
     <dependency>
       <groupId>net.milkbowl.vault</groupId>
       <artifactId>Vault</artifactId>
-      <version>1.4.1</version>
+      <version>LATEST</version>
     </dependency>
   </dependencies>
   <build>

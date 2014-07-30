@@ -33,14 +33,14 @@ import cz.boosik.boosCooldown.Listeners.BoosSignChangeListener;
 import cz.boosik.boosCooldown.Listeners.BoosSignInteractListener;
 
 /**
- * Hlavní tøída pluginu. Tøída je potomkem JavaPlugin a implementuje Runnable.
- * Tato tøída se stará o veškeré inicializace pøi spuštìní a ukonèení pluginu.
- * Toto zahrnuje zjištìní, zda je k dispozici plugin Vault a ekonomickı plugin,
- * registraci posluchaèù a také se stará o funkce všech kontrolních a
- * konfiguraèních pøíkazù. Periodicky také ukládá soubor databáze v intervalu
- * nastaveném v konfiguraci.
+ * Hlavnï¿½ tï¿½ï¿½da pluginu. Tï¿½ï¿½da je potomkem JavaPlugin a implementuje Runnable.
+ * Tato tï¿½ï¿½da se starï¿½ o veï¿½kerï¿½ inicializace pï¿½i spuï¿½tï¿½nï¿½ a ukonï¿½enï¿½ pluginu.
+ * Toto zahrnuje zjiï¿½tï¿½nï¿½, zda je k dispozici plugin Vault a ekonomickï¿½ plugin,
+ * registraci posluchaï¿½ï¿½ a takï¿½ se starï¿½ o funkce vï¿½ech kontrolnï¿½ch a
+ * konfiguraï¿½nï¿½ch pï¿½ï¿½kazï¿½. Periodicky takï¿½ uklï¿½dï¿½ soubor databï¿½ze v intervalu
+ * nastavenï¿½m v konfiguraci.
  * 
- * @author Jakub Koláø
+ * @author Jakub Kolï¿½ï¿½
  * 
  */
 public class BoosCoolDown extends JavaPlugin implements Runnable {
@@ -51,12 +51,12 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 	private PluginManager pm;
 
 	/**
-	 * Metoda odesílá zprávy o pouití pøíkazù do konzole serveru.
+	 * Metoda odesï¿½lï¿½ zprï¿½vy o pouï¿½itï¿½ pï¿½ï¿½kazï¿½ do konzole serveru.
 	 * 
 	 * @param player
-	 *            jméno hráèe kterı vykonal pøíkaz
+	 *            jmï¿½no hrï¿½ï¿½e kterï¿½ vykonal pï¿½ï¿½kaz
 	 * @param command
-	 *            vykonanı pøíkaz
+	 *            vykonanï¿½ pï¿½ï¿½kaz
 	 */
 	public static void commandLogger(String player, String command) {
 		log.info("[" + "boosLogger" + "] " + player + " used command "
@@ -78,11 +78,11 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 	}
 
 	/**
-	 * Metoda zjišuje na základì oprávnìní jestli je plugin aktivní pro daného
-	 * hráèe nebo ne.
+	 * Metoda zjiï¿½ï¿½uje na zï¿½kladï¿½ oprï¿½vnï¿½nï¿½ jestli je plugin aktivnï¿½ pro danï¿½ho
+	 * hrï¿½ï¿½e nebo ne.
 	 * 
 	 * @param player
-	 *            specifikovanı hráè
+	 *            specifikovanï¿½ hrï¿½ï¿½
 	 * @return
 	 */
 	static boolean isPluginOnForPlayer(Player player) {
@@ -98,9 +98,9 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 	}
 
 	/**
-	 * Metoda zjišuje jestli je dostupnı plugin Vault a na základì toho volá
-	 * metodu pro nastavení ekonomického pluginu a informuje o tom uivatele
-	 * pomocí konzole serveru.
+	 * Metoda zjiï¿½ï¿½uje jestli je dostupnï¿½ plugin Vault a na zï¿½kladï¿½ toho volï¿½
+	 * metodu pro nastavenï¿½ ekonomickï¿½ho pluginu a informuje o tom uï¿½ivatele
+	 * pomocï¿½ konzole serveru.
 	 */
 	private void initializeVault() {
 		Plugin x = pm.getPlugin("Vault");
@@ -132,6 +132,7 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 	 * org.bukkit.plugin.java.JavaPlugin#onCommand(org.bukkit.command.CommandSender
 	 * , org.bukkit.command.Command, java.lang.String, java.lang.String[])
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command c,
 			String commandLabel, String[] args) {
@@ -350,9 +351,9 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 	}
 
 	/**
-	 * Metoda registruje posluchaèe v PluginManageru na základì konfigurace
-	 * pluginu. Registrojí se vdy jen nezbytní posluchaèi. Posluchaèi pro
-	 * vypnuté funkce nejsou registrováni.
+	 * Metoda registruje posluchaï¿½e v PluginManageru na zï¿½kladï¿½ konfigurace
+	 * pluginu. Registrojï¿½ se vï¿½dy jen nezbytnï¿½ posluchaï¿½i. Posluchaï¿½i pro
+	 * vypnutï¿½ funkce nejsou registrovï¿½ni.
 	 */
 	private void registerListeners() {
 		HandlerList.unregisterAll(this);
@@ -387,8 +388,8 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 	}
 
 	/**
-	 * Metoda volá metodu pro znovunaètení konfiguraèního souboru a metodu pro
-	 * registraci posluchaèù.
+	 * Metoda volï¿½ metodu pro znovunaï¿½tenï¿½ konfiguraï¿½nï¿½ho souboru a metodu pro
+	 * registraci posluchaï¿½ï¿½.
 	 */
 	private void reload() {
 		BoosConfigManager.reload();
@@ -408,11 +409,11 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 	}
 
 	/**
-	 * Metoda vrací hodnotu true, pokud je na serveru dostupnı Ekonomickı plugin
-	 * kompatibilní s pluginem Vault.
+	 * Metoda vracï¿½ hodnotu true, pokud je na serveru dostupnï¿½ Ekonomickï¿½ plugin
+	 * kompatibilnï¿½ s pluginem Vault.
 	 * 
-	 * @return true pokud je dostupnı ekonomickı plugin kompatibilní s pluginem
-	 *         Vault, jinak vrací hodnotu false
+	 * @return true pokud je dostupnï¿½ ekonomickï¿½ plugin kompatibilnï¿½ s pluginem
+	 *         Vault, jinak vracï¿½ hodnotu false
 	 */
 	private boolean setupEconomy() {
 		if (usingVault) {

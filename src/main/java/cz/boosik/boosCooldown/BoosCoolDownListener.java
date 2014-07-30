@@ -106,7 +106,7 @@ public class BoosCoolDownListener implements Listener {
 							(price + " " + unit),
 							BoosCoolDown.getEconomy().format(
 									BoosCoolDown.getEconomy().getBalance(
-											player.getName())));
+											player)));
 					msg = msg.replaceAll("&command&", originalCommand);
 					boosChat.sendMessageToPlayer(player, msg);
 				}

@@ -43,7 +43,7 @@ public class BoosPriceManager {
 		if (economy == null) {
 			return true;
 		}
-		EconomyResponse r = economy.withdrawPlayer(name, price);
+		EconomyResponse r = economy.withdrawPlayer(player, price);
 		if (r.transactionSuccess()) {
 			msg = String.format(BoosConfigManager.getPaidForCommandMessage(),
 					economy.format(r.amount), economy.format(r.balance));
@@ -113,7 +113,7 @@ public class BoosPriceManager {
 		if (economy == null) {
 			return true;
 		} else {
-			return economy.has(player.getName(), price);
+			return economy.has(player, price);
 		}
 	}
 }
