@@ -174,7 +174,15 @@ public class BoosCoolDownListener implements Listener {
 		originalCommand = originalCommand.trim().replaceAll(" +", " ")
 				.toLowerCase();
 		String regexCommad = "";
-		Set<String> aliases = BoosConfigManager.getAliases();
+		Set<String> aliases = null;
+		try {
+			aliases = BoosConfigManager.getAliases();
+		} catch (Exception e1) {
+			BoosCoolDown
+			.getLog()
+			.warning(
+					"Aliases section in config.yml is missing! Please delete your config.yml, restart server and set it again!");
+		}
 		Set<String> commands = BoosConfigManager.getCommands(player);
 		boolean on = true;
 		String item = "";
@@ -197,7 +205,7 @@ public class BoosCoolDownListener implements Listener {
 				}
 				event.setMessage(originalCommand);
 			}
-		} catch (NullPointerException e) {
+		} catch (Exception e) {
 			BoosCoolDown
 					.getLog()
 					.warning(
