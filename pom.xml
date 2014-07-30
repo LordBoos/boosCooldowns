@@ -7,44 +7,46 @@
   <packaging>jar</packaging>
   <url>http://maven.apache.org</url>
   <pluginRepositories>
-        <pluginRepository>
-            <id>maven2-repository.dev.java.net</id>
-            <name>Java.net Repository for Maven</name>
-            <url>http://download.java.net/maven/2/</url>
-            <layout>default</layout>
-        </pluginRepository>
+    <pluginRepository>
+      <id>maven2-repository.dev.java.net</id>
+      <name>Java.net Repository for Maven</name>
+      <url>http://download.java.net/maven/2/</url>
+      <layout>default</layout>
+    </pluginRepository>
   </pluginRepositories>
   <repositories>
-        <repository>
-          <id>bukkit-repo</id>
-          <url>http://repo.bukkit.org/content/groups/public/</url>
-        </repository>
-        <repository>
-        	<id>vault-repo</id>
-			<url>http://ci.herocraftonline.com/plugin/repository/everything</url>
-		</repository>
-   </repositories>
+    <repository>
+      <id>bukkit-repo</id>
+      <url>http://repo.bukkit.org/content/groups/public/</url>
+    </repository>
+    <repository>
+      <id>vault-repo</id>
+      <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
+    </repository>
+  </repositories>
   <dependencies>
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>LATEST</version>
+      <version>1.7.9-R0.2</version>
     </dependency>
     <dependency>
-		<groupId>net.milkbowl.vault</groupId>
-		<artifactId>Vault</artifactId>
-		<version>1.2.27</version>
-	</dependency>
+      <groupId>net.milkbowl.vault</groupId>
+      <artifactId>Vault</artifactId>
+      <version>1.4.1</version>
+    </dependency>
   </dependencies>
   <build>
-  	<finalName>boosCooldowns</finalName>
-    <sourceDirectory>src</sourceDirectory>
+    <finalName>boosCooldowns</finalName>
+    <sourceDirectory>${basedir}/src/main/java/</sourceDirectory>
     <resources>
       <resource>
-        <directory>src</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
+        <targetPath>.</targetPath>
+        <filtering>true</filtering>
+        <directory>${basedir}/src/main/resources/</directory>
+        <includes>
+          <include>plugin.yml</include>
+        </includes>
       </resource>
     </resources>
     <plugins>
