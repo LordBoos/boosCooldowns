@@ -74,12 +74,10 @@ public class BoosConfigManager {
 	 */
 	public static void clearSomething(String co, UUID uuid) {
 		ConfigurationSection userSection = confusers
-				.getConfigurationSection("users."
-						+ uuid + "." + co);
+				.getConfigurationSection("users." + uuid + "." + co);
 		if (userSection == null)
 			return;
-		confusers.set("users." + uuid + "." + co,
-				null);
+		confusers.set("users." + uuid + "." + co, null);
 		saveConfusers();
 		loadConfusers();
 	}
@@ -97,8 +95,7 @@ public class BoosConfigManager {
 	 */
 	static void clearSomething(String co, UUID uuid, String command) {
 		int pre2 = command.toLowerCase().hashCode();
-		confusers.set("users." + uuid + "." + co
-				+ "." + pre2, 0);
+		confusers.set("users." + uuid + "." + co + "." + pre2, 0);
 		saveConfusers();
 		loadConfusers();
 	}
@@ -117,6 +114,15 @@ public class BoosConfigManager {
 	static Set<String> getAliases() {
 		Set<String> aliases = conf.getConfigurationSection("commands.aliases")
 				.getKeys(false);
+		return aliases;
+	}
+	
+	/**
+	 * @return
+	 */
+	static Set<String> getAliasesKeys() {
+		Set<String> aliases = conf.getConfigurationSection("commands.aliases")
+				.getKeys(true);
 		return aliases;
 	}
 
@@ -725,10 +731,12 @@ public class BoosConfigManager {
 		try {
 			value2 = Integer.parseInt(value);
 			reload();
-			conf.set("commands.groups." + group + "." + command + "." + what, value2);
+			conf.set("commands.groups." + group + "." + command + "." + what,
+					value2);
 		} catch (NumberFormatException e1) {
 			reload();
-			conf.set("commands.groups." + group + "." + command + "." + what, value);
+			conf.set("commands.groups." + group + "." + command + "." + what,
+					value);
 		}
 		try {
 			conf.save(confFile);

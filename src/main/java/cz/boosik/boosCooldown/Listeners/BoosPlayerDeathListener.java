@@ -11,23 +11,23 @@ import cz.boosik.boosCooldown.BoosConfigManager;
 import cz.boosik.boosCooldown.BoosCoolDownManager;
 
 /**
- * Posluchaè naslouchající události, která se spouští v okamiku kdy hráè zemøe.
- * V závislosti na konfiguraci pluginu a oprávnìních hráèe mohou nastat tøi
- * rùzné aktivity. Cooldown èasovaèe mohou bıt po smrti vymazány, nebo naopak
- * mohou bıt znovu spuštìny veškeré cooldown èasovaèe pro veškeré nastavené
- * pøíkazy. Také mohou bıt vymazány záznamy o pouitích pøíkazu a hráè bude opìt
- * schopen pouívat limitované pøíkazy a po hodnotu limitu.
+ * Posluchaï¿½ naslouchajï¿½cï¿½ udï¿½losti, kterï¿½ se spouï¿½tï¿½ v okamï¿½iku kdy hrï¿½ï¿½ zemï¿½e.
+ * V zï¿½vislosti na konfiguraci pluginu a oprï¿½vnï¿½nï¿½ch hrï¿½ï¿½e mohou nastat tï¿½i
+ * rï¿½znï¿½ aktivity. Cooldown ï¿½asovaï¿½e mohou bï¿½t po smrti vymazï¿½ny, nebo naopak
+ * mohou bï¿½t znovu spuï¿½tï¿½ny veï¿½kerï¿½ cooldown ï¿½asovaï¿½e pro veï¿½kerï¿½ nastavenï¿½
+ * pï¿½ï¿½kazy. Takï¿½ mohou bï¿½t vymazï¿½ny zï¿½znamy o pouï¿½itï¿½ch pï¿½ï¿½kazu a hrï¿½ï¿½ bude opï¿½t
+ * schopen pouï¿½ï¿½vat limitovanï¿½ pï¿½ï¿½kazy aï¿½ po hodnotu limitu.
  * 
- * @author Jakub Koláø
+ * @author Jakub Kolï¿½ï¿½
  * 
  */
 public class BoosPlayerDeathListener implements Listener {
 	/**
-	 * Metoda zjišuje jestli je entita která spustila tuto událost hráè a
-	 * jestli není null. Na základì toho spouští další metody.
+	 * Metoda zjiï¿½ï¿½uje jestli je entita kterï¿½ spustila tuto udï¿½lost hrï¿½ï¿½ a
+	 * jestli nenï¿½ null. Na zï¿½kladï¿½ toho spouï¿½tï¿½ dalï¿½ï¿½ metody.
 	 * 
 	 * @param event
-	 *            událost PlayerDeathEvent
+	 *            udï¿½lost PlayerDeathEvent
 	 */
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	private void onPlayerDeath(PlayerDeathEvent event) {
@@ -41,11 +41,11 @@ public class BoosPlayerDeathListener implements Listener {
 	}
 
 	/**
-	 * Na základì konfigurace metoda spouští všechny cooldown èasovaèe
-	 * specifikovaného hráèe tím e spustí medotu startAllCooldowns();.
+	 * Na zï¿½kladï¿½ konfigurace metoda spouï¿½tï¿½ vï¿½echny cooldown ï¿½asovaï¿½e
+	 * specifikovanï¿½ho hrï¿½ï¿½e tï¿½m ï¿½e spustï¿½ medotu startAllCooldowns();.
 	 * 
 	 * @param player
-	 *            hráè, kterı spustil událost PlayerDeathEvent
+	 *            hrï¿½ï¿½, kterï¿½ spustil udï¿½lost PlayerDeathEvent
 	 */
 	private void startCooldownsOnDeath(Player player) {
 		if (player != null) {
@@ -56,13 +56,13 @@ public class BoosPlayerDeathListener implements Listener {
 	}
 
 	/**
-	 * Na základì konfigurace a toho jestli hráè disponuje oprávnìním
-	 * booscooldowns.clear.uses.death metoda vymae všechny záznamy o spuštìní
-	 * všech pøíkazù specifikovaného hráèe tím e spustí metodu
+	 * Na zï¿½kladï¿½ konfigurace a toho jestli hrï¿½ï¿½ disponuje oprï¿½vnï¿½nï¿½m
+	 * booscooldowns.clear.uses.death metoda vymaï¿½e vï¿½echny zï¿½znamy o spuï¿½tï¿½nï¿½
+	 * vï¿½ech pï¿½ï¿½kazï¿½ specifikovanï¿½ho hrï¿½ï¿½e tï¿½m ï¿½e spustï¿½ metodu
 	 * clearSomething();.
 	 * 
 	 * @param player
-	 *            hráè, kterı spustil událost PlayerDeathEvent
+	 *            hrï¿½ï¿½, kterï¿½ spustil udï¿½lost PlayerDeathEvent
 	 */
 	private void clearUsesOnDeath(Player player) {
 		if (player != null
@@ -74,19 +74,20 @@ public class BoosPlayerDeathListener implements Listener {
 	}
 
 	/**
-	 * Na základì konfigurace a toho jestli hráè disponuje oprávnìním
-	 * booscooldowns.clear.cooldowns.death metoda vymae všechny cooldown
-	 * èasovaèe všech pøíkazù specifikovaného hráèe tím e spustí metodu
+	 * Na zï¿½kladï¿½ konfigurace a toho jestli hrï¿½ï¿½ disponuje oprï¿½vnï¿½nï¿½m
+	 * booscooldowns.clear.cooldowns.death metoda vymaï¿½e vï¿½echny cooldown
+	 * ï¿½asovaï¿½e vï¿½ech pï¿½ï¿½kazï¿½ specifikovanï¿½ho hrï¿½ï¿½e tï¿½m ï¿½e spustï¿½ metodu
 	 * clearSomething();.
 	 * 
 	 * @param player
-	 *            hráè, kterı spustil událost PlayerDeathEvent
+	 *            hrï¿½ï¿½, kterï¿½ spustil udï¿½lost PlayerDeathEvent
 	 */
 	private void clearCooldownsOnDeath(Player player) {
 		if (player != null
 				&& player.hasPermission("booscooldowns.clear.cooldowns.death")) {
 			if (BoosConfigManager.getCleanCooldownsOnDeath()) {
-				BoosConfigManager.clearSomething("cooldown", player.getUniqueId());
+				BoosConfigManager.clearSomething("cooldown",
+						player.getUniqueId());
 			}
 		}
 	}

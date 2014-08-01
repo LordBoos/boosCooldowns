@@ -11,42 +11,41 @@ import org.bukkit.entity.Player;
 import util.boosChat;
 
 /**
- * Tøída obsahuje veškeré metody potøebné k øízení cooldown èasovaèù. Spouštìní,
- * ukonèování, zjišování zda je cooldown èasovaè ji aktivní.
+ * Tï¿½ï¿½da obsahuje veï¿½kerï¿½ metody potï¿½ebnï¿½ k ï¿½ï¿½zenï¿½ cooldown ï¿½asovaï¿½ï¿½. Spouï¿½tï¿½nï¿½,
+ * ukonï¿½ovï¿½nï¿½, zjiï¿½ï¿½ovï¿½nï¿½ zda je cooldown ï¿½asovaï¿½ jiï¿½ aktivnï¿½.
  * 
- * @author Jakub Koláø
+ * @author Jakub Kolï¿½ï¿½
  * 
  */
 public class BoosCoolDownManager {
 	/**
-	 * Metoda ukonèuje specifikovanı cooldown èasovaè pro specifikovaného hráèe.
+	 * Metoda ukonï¿½uje specifikovanï¿½ cooldown ï¿½asovaï¿½ pro specifikovanï¿½ho hrï¿½ï¿½e.
 	 * 
 	 * @param player
-	 *            specifickı hráè
+	 *            specifickï¿½ hrï¿½ï¿½
 	 * @param regexCommand
-	 *            pøíkaz z konfigurace vyhovující originálnímu pøíkazu
+	 *            pï¿½ï¿½kaz z konfigurace vyhovujï¿½cï¿½ originï¿½lnï¿½mu pï¿½ï¿½kazu
 	 */
 	static void cancelCooldown(Player player, String regexCommand) {
 		int pre2 = regexCommand.toLowerCase().hashCode();
 		BoosConfigManager.getConfusers().set(
-				"users." + player.getUniqueId() + ".cooldown."
-						+ pre2, null);
+				"users." + player.getUniqueId() + ".cooldown." + pre2, null);
 	}
 
 	/**
-	 * Metoda vrací hodnotu boolean na základì toho, jestli má specifikovanı
-	 * pøíkaz aktivní cooldown èasovaè.
+	 * Metoda vracï¿½ hodnotu boolean na zï¿½kladï¿½ toho, jestli mï¿½ specifikovanï¿½
+	 * pï¿½ï¿½kaz aktivnï¿½ cooldown ï¿½asovaï¿½.
 	 * 
 	 * @param player
-	 *            specifikovanı hráè
+	 *            specifikovanï¿½ hrï¿½ï¿½
 	 * @param regexCommand
-	 *            pøíkaz z konfigurace vyhovující originálnímu pøíkazu
+	 *            pï¿½ï¿½kaz z konfigurace vyhovujï¿½cï¿½ originï¿½lnï¿½mu pï¿½ï¿½kazu
 	 * @param originalCommand
-	 *            originální pøíkaz pouitı hráèem
+	 *            originï¿½lnï¿½ pï¿½ï¿½kaz pouï¿½itï¿½ hrï¿½ï¿½em
 	 * @param coolDownSeconds
-	 *            cooldown doba v sekundách, nastavená pro regexCommand v
+	 *            cooldown doba v sekundï¿½ch, nastavenï¿½ pro regexCommand v
 	 *            konfiguraci
-	 * @return true pokud je pøíkaz na cooldown èasovaèi, jinak false
+	 * @return true pokud je pï¿½ï¿½kaz na cooldown ï¿½asovaï¿½i, jinak false
 	 */
 	static boolean cd(Player player, String regexCommand,
 			String originalCommand, int coolDownSeconds) {
@@ -110,21 +109,21 @@ public class BoosCoolDownManager {
 	}
 
 	/**
-	 * Metoda kontroluje, jestli hráè nedisponuje oprávnìními, která obcházejí
-	 * cooldown èasovaèe. Pokud tìmito oprávnìními hráè disponuje, pak metoda
-	 * vrací false. Pokud hráè nedisponuje tìmito oprávnìními, vrací hodnotu
-	 * vrácenou metodou cd();.
+	 * Metoda kontroluje, jestli hrï¿½ï¿½ nedisponuje oprï¿½vnï¿½nï¿½mi, kterï¿½ obchï¿½zejï¿½
+	 * cooldown ï¿½asovaï¿½e. Pokud tï¿½mito oprï¿½vnï¿½nï¿½mi hrï¿½ï¿½ disponuje, pak metoda
+	 * vracï¿½ false. Pokud hrï¿½ï¿½ nedisponuje tï¿½mito oprï¿½vnï¿½nï¿½mi, vracï¿½ hodnotu
+	 * vrï¿½cenou metodou cd();.
 	 * 
 	 * @param player
-	 *            specifikovanı hráè
+	 *            specifikovanï¿½ hrï¿½ï¿½
 	 * @param regexCommand
-	 *            pøíkaz z konfigurace vyhovující originálnímu pøíkazu
+	 *            pï¿½ï¿½kaz z konfigurace vyhovujï¿½cï¿½ originï¿½lnï¿½mu pï¿½ï¿½kazu
 	 * @param originalCommand
-	 *            originální pøíkaz pouitı hráèem
+	 *            originï¿½lnï¿½ pï¿½ï¿½kaz pouï¿½itï¿½ hrï¿½ï¿½em
 	 * @param time
-	 *            cooldown doba v sekundách, nastavená pro regexCommand v
+	 *            cooldown doba v sekundï¿½ch, nastavenï¿½ pro regexCommand v
 	 *            konfiguraci
-	 * @return false pokud hráè disponuje oprávnìními, jinak hodnotu vrácenou
+	 * @return false pokud hrï¿½ï¿½ disponuje oprï¿½vnï¿½nï¿½mi, jinak hodnotu vrï¿½cenou
 	 *         metodou cd();.
 	 */
 	static boolean coolDown(Player player, String regexCommand,
@@ -140,9 +139,9 @@ public class BoosCoolDownManager {
 	}
 
 	/**
-	 * Metoda vrací souèasnı pøesnı datum a èas.
+	 * Metoda vracï¿½ souï¿½asnï¿½ pï¿½esnï¿½ datum a ï¿½as.
 	 * 
-	 * @return souèasnı èas a datum
+	 * @return souï¿½asnï¿½ ï¿½as a datum
 	 */
 	static Date getCurrTime() {
 		String currTime = "";
@@ -160,13 +159,13 @@ public class BoosCoolDownManager {
 	}
 
 	/**
-	 * Metoda vrací datum a èas, kdy hráè naposledy pouil danı pøíkaz.
+	 * Metoda vracï¿½ datum a ï¿½as, kdy hrï¿½ï¿½ naposledy pouï¿½il danï¿½ pï¿½ï¿½kaz.
 	 * 
 	 * @param player
-	 *            specifikovanı hráè
+	 *            specifikovanï¿½ hrï¿½ï¿½
 	 * @param regexCommand
-	 *            pøíkaz z konfigurace vyhovující originálnímu pøíkazu
-	 * @return datum a èas kdy hráè naposledy pouil danı pøíkaz
+	 *            pï¿½ï¿½kaz z konfigurace vyhovujï¿½cï¿½ originï¿½lnï¿½mu pï¿½ï¿½kazu
+	 * @return datum a ï¿½as kdy hrï¿½ï¿½ naposledy pouï¿½il danï¿½ pï¿½ï¿½kaz
 	 */
 	static Date getTime(Player player, String regexCommand) {
 		int pre2 = regexCommand.toLowerCase().hashCode();
@@ -190,19 +189,19 @@ public class BoosCoolDownManager {
 	}
 
 	/**
-	 * Metoda vrací hodnotu boolean na základì toho, jestli má specifikovanı
-	 * pøíkaz aktivní cooldown èasovaè.
+	 * Metoda vracï¿½ hodnotu boolean na zï¿½kladï¿½ toho, jestli mï¿½ specifikovanï¿½
+	 * pï¿½ï¿½kaz aktivnï¿½ cooldown ï¿½asovaï¿½.
 	 * 
 	 * @param player
-	 *            specifikovanı hráè
+	 *            specifikovanï¿½ hrï¿½ï¿½
 	 * @param regexCommand
-	 *            pøíkaz z konfigurace vyhovující originálnímu pøíkazu
+	 *            pï¿½ï¿½kaz z konfigurace vyhovujï¿½cï¿½ originï¿½lnï¿½mu pï¿½ï¿½kazu
 	 * @param originalCommand
-	 *            originální pøíkaz pouitı hráèem
+	 *            originï¿½lnï¿½ pï¿½ï¿½kaz pouï¿½itï¿½ hrï¿½ï¿½em
 	 * @param time
-	 *            cooldown doba v sekundách, nastavená pro regexCommand v
+	 *            cooldown doba v sekundï¿½ch, nastavenï¿½ pro regexCommand v
 	 *            konfiguraci
-	 * @return false pokud má pøíkaz aktivní cooldown èasovaè, jinak false
+	 * @return false pokud mï¿½ pï¿½ï¿½kaz aktivnï¿½ cooldown ï¿½asovaï¿½, jinak false
 	 */
 	static boolean checkCoolDownOK(Player player, String regexCommand,
 			String originalCommand, int time) {
@@ -250,12 +249,12 @@ public class BoosCoolDownManager {
 	}
 
 	/**
-	 * Metoda vrací hodnotu rozdílu v sekundách mezi dvìmi hodnotami datumu a
-	 * èasu.
+	 * Metoda vracï¿½ hodnotu rozdï¿½lu v sekundï¿½ch mezi dvï¿½mi hodnotami datumu a
+	 * ï¿½asu.
 	 * 
 	 * @param startDate
 	 * @param endDate
-	 * @return rozdíl v sekundách mezi startDate a endDate
+	 * @return rozdï¿½l v sekundï¿½ch mezi startDate a endDate
 	 */
 	static long secondsBetween(Calendar startDate, Calendar endDate) {
 		long secondsBetween = 0;
@@ -268,13 +267,13 @@ public class BoosCoolDownManager {
 	}
 
 	/**
-	 * Metoda ukládá do databáze datum a èas kdy hráè naposledy pouil danı
-	 * pøíkaz.
+	 * Metoda uklï¿½dï¿½ do databï¿½ze datum a ï¿½as kdy hrï¿½ï¿½ naposledy pouï¿½il danï¿½
+	 * pï¿½ï¿½kaz.
 	 * 
 	 * @param player
-	 *            specifickı hráè
+	 *            specifickï¿½ hrï¿½ï¿½
 	 * @param regexCommand
-	 *            pøíkaz z konfigurace vyhovující originálnímu pøíkazu
+	 *            pï¿½ï¿½kaz z konfigurace vyhovujï¿½cï¿½ originï¿½lnï¿½mu pï¿½ï¿½kazu
 	 */
 	static void setTime(Player player, String regexCommand) {
 		int pre2 = regexCommand.toLowerCase().hashCode();
@@ -288,10 +287,10 @@ public class BoosCoolDownManager {
 	}
 
 	/**
-	 * Metoda spouští veškeré cooldown èasovaèe pro specifického hráèe.
+	 * Metoda spouï¿½tï¿½ veï¿½kerï¿½ cooldown ï¿½asovaï¿½e pro specifickï¿½ho hrï¿½ï¿½e.
 	 * 
 	 * @param player
-	 *            specifickı hráè
+	 *            specifickï¿½ hrï¿½ï¿½
 	 * @param message
 	 */
 	public static void startAllCooldowns(Player player, String message) {

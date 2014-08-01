@@ -6,9 +6,9 @@ import java.util.TimerTask;
 import org.bukkit.entity.Player;
 
 /**
- * Tøída starající se o samotné èasovaèe warmupù pomocí TimerTask
+ * Tï¿½ï¿½da starajï¿½cï¿½ se o samotnï¿½ ï¿½asovaï¿½e warmupï¿½ pomocï¿½ TimerTask
  * 
- * @author Jakub Koláø
+ * @author Jakub Kolï¿½ï¿½
  * 
  */
 public class BoosWarmUpTimer extends TimerTask {
@@ -20,15 +20,15 @@ public class BoosWarmUpTimer extends TimerTask {
 
 	/**
 	 * @param bCoolDown
-	 *            instance tøídy BoosCoolDown
+	 *            instance tï¿½ï¿½dy BoosCoolDown
 	 * @param timer
 	 * @param player
-	 *            specifický hráè
+	 *            specifickï¿½ hrï¿½ï¿½
 	 * @param regexCommand
-	 *            pøíkaz z konfiguraèního souboru, který vyhovuje originálnímu
-	 *            pøíkazu
+	 *            pï¿½ï¿½kaz z konfiguraï¿½nï¿½ho souboru, kterï¿½ vyhovuje originï¿½lnï¿½mu
+	 *            pï¿½ï¿½kazu
 	 * @param originalCommand
-	 *            originální pøíkaz který hráè použil
+	 *            originï¿½lnï¿½ pï¿½ï¿½kaz kterï¿½ hrï¿½ï¿½ pouï¿½il
 	 */
 	public BoosWarmUpTimer(BoosCoolDown bCoolDown, Timer timer, Player player,
 			String regexCommand, String originalCommand) {
@@ -60,21 +60,21 @@ public class BoosWarmUpTimer extends TimerTask {
 			if (player.isOnline() && !player.isDead()
 					&& BoosWarmUpManager.hasWarmUps(player)) {
 				BoosWarmUpManager.setWarmUpOK(player, regexCommand);
-				BoosWarmUpManager.removeWarmUpProcess(player.getUniqueId() + "@"
-						+ regexCommand);
+				BoosWarmUpManager.removeWarmUpProcess(player.getUniqueId()
+						+ "@" + regexCommand);
 				BoosWarmUpManager.clearLocWorld(player);
 				player.chat(originalCommand);
 			} else if (player.isOnline() && player.isDead()
 					&& BoosWarmUpManager.hasWarmUps(player)) {
 				BoosWarmUpManager.removeWarmUp(player, regexCommand);
-				BoosWarmUpManager.removeWarmUpProcess(player.getUniqueId() + "@"
-						+ regexCommand);
+				BoosWarmUpManager.removeWarmUpProcess(player.getUniqueId()
+						+ "@" + regexCommand);
 				BoosWarmUpManager.clearLocWorld(player);
 			} else if (!player.isOnline()
 					&& BoosWarmUpManager.hasWarmUps(player)) {
 				BoosWarmUpManager.removeWarmUp(player, regexCommand);
-				BoosWarmUpManager.removeWarmUpProcess(player.getUniqueId() + "@"
-						+ regexCommand);
+				BoosWarmUpManager.removeWarmUpProcess(player.getUniqueId()
+						+ "@" + regexCommand);
 				BoosWarmUpManager.clearLocWorld(player);
 			}
 		}

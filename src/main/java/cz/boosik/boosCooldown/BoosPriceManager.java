@@ -9,8 +9,8 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import util.boosChat;
 
 /**
- * T��da obsahuje ve�ker� metody pot�ebn� k ��zen� poplatk�
- * pomoc� v�c� za p��kazy.
+ * T��da obsahuje ve�ker� metody pot�ebn� k ��zen� poplatk� pomoc� v�c� za
+ * p��kazy.
  * 
  * @author Jakub Kol��
  * 
@@ -20,23 +20,22 @@ public class BoosPriceManager {
 	private static String msg = "";
 
 	/**
-	 * Metoda zaji��uje funkci platby za p��kaz. Vrac� hodnotu v
-	 * z�vislosti na �sp�nosti platby.
+	 * Metoda zaji��uje funkci platby za p��kaz. Vrac� hodnotu v z�vislosti na
+	 * �sp�nosti platby.
 	 * 
 	 * @param player
 	 *            specifikovan� hr��
 	 * @param regexCommand
-	 *            p��kaz z konfigurace vyhovuj�c� origin�ln�mu
-	 *            p��kazu
+	 *            p��kaz z konfigurace vyhovuj�c� origin�ln�mu p��kazu
 	 * @param originalCommand
 	 *            origin�ln� p��kaz pou�it� hr��em
 	 * @param price
 	 *            cena pou�it� p��kazu
 	 * @param name
 	 *            jm�no specifick�ho hr��e
-	 * @return true pokud byl �sp�n� zaplacen poplatek, nebo pokud nebyl
-	 *         nalezen ekonomick� plugin; false pokud do�lo k chyb� nebo
-	 *         hr�� nem�l dostatek financ�
+	 * @return true pokud byl �sp�n� zaplacen poplatek, nebo pokud nebyl nalezen
+	 *         ekonomick� plugin; false pokud do�lo k chyb� nebo hr�� nem�l
+	 *         dostatek financ�
 	 */
 	static boolean payForCommand(Player player, String regexCommand,
 			String originalCommand, double price, String name) {
@@ -72,18 +71,16 @@ public class BoosPriceManager {
 	}
 
 	/**
-	 * Metoda ukon�uje/neukon�uje ud�lost pou�it� p��kazu v
-	 * z�vislosti na tom, jakou hodnotu vr�tila metoda payForCommand(Player
-	 * player, String regexCommand, String originalCommand, double price, String
-	 * name);.
+	 * Metoda ukon�uje/neukon�uje ud�lost pou�it� p��kazu v z�vislosti na tom,
+	 * jakou hodnotu vr�tila metoda payForCommand(Player player, String
+	 * regexCommand, String originalCommand, double price, String name);.
 	 * 
 	 * @param event
 	 *            ud�lost PlayerCommandPreprocessEvent
 	 * @param player
 	 *            specifick� hr��
 	 * @param regexCommand
-	 *            p��kaz z konfigurace vyhovuj�c� origin�ln�mu
-	 *            p��kazu
+	 *            p��kaz z konfigurace vyhovuj�c� origin�ln�mu p��kazu
 	 * @param originalCommand
 	 *            origin�ln� p��kaz pou�it� hr��em
 	 * @param price

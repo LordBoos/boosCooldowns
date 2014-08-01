@@ -5,27 +5,27 @@ import org.bukkit.entity.Player;
 import util.boosChat;
 
 /**
- * Tøída obsahuje veškeré metody potøebné k øízení limitù.
+ * Tï¿½ï¿½da obsahuje veï¿½kerï¿½ metody potï¿½ebnï¿½ k ï¿½ï¿½zenï¿½ limitï¿½.
  * 
- * @author Jakub Koláø
+ * @author Jakub Kolï¿½ï¿½
  * 
  */
 public class BoosLimitManager {
 	/**
-	 * Metoda kontroluje zda je možné použít pøíkaz, nebo zda je pøíkaz již
-	 * zablokovaný.
+	 * Metoda kontroluje zda je moï¿½nï¿½ pouï¿½ï¿½t pï¿½ï¿½kaz, nebo zda je pï¿½ï¿½kaz jiï¿½
+	 * zablokovanï¿½.
 	 * 
 	 * @param player
-	 *            specifická hráè
+	 *            specifickï¿½ hrï¿½ï¿½
 	 * @param regexCommand
-	 *            pøíkaz z konfiguraèního souboru, který vyhovuje originálnímu
-	 *            pøíkazu
+	 *            pï¿½ï¿½kaz z konfiguraï¿½nï¿½ho souboru, kterï¿½ vyhovuje originï¿½lnï¿½mu
+	 *            pï¿½ï¿½kazu
 	 * @param originalCommand
-	 *            originální pøíkaz použitý hráèem
+	 *            originï¿½lnï¿½ pï¿½ï¿½kaz pouï¿½itï¿½ hrï¿½ï¿½em
 	 * @param limit
-	 *            limit nastavený pro regexCommand
-	 * @return false pokud pøíkaz je možné použít, true pokud pøíkaz není možné
-	 *         použít
+	 *            limit nastavenï¿½ pro regexCommand
+	 * @return false pokud pï¿½ï¿½kaz je moï¿½nï¿½ pouï¿½ï¿½t, true pokud pï¿½ï¿½kaz nenï¿½ moï¿½nï¿½
+	 *         pouï¿½ï¿½t
 	 */
 	static boolean blocked(Player player, String regexCommand,
 			String originalCommand, int limit) {
@@ -44,37 +44,37 @@ public class BoosLimitManager {
 	}
 
 	/**
-	 * Metoda vrací hodnotu, která je urèena tím, kolikrát již hráè použil
-	 * specifikovaný pøíkaz.
+	 * Metoda vracï¿½ hodnotu, kterï¿½ je urï¿½ena tï¿½m, kolikrï¿½t jiï¿½ hrï¿½ï¿½ pouï¿½il
+	 * specifikovanï¿½ pï¿½ï¿½kaz.
 	 * 
 	 * @param player
-	 *            specifická hráè
+	 *            specifickï¿½ hrï¿½ï¿½
 	 * @param regexCommand
-	 *            pøíkaz z konfiguraèního souboru, který vyhovuje originálnímu
-	 *            pøíkazu
-	 * @return hodnota pøedstavujíci poèet použití specifikovaného pøíkazu
+	 *            pï¿½ï¿½kaz z konfiguraï¿½nï¿½ho souboru, kterï¿½ vyhovuje originï¿½lnï¿½mu
+	 *            pï¿½ï¿½kazu
+	 * @return hodnota pï¿½edstavujï¿½ci poï¿½et pouï¿½itï¿½ specifikovanï¿½ho pï¿½ï¿½kazu
 	 */
 	static int getUses(Player player, String regexCommand) {
 		int regexCommand2 = regexCommand.toLowerCase().hashCode();
 		int uses = 0;
 		uses = BoosConfigManager.getConfusers().getInt(
-				"users." + player.getUniqueId() + ".uses."
-						+ regexCommand2, uses);
+				"users." + player.getUniqueId() + ".uses." + regexCommand2,
+				uses);
 		return uses;
 	}
 
 	/**
-	 * Metoda nastavuje poèet použití pøíkazu o jedna vìtší po každém použití
-	 * pøíkazu hráèem. Nastevení hodnoty probíhá jen pro pøíkazy, které jsou
-	 * definovány v konfiguraci.
+	 * Metoda nastavuje poï¿½et pouï¿½itï¿½ pï¿½ï¿½kazu o jedna vï¿½tï¿½ï¿½ po kaï¿½dï¿½m pouï¿½itï¿½
+	 * pï¿½ï¿½kazu hrï¿½ï¿½em. Nastevenï¿½ hodnoty probï¿½hï¿½ jen pro pï¿½ï¿½kazy, kterï¿½ jsou
+	 * definovï¿½ny v konfiguraci.
 	 * 
 	 * @param player
-	 *            specifická hráè
+	 *            specifickï¿½ hrï¿½ï¿½
 	 * @param regexCommand
-	 *            pøíkaz z konfiguraèního souboru, který vyhovuje originálnímu
-	 *            pøíkazu
+	 *            pï¿½ï¿½kaz z konfiguraï¿½nï¿½ho souboru, kterï¿½ vyhovuje originï¿½lnï¿½mu
+	 *            pï¿½ï¿½kazu
 	 * @param originalCommand
-	 *            originální pøíkaz použitý hráèem
+	 *            originï¿½lnï¿½ pï¿½ï¿½kaz pouï¿½itï¿½ hrï¿½ï¿½em
 	 */
 	static void setUses(Player player, String regexCommand,
 			String originalCommand) {
@@ -103,15 +103,15 @@ public class BoosLimitManager {
 	}
 
 	/**
-	 * Metoda odesílá hráèi zprávu o limitovaném pøíkazu, hodnotu tohoto limitu
-	 * a kolikrát je ještì možné limitovaný pøíkaz použít.
+	 * Metoda odesï¿½lï¿½ hrï¿½ï¿½i zprï¿½vu o limitovanï¿½m pï¿½ï¿½kazu, hodnotu tohoto limitu
+	 * a kolikrï¿½t je jeï¿½tï¿½ moï¿½nï¿½ limitovanï¿½ pï¿½ï¿½kaz pouï¿½ï¿½t.
 	 * 
 	 * @param send
-	 *            hráè kterému bude odeslán seznam
+	 *            hrï¿½ï¿½ kterï¿½mu bude odeslï¿½n seznam
 	 * @param comm
-	 *            pøíkaz o kterém si hráè vyžádal informace
+	 *            pï¿½ï¿½kaz o kterï¿½m si hrï¿½ï¿½ vyï¿½ï¿½dal informace
 	 * @param lim
-	 *            hodnota limitu na pøíkazu
+	 *            hodnota limitu na pï¿½ï¿½kazu
 	 */
 	static void getLimitListMessages(Player send, String comm, int lim) {
 		if (lim != -1) {

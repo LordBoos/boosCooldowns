@@ -9,32 +9,32 @@ import org.bukkit.inventory.ItemStack;
 import util.boosChat;
 
 /**
- * Tøída obsahuje veškeré metody potøebné k øízení poplatkù za pøíkazy.
+ * Tï¿½ï¿½da obsahuje veï¿½kerï¿½ metody potï¿½ebnï¿½ k ï¿½ï¿½zenï¿½ poplatkï¿½ za pï¿½ï¿½kazy.
  * 
- * @author Jakub Koláø
+ * @author Jakub Kolï¿½ï¿½
  * 
  */
 public class BoosItemCostManager {
 	private static String msg = "";
 
 	/**
-	 * Metoda zajišuje funkci platby za pøíkaz. Vrací hodnotu v závislosti na
-	 * úspìšnosti platby.
+	 * Metoda zajiï¿½ï¿½uje funkci platby za pï¿½ï¿½kaz. Vracï¿½ hodnotu v zï¿½vislosti na
+	 * ï¿½spï¿½nosti platby.
 	 * 
 	 * @param player
-	 *            specifikovanı hráè
+	 *            specifikovanï¿½ hrï¿½ï¿½
 	 * @param regexCommand
-	 *            pøíkaz z konfigurace vyhovující originálnímu pøíkazu
+	 *            pï¿½ï¿½kaz z konfigurace vyhovujï¿½cï¿½ originï¿½lnï¿½mu pï¿½ï¿½kazu
 	 * @param originalCommand
-	 *            originální pøíkaz pouitı hráèem
+	 *            originï¿½lnï¿½ pï¿½ï¿½kaz pouï¿½itï¿½ hrï¿½ï¿½em
 	 * @param item
 	 * @param price
-	 *            cena pouití pøíkazu
+	 *            cena pouï¿½itï¿½ pï¿½ï¿½kazu
 	 * @param name
-	 *            jméno specifického hráèe
-	 * @return true pokud byl úspìšnì zaplacen poplatek, nebo pokud nebyl
-	 *         nalezen ekonomickı plugin; false pokud došlo k chybì nebo hráè
-	 *         nemìl dostatek financí
+	 *            jmï¿½no specifickï¿½ho hrï¿½ï¿½e
+	 * @return true pokud byl ï¿½spï¿½nï¿½ zaplacen poplatek, nebo pokud nebyl nalezen
+	 *         ekonomickï¿½ plugin; false pokud doï¿½lo k chybï¿½ nebo hrï¿½ï¿½ nemï¿½l
+	 *         dostatek financï¿½
 	 */
 	static boolean payItemForCommand(Player player, String regexCommand,
 			String originalCommand, String item, int count, String name) {
@@ -64,21 +64,21 @@ public class BoosItemCostManager {
 	}
 
 	/**
-	 * Metoda ukonèuje/neukonèuje událost pouití pøíkazu v závislosti na tom,
-	 * jakou hodnotu vrátila metoda payForCommand(Player player, String
+	 * Metoda ukonï¿½uje/neukonï¿½uje udï¿½lost pouï¿½itï¿½ pï¿½ï¿½kazu v zï¿½vislosti na tom,
+	 * jakou hodnotu vrï¿½tila metoda payForCommand(Player player, String
 	 * regexCommand, String originalCommand, double price, String name);.
 	 * 
 	 * @param event
-	 *            událost PlayerCommandPreprocessEvent
+	 *            udï¿½lost PlayerCommandPreprocessEvent
 	 * @param player
-	 *            specifickı hráè
+	 *            specifickï¿½ hrï¿½ï¿½
 	 * @param regexCommand
-	 *            pøíkaz z konfigurace vyhovující originálnímu pøíkazu
+	 *            pï¿½ï¿½kaz z konfigurace vyhovujï¿½cï¿½ originï¿½lnï¿½mu pï¿½ï¿½kazu
 	 * @param originalCommand
-	 *            originální pøíkaz pouitı hráèem
+	 *            originï¿½lnï¿½ pï¿½ï¿½kaz pouï¿½itï¿½ hrï¿½ï¿½em
 	 * @param item
 	 * @param price
-	 *            cena pouití pøíkazu
+	 *            cena pouï¿½itï¿½ pï¿½ï¿½kazu
 	 */
 	static void payItemForCommand(PlayerCommandPreprocessEvent event,
 			Player player, String regexCommand, String originalCommand,

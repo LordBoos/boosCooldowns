@@ -11,10 +11,10 @@ import org.bukkit.potion.PotionEffectType;
 import util.boosChat;
 
 /**
- * Tøída obsahuje veškeré metody potøebné k øízení warmup èasovaèù. Spouštìní,
- * ukonèování a zjišování zda je warmup èasovaè ji aktivní.
+ * Tï¿½ï¿½da obsahuje veï¿½kerï¿½ metody potï¿½ebnï¿½ k ï¿½ï¿½zenï¿½ warmup ï¿½asovaï¿½ï¿½. Spouï¿½tï¿½nï¿½,
+ * ukonï¿½ovï¿½nï¿½ a zjiï¿½ï¿½ovï¿½nï¿½ zda je warmup ï¿½asovaï¿½ jiï¿½ aktivnï¿½.
  * 
- * @author Jakub Koláø
+ * @author Jakub Kolï¿½ï¿½
  * 
  */
 public class BoosWarmUpManager {
@@ -26,16 +26,16 @@ public class BoosWarmUpManager {
 	private static Timer scheduler;
 
 	/**
-	 * Metoda aplikuje na hráèe magickı efekt na dobu urèenou parametrem
+	 * Metoda aplikuje na hrï¿½ï¿½e magickï¿½ efekt na dobu urï¿½enou parametrem
 	 * warmUpSeconds.
 	 * 
 	 * @param player
-	 *            specifickı hráè
+	 *            specifickï¿½ hrï¿½ï¿½
 	 * @param regexCommand
-	 *            pøíkaz z konfiguraèního souboru, kterı vyhovuje originálnímu
-	 *            pøíkazu
+	 *            pï¿½ï¿½kaz z konfiguraï¿½nï¿½ho souboru, kterï¿½ vyhovuje originï¿½lnï¿½mu
+	 *            pï¿½ï¿½kazu
 	 * @param warmUpSeconds
-	 *            doba warmup v sekundách, nastavená pro regexCommand v
+	 *            doba warmup v sekundï¿½ch, nastavenï¿½ pro regexCommand v
 	 *            konfiguraci
 	 */
 	static void applyPotionEffect(Player player, String regexCommand,
@@ -56,10 +56,10 @@ public class BoosWarmUpManager {
 	}
 
 	/**
-	 * Metoda stornuje veškeré probíhající warmup èasovaèe specifického hráèe.
+	 * Metoda stornuje veï¿½kerï¿½ probï¿½hajï¿½cï¿½ warmup ï¿½asovaï¿½e specifickï¿½ho hrï¿½ï¿½e.
 	 * 
 	 * @param player
-	 *            specifickı hráè
+	 *            specifickï¿½ hrï¿½ï¿½
 	 */
 	public static void cancelWarmUps(Player player) {
 		Iterator<String> iter = playercommands.keySet().iterator();
@@ -72,10 +72,10 @@ public class BoosWarmUpManager {
 	}
 
 	/**
-	 * Metoda pro specifického hráèe vymae uloenou pozici a svìt.
+	 * Metoda pro specifickï¿½ho hrï¿½ï¿½e vymaï¿½e uloï¿½enou pozici a svï¿½t.
 	 * 
 	 * @param player
-	 *            specifickı hráè
+	 *            specifickï¿½ hrï¿½ï¿½
 	 */
 	public static void clearLocWorld(Player player) {
 		BoosWarmUpManager.playerloc.remove(player);
@@ -83,12 +83,12 @@ public class BoosWarmUpManager {
 	}
 
 	/**
-	 * Metoda vrací boolean hodnotu v závislosti na tom jestli specifikovanı
-	 * hráè má aktivní warmup èasovaèe nebo ne.
+	 * Metoda vracï¿½ boolean hodnotu v zï¿½vislosti na tom jestli specifikovanï¿½
+	 * hrï¿½ï¿½ mï¿½ aktivnï¿½ warmup ï¿½asovaï¿½e nebo ne.
 	 * 
 	 * @param player
-	 *            specifickı hráè
-	 * @return true pokud hráè má aktivní warmup èasovaèe, jinak false
+	 *            specifickï¿½ hrï¿½ï¿½
+	 * @return true pokud hrï¿½ï¿½ mï¿½ aktivnï¿½ warmup ï¿½asovaï¿½e, jinak false
 	 */
 	public static boolean hasWarmUps(Player player) {
 		for (String key : playercommands.keySet()) {
@@ -100,23 +100,22 @@ public class BoosWarmUpManager {
 	}
 
 	/**
-	 * Metoda zjišuje, jestli je danı warmup èasovaè oznaèenı jako ji probìhlı
+	 * Metoda zjiï¿½ï¿½uje, jestli je danï¿½ warmup ï¿½asovaï¿½ oznaï¿½enï¿½ jako jiï¿½ probï¿½hlï¿½
 	 * nebo ne.
 	 * 
 	 * @param player
-	 *            specifickı hráè
+	 *            specifickï¿½ hrï¿½ï¿½
 	 * @param regexCommand
-	 *            pøíkaz z konfiguraèního souboru, kterı vyhovuje originálnímu
-	 *            pøíkazu
-	 * @return true pokud je warmup èasovaè oznaèen jako ji probìhlı, jinak
+	 *            pï¿½ï¿½kaz z konfiguraï¿½nï¿½ho souboru, kterï¿½ vyhovuje originï¿½lnï¿½mu
+	 *            pï¿½ï¿½kazu
+	 * @return true pokud je warmup ï¿½asovaï¿½ oznaï¿½en jako jiï¿½ probï¿½hlï¿½, jinak
 	 *         false
 	 */
 	static boolean checkWarmUpOK(Player player, String regexCommand) {
 		int pre2 = regexCommand.toLowerCase().hashCode();
 		int ok = 0;
 		ok = BoosConfigManager.getConfusers().getInt(
-				"users." + player.getUniqueId()
-						+ ".warmup." + pre2, ok);
+				"users." + player.getUniqueId() + ".warmup." + pre2, ok);
 		if (ok == 1) {
 			return true;
 		}
@@ -124,29 +123,30 @@ public class BoosWarmUpManager {
 	}
 
 	/**
-	 * Metoda vrací boolean hodnotu na základì toho jestli je pro specifikovanı
-	 * pøíkaz specifikovaného hráèe aktivní warmup èasovaè.
+	 * Metoda vracï¿½ boolean hodnotu na zï¿½kladï¿½ toho jestli je pro specifikovanï¿½
+	 * pï¿½ï¿½kaz specifikovanï¿½ho hrï¿½ï¿½e aktivnï¿½ warmup ï¿½asovaï¿½.
 	 * 
 	 * @param player
-	 *            specifickı hráè
+	 *            specifickï¿½ hrï¿½ï¿½
 	 * @param regexCommand
-	 *            pøíkaz z konfiguraèního souboru, kterı vyhovuje originálnímu
-	 *            pøíkazu
-	 * @return true pokud je warmup èasovaè aktivní, jinak false
+	 *            pï¿½ï¿½kaz z konfiguraï¿½nï¿½ho souboru, kterï¿½ vyhovuje originï¿½lnï¿½mu
+	 *            pï¿½ï¿½kazu
+	 * @return true pokud je warmup ï¿½asovaï¿½ aktivnï¿½, jinak false
 	 */
 	static boolean isWarmUpProcess(Player player, String regexCommand) {
 		regexCommand = regexCommand.toLowerCase();
-		if (playercommands.containsKey(player.getUniqueId() + "@" + regexCommand)) {
+		if (playercommands.containsKey(player.getUniqueId() + "@"
+				+ regexCommand)) {
 			return true;
 		}
 		return false;
 	}
 
 	/**
-	 * Metoda odstraní všechny èasovaèe specifikovaného hráèe
+	 * Metoda odstranï¿½ vï¿½echny ï¿½asovaï¿½e specifikovanï¿½ho hrï¿½ï¿½e
 	 * 
 	 * @param player
-	 *            specifickı hráè
+	 *            specifickï¿½ hrï¿½ï¿½
 	 */
 	static void killTimer(Player player) {
 		for (String key : playercommands.keySet()) {
@@ -157,80 +157,77 @@ public class BoosWarmUpManager {
 	}
 
 	/**
-	 * Metoda odstraní èasovaèe na specifikovaném pøíkazu specifikovaného hráèe
+	 * Metoda odstranï¿½ ï¿½asovaï¿½e na specifikovanï¿½m pï¿½ï¿½kazu specifikovanï¿½ho hrï¿½ï¿½e
 	 * 
 	 * @param player
-	 *            specifickı hráè
+	 *            specifickï¿½ hrï¿½ï¿½
 	 * @param regexCommand
-	 *            pøíkaz z konfiguraèního souboru, kterı vyhovuje originálnímu
-	 *            pøíkazu
+	 *            pï¿½ï¿½kaz z konfiguraï¿½nï¿½ho souboru, kterï¿½ vyhovuje originï¿½lnï¿½mu
+	 *            pï¿½ï¿½kazu
 	 */
 	static void removeWarmUp(Player player, String regexCommand) {
 		int pre2 = regexCommand.toLowerCase().hashCode();
 		BoosConfigManager.getConfusers().set(
-				"users." + player.getUniqueId()
-						+ ".warmup." + pre2, null);
+				"users." + player.getUniqueId() + ".warmup." + pre2, null);
 	}
 
 	/**
-	 * Metoda odstraní ukonèené èasovaèe na specifikovaném pøíkazu
-	 * specifikovaného hráèe
+	 * Metoda odstranï¿½ ukonï¿½enï¿½ ï¿½asovaï¿½e na specifikovanï¿½m pï¿½ï¿½kazu
+	 * specifikovanï¿½ho hrï¿½ï¿½e
 	 * 
 	 * @param player
-	 *            specifickı hráè
+	 *            specifickï¿½ hrï¿½ï¿½
 	 * @param regexCommand
-	 *            pøíkaz z konfiguraèního souboru, kterı vyhovuje originálnímu
-	 *            pøíkazu
+	 *            pï¿½ï¿½kaz z konfiguraï¿½nï¿½ho souboru, kterï¿½ vyhovuje originï¿½lnï¿½mu
+	 *            pï¿½ï¿½kazu
 	 */
 	static void removeWarmUpOK(Player player, String regexCommand) {
 		int pre2 = regexCommand.toLowerCase().hashCode();
 		BoosConfigManager.getConfusers().set(
-				"users." + player.getUniqueId()
-						+ ".warmup." + pre2, null);
+				"users." + player.getUniqueId() + ".warmup." + pre2, null);
 	}
 
 	/**
-	 * Metoda odstraòuje danı øetìzec z Hashmapy
+	 * Metoda odstraï¿½uje danï¿½ ï¿½etï¿½zec z Hashmapy
 	 * 
 	 * @param tag
-	 *            øetìzec, kterı se má odstranit z Hasmapy
+	 *            ï¿½etï¿½zec, kterï¿½ se mï¿½ odstranit z Hasmapy
 	 */
 	static void removeWarmUpProcess(String tag) {
 		BoosWarmUpManager.playercommands.remove(tag);
 	}
 
 	/**
-	 * Metoda oznaèuje warmup èasovaè specifikovaného pøíkazu specifikovaného
-	 * hráèe jako ji ukonèenı.
+	 * Metoda oznaï¿½uje warmup ï¿½asovaï¿½ specifikovanï¿½ho pï¿½ï¿½kazu specifikovanï¿½ho
+	 * hrï¿½ï¿½e jako jiï¿½ ukonï¿½enï¿½.
 	 * 
 	 * @param player
-	 *            specifickı hráè
+	 *            specifickï¿½ hrï¿½ï¿½
 	 * @param regexCommand
-	 *            pøíkaz z konfiguraèního souboru, kterı vyhovuje originálnímu
-	 *            pøíkazu
+	 *            pï¿½ï¿½kaz z konfiguraï¿½nï¿½ho souboru, kterï¿½ vyhovuje originï¿½lnï¿½mu
+	 *            pï¿½ï¿½kazu
 	 */
 	static void setWarmUpOK(Player player, String regexCommand) {
 		int pre2 = regexCommand.toLowerCase().hashCode();
 		BoosConfigManager.getConfusers().set(
-				"users." + player.getUniqueId()
-						+ ".warmup." + pre2, 1);
+				"users." + player.getUniqueId() + ".warmup." + pre2, 1);
 	}
 
 	/**
-	 * Metoda spouští warmup èasovaè na základì parametrù pomocí Timer(). Pokud
-	 * je ji warmup aktivní, odešle hráèi zprávu která ho o tom informuje.
+	 * Metoda spouï¿½tï¿½ warmup ï¿½asovaï¿½ na zï¿½kladï¿½ parametrï¿½ pomocï¿½ Timer(). Pokud
+	 * je jiï¿½ warmup aktivnï¿½, odeï¿½le hrï¿½ï¿½i zprï¿½vu kterï¿½ ho o tom informuje.
 	 * 
 	 * @param bCoolDown
-	 *            instance tøídy BoosCooldown
+	 *            instance tï¿½ï¿½dy BoosCooldown
 	 * @param player
-	 *            specifickı hráè
+	 *            specifickï¿½ hrï¿½ï¿½
 	 * @param regexCommand
-	 *            pøíkaz z konfiguraèního souboru, kterı vyhovuje originálnímu
-	 *            pøíkazu
+	 *            pï¿½ï¿½kaz z konfiguraï¿½nï¿½ho souboru, kterï¿½ vyhovuje originï¿½lnï¿½mu
+	 *            pï¿½ï¿½kazu
 	 * @param originalCommand
-	 *            originální pøíkaz pouitı hráèem
+	 *            originï¿½lnï¿½ pï¿½ï¿½kaz pouï¿½itï¿½ hrï¿½ï¿½em
 	 * @param warmUpSeconds
-	 *            warmup doba nastavená pro pøíkaz v sekundách
+	 *            warmup doba nastavenï¿½ pro pï¿½ï¿½kaz v sekundï¿½ch
 	 */
 	static void startWarmUp(BoosCoolDown bCoolDown, Player player,
 			String regexCommand, String originalCommand, int warmUpSeconds) {
