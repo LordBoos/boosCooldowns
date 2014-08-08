@@ -35,6 +35,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitTask;
 
+import cz.boosik.boosCooldown.BoosCoolDown;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -307,7 +309,12 @@ public class MetricsLite {
 																	// enabled
 		String pluginVersion = description.getVersion();
 		String serverVersion = Bukkit.getVersion();
-		int playersOnline = Bukkit.getServer().getOnlinePlayers().size();
+		int playersOnline = 0;
+		try {
+			playersOnline = Bukkit.getServer().getOnlinePlayers().size();
+		} catch (Exception e) {
+			BoosCoolDown.getLog().warning("[boosCooldowns] This error was caused because you are using old CraftBukkit version. Please update to 1.7.10 (1.7.9-R0.3).");
+		}
 
 		// END server software specific section -- all code below does not use
 		// any code outside of this class / Java

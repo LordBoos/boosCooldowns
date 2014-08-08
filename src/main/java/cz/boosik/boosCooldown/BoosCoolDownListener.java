@@ -238,9 +238,14 @@ public class BoosCoolDownListener implements Listener {
 					break;
 				}
 			}
-			this.checkRestrictions(event, player, regexCommad, originalCommand,
-					warmupTime, cooldownTime, price, item, count, limit,
-					xpPrice);
+			try {
+				this.checkRestrictions(event, player, regexCommad, originalCommand,
+						warmupTime, cooldownTime, price, item, count, limit,
+						xpPrice);
+			} catch (Exception e) {
+				BoosCoolDown.getLog().warning("[boosCooldowns] Looks like you have deleted some important part of config file (like default group or aliases section. To get rid of this message, you have to restore it.");
+				return;
+			}
 		}
 	}
 
