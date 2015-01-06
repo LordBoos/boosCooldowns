@@ -1,6 +1,6 @@
 name: boosCooldowns
 main: cz.boosik.boosCooldown.BoosCoolDown
-version: 3.8.5
+version: 3.9.5
 authors: [LordBoos (ingame name boosik)]
 softdepend: [Vault]
 description: >
@@ -8,7 +8,7 @@ description: >
 commands:
   booscooldowns:
     description: Reload command.
-    usage: Use /booscooldowns reload, clearcooldowns <player>, clearwarmups <player> or clearuses <player>
+    usage: §6[boosCooldowns] §eInvalid command or access denied!
     aliases: bcd
 permissions:
     booscooldowns.exception:

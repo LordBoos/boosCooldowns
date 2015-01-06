@@ -1,7 +1,10 @@
 package cz.boosik.boosCooldown;
 
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -139,12 +142,9 @@ public class BoosCoolDownListener implements Listener {
 			}
 		} else {
 			event.setCancelled(true);
-			String msg = String.format(BoosConfigManager
-					.getCommandBlockedMessage());
-			boosChat.sendMessageToPlayer(player, msg);
 		}
 		if (!event.isCancelled()) {
-			BoosLimitManager.setUses(player, regexCommad, originalCommand);
+			BoosLimitManager.setUses(player, regexCommad);
 			if (BoosConfigManager.getCommandLogging()) {
 				BoosCoolDown.commandLogger(player.getName(), originalCommand);
 			}
@@ -165,6 +165,18 @@ public class BoosCoolDownListener implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	private void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		Player player = event.getPlayer();
+		if (event.getMessage().contains(":")) {
+			Pattern p = Pattern.compile("^/([a-zA-Z0-9_]+):");
+			Matcher m = p.matcher(event.getMessage());
+			if (m.find()) {
+				{
+					boosChat.sendMessageToPlayer(player, BoosConfigManager
+							.getInvalidCommandSyntaxMessage(player));
+					event.setCancelled(true);
+					return;
+				}
+			}
+		}
 		String originalCommand = event.getMessage().replace("\\", "\\\\");
 		originalCommand = originalCommand.replace("$", "S");
 		originalCommand = originalCommand.trim().replaceAll(" +", " ");
@@ -188,28 +200,13 @@ public class BoosCoolDownListener implements Listener {
 		int cooldownTime = 0;
 		int xpPrice = 0;
 		on = BoosCoolDown.isPluginOnForPlayer(player);
-		try {
-			if (aliases.contains(originalCommand)) {
-				originalCommand = BoosConfigManager.getAlias(originalCommand);
-				if (originalCommand.contains("$player")) {
-					originalCommand.replaceAll("$player", player.getName());
-				}
-				if (originalCommand.contains("$world")) {
-					originalCommand.replaceAll("$world", player.getWorld()
-							.getName());
-				}
-				event.setMessage(originalCommand);
-			}
-		} catch (Exception e) {
-			BoosCoolDown
-					.getLog()
-					.warning(
-							"Aliases section in config.yml is missing! Please delete your config.yml, restart server and set it again!");
-		}
+		originalCommand = BoosAliasManager.checkCommandAlias(originalCommand,
+				aliases, player);
+		event.setMessage(originalCommand);
 		if (on) {
 			for (String group : commands) {
 				String group2 = group.replace("*", ".+");
-				if (originalCommand.matches("(?i)"+group2)) {
+				if (originalCommand.matches("(?i)" + group2)) {
 					regexCommad = group;
 					if (BoosConfigManager.getWarmupEnabled()) {
 						warmupTime = BoosConfigManager.getWarmUp(regexCommad,
@@ -238,12 +235,15 @@ public class BoosCoolDownListener implements Listener {
 					break;
 				}
 			}
+			this.checkRestrictions(event, player, regexCommad, originalCommand,
+					warmupTime, cooldownTime, price, item, count, limit,
+					xpPrice);
 			try {
-				this.checkRestrictions(event, player, regexCommad, originalCommand,
-						warmupTime, cooldownTime, price, item, count, limit,
-						xpPrice);
 			} catch (Exception e) {
-				BoosCoolDown.getLog().warning("[boosCooldowns] Looks like you have deleted some important part of config file (like default group or aliases section. To get rid of this message, you have to restore it.");
+				BoosCoolDown
+						.getLog()
+						.warning(
+								"[boosCooldowns] Looks like you have deleted some important part of config file (like default group or aliases section. To get rid of this message, you have to restore it.");
 				return;
 			}
 		}

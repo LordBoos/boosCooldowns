@@ -232,8 +232,8 @@ public class BoosWarmUpManager {
 	static void startWarmUp(BoosCoolDown bCoolDown, Player player,
 			String regexCommand, String originalCommand, int warmUpSeconds) {
 		regexCommand = regexCommand.toLowerCase();
-		long warmUpMinutes = Math.round(warmUpSeconds / 60);
-		long warmUpHours = Math.round(warmUpMinutes / 60);
+		long warmUpMinutes = (long) Math.ceil(warmUpSeconds / 60.0);
+		long warmUpHours = (long) Math.ceil(warmUpMinutes / 60.0);
 		if (!isWarmUpProcess(player, regexCommand)) {
 			BoosWarmUpManager.removeWarmUpOK(player, regexCommand);
 			String msg = BoosConfigManager.getWarmUpMessage();

@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -116,7 +117,7 @@ public class BoosConfigManager {
 				.getKeys(false);
 		return aliases;
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -313,9 +314,11 @@ public class BoosConfigManager {
 	 */
 	static int getCoolDown(String regexCommand, Player player) {
 		int coolDown;
+		String coolDownString = "";
 		String group = getCommandGroup(player);
-		coolDown = conf.getInt("commands.groups." + group + "." + regexCommand
-				+ ".cooldown", 0);
+		coolDownString = conf.getString("commands.groups." + group + "."
+				+ regexCommand + ".cooldown", "0");
+		coolDown = parseTime(coolDownString);
 		return coolDown;
 	}
 
@@ -441,26 +444,18 @@ public class BoosConfigManager {
 		return conf.getBoolean("options.options.limits_enabled", true);
 	}
 
-	/**
-	 * @param pre
-	 * @return
-	 */
-	static String getLink(String pre) {
-		String link = null;
-		pre = pre.toLowerCase();
-		link = conf.getString("commands.links.link." + pre, link);
-		return link;
+	static Set<String> getAllPlayers() {
+		ConfigurationSection users = confusers.getConfigurationSection("users");
+		Set<String> list = users.getKeys(false);
+		return list;
 	}
 
-	/**
-	 * @param link
-	 * @return
-	 */
-	static List<String> getLinkList(String link) {
-		List<String> linkGroup;
-		link = link.toLowerCase();
-		linkGroup = conf.getStringList("commands.links.linkGroups." + link);
-		return linkGroup;
+	static List<String> getSharedCooldowns(String pre, Player player) {
+		List<String> sharedCooldowns;
+		String group = getCommandGroup(player);
+		sharedCooldowns = conf.getStringList("commands.groups." + group + "."
+				+ pre + ".shared_cooldown");
+		return sharedCooldowns;
 	}
 
 	/**
@@ -600,9 +595,11 @@ public class BoosConfigManager {
 	 */
 	static int getWarmUp(String regexCommand, Player player) {
 		int warmUp;
+		String warmUpString = "";
 		String group = getCommandGroup(player);
-		warmUp = conf.getInt("commands.groups." + group + "." + regexCommand
-				+ ".warmup", 0);
+		warmUpString = conf.getString("commands.groups." + group + "."
+				+ regexCommand + ".warmup", "0");
+		warmUp = parseTime(warmUpString);
 		return warmUp;
 	}
 
@@ -764,126 +761,9 @@ public class BoosConfigManager {
 		} else {
 			this.confFile = new File(boosCoolDown.getDataFolder(), "config.yml");
 			this.conf = new YamlConfiguration();
-			conf.options().copyDefaults(true);
-			conf.addDefault("options.options.warmups_enabled", true);
-			conf.addDefault("options.options.cooldowns_enabled", true);
-			conf.addDefault("options.options.prices_enabled", true);
-			conf.addDefault("options.options.item_cost_enabled", true);
-			conf.addDefault("options.options.xp_cost_enabled", true);
-			conf.addDefault("options.options.limits_enabled", true);
-			conf.addDefault(
-					"options.options.auto_save_enabled_CAN_CAUSE_BIG_LAGS",
-					false);
-			conf.addDefault("options.options.save_interval_in_minutes", 15);
-			conf.addDefault("options.options.cancel_warmup_on_damage", false);
-			conf.addDefault("options.options.cancel_warmup_on_move", false);
-			conf.addDefault("options.options.cancel_warmup_on_sneak", false);
-			conf.addDefault("options.options.cancel_warmup_on_sprint", false);
-			conf.addDefault("options.options.cancel_warmup_on_gamemode_change",
-					false);
-			conf.addDefault("options.options.block_interact_during_warmup",
-					false);
-			conf.addDefault("options.options.clear_on_restart", false);
-			conf.addDefault("options.options.clear_uses_on_death", false);
-			conf.addDefault("options.options.clear_cooldowns_on_death", false);
-			conf.addDefault("options.options.start_cooldowns_on_death", false);
-			conf.addDefault("options.options.command_logging", false);
-			conf.addDefault("options.options.command_signs", false);
-			conf.addDefault("options.units.seconds", "seconds");
-			conf.addDefault("options.units.minutes", "minutes");
-			conf.addDefault("options.units.hours", "hours");
-			conf.addDefault("options.messages.warmup_cancelled_by_damage",
-					"&6Warm-ups have been cancelled due to receiving damage.&f");
-			conf.addDefault("options.messages.warmup_cancelled_by_move",
-					"&6Warm-ups have been cancelled due to moving.&f");
-			conf.addDefault("options.messages.warmup_cancelled_by_sprint",
-					"&6Warm-ups have been cancelled due to sprinting.&f");
-			conf.addDefault("options.messages.warmup_cancelled_by_sneak",
-					"&6Warm-ups have been cancelled due to sneaking.&f");
-			conf.addDefault(
-					"options.messages.warmup_cancelled_by_gamemode_change",
-					"&6Warm-ups have been cancelled due to changing gamemode.&f");
-			conf.addDefault("options.messages.cooling_down",
-					"&6Wait&e &seconds& &unit&&6 before you can use command&e &command& &6again.&f");
-			conf.addDefault("options.messages.warming_up",
-					"&6Wait&e &seconds& &unit&&6 before command&e &command& &6has warmed up.&f");
-			conf.addDefault("options.messages.warmup_already_started",
-					"&6Warm-Up process for&e &command& &6has already started.&f");
-			conf.addDefault("options.messages.paid_error",
-					"&6An error has occured:&e %s");
-			conf.addDefault(
-					"options.messages.insufficient_funds",
-					"&6You have insufficient funds!&e &command& &6costs &e%s &6but you only have &e%s");
-			conf.addDefault("options.messages.paid_for_command",
-					"&6Price of&e &command& &6was&e %s &6and you now have&e %s");
-			conf.addDefault("options.messages.paid_items_for_command",
-					"&6Price of&e &command& &6was &e%s");
-			conf.addDefault("options.messages.paid_xp_for_command",
-					"&6Price of&e &command& &6was &e%s levels");
-			conf.addDefault("options.messages.insufficient_items",
-					"&6You have not enough items!&e &command& &6needs &e%s");
-			conf.addDefault("options.messages.insufficient_xp",
-					"&6You have not enough XP!&e &command& &6needs &e%s");
-			conf.addDefault("options.messages.limit_achieved",
-					"&6You cannot use this command anymore!&f");
-			conf.addDefault(
-					"options.messages.limit_list",
-					"&6Limit for command &e&command&&6 is &e&limit&&6. You can still use it &e&times&&6 times.&f");
-			conf.addDefault("options.messages.interact_blocked_during_warmup",
-					"&6You can't do this when command is warming-up!&f");
-			conf.addDefault("options.messages.cannot_create_sign",
-					"&6You are not allowed to create this kind of signs!&f");
-			conf.addDefault("options.messages.cannot_use_sign",
-					"&6You are not allowed to use this sign!&f");
 		}
 		if (confFile.exists()) {
 			load();
-		}
-		try {
-			conf.addDefault(
-					"commands.groups.default./command parameter.cooldown", 2);
-			conf.addDefault(
-					"commands.groups.default./commandwithparameters *.cooldown",
-					5);
-			conf.addDefault("commands.groups.default./anothercommand.cooldown",
-					2);
-			conf.addDefault(
-					"commands.groups.default./yetanothercommand.warmup", 5);
-			conf.addDefault("commands.groups.default./yetanothercommand.price",
-					10.0);
-			conf.addDefault("commands.groups.default./yetanothercommand.limit",
-					5);
-			conf.addDefault(
-					"commands.groups.default./yetanothercommand.potion",
-					"WEAKNESS,3");
-			conf.addDefault("commands.groups.default./test.message",
-					"You just used /test!");
-			conf.addDefault("commands.groups.default./test.itemcost",
-					"STONE,10");
-			conf.addDefault("commands.groups.default./test.xpcost", 6);
-			conf.addDefault("commands.groups.default.*.warmup", 1);
-			conf.addDefault("commands.groups.default.*.cooldown", 1);
-			conf.addDefault("commands.groups.default.*.price", 0.0);
-			conf.addDefault("commands.groups.default.*.limit", -1);
-			conf.addDefault("commands.groups.vip./command *.warmup", 5);
-			conf.addDefault("commands.links.link./lol", "default");
-			conf.addDefault("commands.links.link./example", "default");
-			conf.addDefault("commands.links.link./command", "default");
-			conf.addDefault("commands.links.link./yourCommandHere",
-					"yourNameHere");
-			String[] def = { "/lol", "/example" };
-			conf.addDefault("commands.links.linkGroups.default",
-					Arrays.asList(def));
-			String[] def2 = { "/yourCommandHere", "/someCommand",
-					"/otherCommand" };
-			conf.addDefault("commands.links.linkGroups.yourNameHere",
-					Arrays.asList(def2));
-			conf.addDefault("commands.aliases./newcommand", "/originalcommand");
-			conf.addDefault("commands.aliases./new spawn command",
-					"/original spawn command");
-			conf.save(confFile);
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 		confusersFile = new File(boosCoolDown.getDataFolder(), "users.yml");
 		confusers = new YamlConfiguration();
@@ -905,26 +785,26 @@ public class BoosConfigManager {
 				"options.options.auto_save_enabled_CAN_CAUSE_BIG_LAGS", false);
 	}
 
-	public static String getPaidItemsForCommandMessage() {
+	static String getPaidItemsForCommandMessage() {
 		return conf.getString("options.messages.paid_items_for_command",
 				"&6Price of&e &command& &6was &e%s");
 	}
 
-	public static String getInsufficientItemsMessage() {
+	static String getInsufficientItemsMessage() {
 		return conf.getString("options.messages.insufficient_items",
 				"&6You have not enough items!&e &command& &6needs &e%s");
 	}
 
-	public static boolean getItemCostEnabled() {
+	static boolean getItemCostEnabled() {
 		return conf.getBoolean("options.options.item_cost_enabled", true);
 	}
 
-	public static String getPaidXPForCommandMessage() {
+	static String getPaidXPForCommandMessage() {
 		return conf.getString("options.messages.paid_xp_for_command",
 				"&6Price of&e &command& &6was &e%s");
 	}
 
-	public static int getXpPrice(String regexCommand, Player player) {
+	static int getXpPrice(String regexCommand, Player player) {
 		int price;
 		String group = getCommandGroup(player);
 		price = conf.getInt("commands.groups." + group + "." + regexCommand
@@ -932,12 +812,85 @@ public class BoosConfigManager {
 		return price;
 	}
 
-	public static boolean getXpPriceEnabled() {
+	static boolean getXpPriceEnabled() {
 		return conf.getBoolean("options.options.xp_cost_enabled", true);
 	}
 
-	public static String getInsufficientXpMessage() {
+	static String getInsufficientXpMessage() {
 		return conf.getString("options.messages.insufficient_xp",
 				"&6You have not enough XP!&e &command& &6needs &e%s");
+	}
+
+	static String getInvalidCommandSyntaxMessage(Player player) {
+		return conf
+				.getString("options.messages.invalid_command_syntax",
+						"&6You are not allowed to use command syntax /<pluginname>:<command>!");
+	}
+
+	static long getLimitResetDelay(String regexCommand, Player player) {
+		long limitreset;
+		String limitResetString = "";
+		String group = getCommandGroup(player);
+		limitResetString = conf.getString("commands.groups." + group + "."
+				+ regexCommand + ".limit_reset_delay", "0");
+		limitreset = parseTime(limitResetString);
+		return limitreset;
+	}
+
+	static String getLimitResetMessage() {
+		return conf
+				.getString(
+						"options.messages.limit_reset",
+						"&6Wait&e &seconds& &unit&&6 before your limit for command&e &command& &6is reset.&f");
+	}
+
+	static void clearSomething2(String co, String uuid, int hashedCommand) {
+		confusers.set("users." + uuid + "." + co + "." + hashedCommand, 0);
+	}
+
+	static long getLimitResetDelayGlobal(String command) {
+		long delay = 0;
+		String delayString = "";
+		delayString = conf.getString(
+				"global." + command + ".limit_reset_delay", "0");
+		delay = parseTime(delayString);
+		return delay;
+	}
+
+	static Set<String> getLimitResetCommandsGlobal() {
+		return conf.getConfigurationSection("global").getKeys(false);
+	}
+
+	static int parseTime(String time) {
+		String[] timeString = time.split(" ", 2);
+		if (timeString[0].equals("cancel")){
+			return -65535;
+		}
+		int timeNumber = Integer.valueOf(timeString[0]);
+		int timeMultiplier = 1;
+		if (timeString.length > 1) {
+			String timeUnit = timeString[1];
+			if (timeUnit.equals("minute") || timeUnit.equals("minutes")) {
+				timeMultiplier = 60;
+			} else if (timeUnit.equals("hour") || timeUnit.equals("hours")) {
+				timeMultiplier = 60 * 60;
+			} else if (timeUnit.equals("day") || timeUnit.equals("days")) {
+				timeMultiplier = 60 * 60 * 24;
+			} else if (timeUnit.equals("week") || timeUnit.equals("weeks")) {
+				timeMultiplier = 60 * 60 * 24 * 7;
+			} else if (timeUnit.equals("month") || timeUnit.equals("months")) {
+				timeMultiplier = 60 * 60 * 24 * 30;
+			} else {
+				timeMultiplier = 1;
+			}
+		}
+		return timeNumber * timeMultiplier;
+	}
+
+	public static String getLimitResetNowMessage() {
+		return conf
+				.getString(
+						"options.messages.limit_reset_now",
+						"&6Reseting limits for command&e &command& &6now.&f");
 	}
 }

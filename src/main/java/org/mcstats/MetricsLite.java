@@ -313,7 +313,10 @@ public class MetricsLite {
 		try {
 			playersOnline = Bukkit.getServer().getOnlinePlayers().size();
 		} catch (Exception e) {
-			BoosCoolDown.getLog().warning("[boosCooldowns] This error was caused because you are using old CraftBukkit version. Please update to 1.7.10 (1.7.9-R0.3).");
+			BoosCoolDown
+					.getLog()
+					.warning(
+							"[boosCooldowns] This error was caused because you are using old CraftBukkit version. Please update to 1.7.10 (1.7.9-R0.3).");
 		}
 
 		// END server software specific section -- all code below does not use
