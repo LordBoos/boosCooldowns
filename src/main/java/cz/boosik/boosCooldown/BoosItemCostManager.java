@@ -104,6 +104,9 @@ public class BoosItemCostManager {
 		if (item.equals("")) {
 			return true;
 		}
+		if (count <= 0) {
+			return true;
+		}
 		Material material = Material.getMaterial(item);
 		Inventory inventory = player.getInventory();
 		if (inventory.contains(material, count)) {

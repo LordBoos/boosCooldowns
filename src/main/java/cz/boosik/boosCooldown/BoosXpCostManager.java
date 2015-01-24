@@ -47,6 +47,9 @@ public class BoosXpCostManager {
 	}
 
 	public static boolean has(Player player, int xpPrice) {
+		if (xpPrice <= 0){
+			return true;
+		}
 		int xp = player.getLevel();
 		if (xp >= xpPrice) {
 			return true;

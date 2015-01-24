@@ -57,8 +57,11 @@ public class BoosCoolDownListener implements Listener {
 			Player player, String regexCommad, String originalCommand,
 			int warmupTime, int cooldownTime, double price, String item,
 			int count, int limit, int xpPrice) {
-		boolean blocked = BoosLimitManager.blocked(player, regexCommad,
-				originalCommand, limit);
+		boolean blocked = false;
+		if (limit != -1) {
+			blocked = BoosLimitManager.blocked(player, regexCommad,
+					originalCommand, limit);
+		}
 		if (!blocked) {
 			if (warmupTime > 0) {
 				if (!player.hasPermission("booscooldowns.nowarmup")
@@ -180,15 +183,7 @@ public class BoosCoolDownListener implements Listener {
 		originalCommand = originalCommand.replace("$", "S");
 		originalCommand = originalCommand.trim().replaceAll(" +", " ");
 		String regexCommad = "";
-		Set<String> aliases = null;
-		try {
-			aliases = BoosConfigManager.getAliases();
-		} catch (Exception e1) {
-			BoosCoolDown
-					.getLog()
-					.warning(
-							"Aliases section in config.yml is missing! Please delete your config.yml, restart server and set it again!");
-		}
+		Set<String> aliases = BoosConfigManager.getAliases();
 		Set<String> commands = BoosConfigManager.getCommands(player);
 		boolean on = true;
 		String item = "";
@@ -199,10 +194,12 @@ public class BoosCoolDownListener implements Listener {
 		int cooldownTime = 0;
 		int xpPrice = 0;
 		on = BoosCoolDown.isPluginOnForPlayer(player);
-		originalCommand = BoosAliasManager.checkCommandAlias(originalCommand,
-				aliases, player);
-		event.setMessage(originalCommand);
-		if (on) {
+		if (aliases != null) {
+			originalCommand = BoosAliasManager.checkCommandAlias(
+					originalCommand, aliases, player);
+			event.setMessage(originalCommand);
+		}
+		if (on && commands != null) {
 			for (String group : commands) {
 				String group2 = group.replace("*", ".+");
 				if (originalCommand.matches("(?i)" + group2)) {
@@ -237,14 +234,6 @@ public class BoosCoolDownListener implements Listener {
 			this.checkRestrictions(event, player, regexCommad, originalCommand,
 					warmupTime, cooldownTime, price, item, count, limit,
 					xpPrice);
-			try {
-			} catch (Exception e) {
-				BoosCoolDown
-						.getLog()
-						.warning(
-								"[boosCooldowns] Looks like you have deleted some important part of config file (like default group or aliases section. To get rid of this message, you have to restore it.");
-				return;
-			}
 		}
 	}
 

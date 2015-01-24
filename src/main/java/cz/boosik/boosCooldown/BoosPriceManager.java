@@ -109,6 +109,8 @@ public class BoosPriceManager {
 	public static boolean has(Player player, double price) {
 		if (economy == null) {
 			return true;
+		} else if (price <= 0){
+			return true;
 		} else {
 			return economy.has(player, price);
 		}

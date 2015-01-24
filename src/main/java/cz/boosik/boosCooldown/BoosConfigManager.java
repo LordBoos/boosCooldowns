@@ -111,8 +111,13 @@ public class BoosConfigManager {
 	 * @return
 	 */
 	static Set<String> getAliases() {
-		Set<String> aliases = conf.getConfigurationSection("commands.aliases")
-				.getKeys(false);
+		Set<String> aliases = null;
+		ConfigurationSection aliasesSection = conf
+				.getConfigurationSection("commands.aliases");
+		if (aliasesSection != null) {
+			aliases = conf.getConfigurationSection("commands.aliases").getKeys(
+					false);
+		}
 		return aliases;
 	}
 
@@ -248,9 +253,12 @@ public class BoosConfigManager {
 	 */
 	static String getCommandGroup(Player player) {
 		String cmdGroup = "default";
-		for (String group : getCommandGroups()) {
-			if (player.hasPermission("booscooldowns." + group)) {
-				cmdGroup = group;
+		Set<String> groups = getCommandGroups();
+		if (groups != null) {
+			for (String group : groups) {
+				if (player.hasPermission("booscooldowns." + group)) {
+					cmdGroup = group;
+				}
 			}
 		}
 		return cmdGroup;
@@ -260,8 +268,12 @@ public class BoosConfigManager {
 	 * @return
 	 */
 	static Set<String> getCommandGroups() {
-		Set<String> groups = conf.getConfigurationSection("commands.groups")
-				.getKeys(false);
+		ConfigurationSection groupsSection = conf
+				.getConfigurationSection("commands.groups");
+		Set<String> groups = null;
+		if (groupsSection != null) {
+			groups = groupsSection.getKeys(false);
+		}
 		return groups;
 	}
 
@@ -278,8 +290,12 @@ public class BoosConfigManager {
 	 */
 	static Set<String> getCommands(Player player) {
 		String group = getCommandGroup(player);
-		Set<String> commands = conf.getConfigurationSection(
-				"commands.groups." + group).getKeys(false);
+		Set<String> commands = null;
+		ConfigurationSection commandsSection = conf
+				.getConfigurationSection("commands.groups." + group);
+		if (commandsSection != null) {
+			commands = commandsSection.getKeys(false);
+		}
 		return commands;
 	}
 
@@ -861,7 +877,7 @@ public class BoosConfigManager {
 
 	static int parseTime(String time) {
 		String[] timeString = time.split(" ", 2);
-		if (timeString[0].equals("cancel")){
+		if (timeString[0].equals("cancel")) {
 			return -65535;
 		}
 		int timeNumber = Integer.valueOf(timeString[0]);
@@ -886,9 +902,7 @@ public class BoosConfigManager {
 	}
 
 	public static String getLimitResetNowMessage() {
-		return conf
-				.getString(
-						"options.messages.limit_reset_now",
-						"&6Reseting limits for command&e &command& &6now.&f");
+		return conf.getString("options.messages.limit_reset_now",
+				"&6Reseting limits for command&e &command& &6now.&f");
 	}
 }
