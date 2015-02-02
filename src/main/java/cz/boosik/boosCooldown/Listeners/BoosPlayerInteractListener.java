@@ -1,84 +1,60 @@
 package cz.boosik.boosCooldown.Listeners;
 
+import cz.boosik.boosCooldown.BoosConfigManager;
+import cz.boosik.boosCooldown.BoosWarmUpManager;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
-
 import util.boosChat;
-import cz.boosik.boosCooldown.BoosConfigManager;
-import cz.boosik.boosCooldown.BoosWarmUpManager;
 
-/**
- * PosluchaË naslouchajÌcÌ ud·losti, kter· se spouötÌ v okamûiku kdy hr·Ë
- * prov·dÌ interakce s hernÌmi bloky. Pokud na p¯Ìkazech hr·Ëe je aktivnÌ
- * ËasovaË warmup a blok se kter˝m hr·Ë interaguje je kontejner, pak tato t¯Ìda
- * potÈ ukonËuje tuto ud·lost a blokuje hr·Ëi p¯Ìstup do kontejner˘. Pokud hr·Ë
- * disponuje opr·vnÏnÌm Ñbooscooldowns.dontblock.interactì, jeho p¯Ìstup do
- * kontejner˘ nenÌ blokov·n.
- * 
- * @author Jakub Kol·¯
- * 
- */
 public class BoosPlayerInteractListener implements Listener {
-	/**
-	 * Metoda zjiöùuje jestli je entita kter· spustila tuto ud·lost hr·Ë. Pokud
-	 * je entita hr·Ë, hr·Ë nenÌ null a nedisponuje opr·vnÏnÌm
-	 * booscooldowns.dontblock.interact a pokud tento hr·Ë disponuje aktivnÌmi
-	 * warmup ËasovaËi a blok se kter˝m interaguje je kontejner, pak je hr·Ëi
-	 * odesl·na zpr·va, kter· ho informuje o tom, ûe do kontejneru nenÌ moûnÈ
-	 * p¯istupovat a tato ud·lost je n·slednÏ ukonËena. To zablokuje hr·Ëi
-	 * p¯Ìstup do kontejneru.
-	 * 
-	 * @param event
-	 *            ud·lost PlayerInteractEvent
-	 */
-	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-	private void onPlayerInteract(PlayerInteractEvent event) {
-		Entity entity = event.getPlayer();
-		if (entity != null && entity instanceof Player) {
-			Player player = (Player) entity;
-			if (player != null
-					&& !player
-							.hasPermission("booscooldowns.dontblock.interact")) {
-				if (BoosWarmUpManager.hasWarmUps(player)) {
-					if (event.getClickedBlock().getType().name()
-							.equals("CHEST")
-							|| event.getClickedBlock().getType().name()
-									.equals("FURNACE")
-							|| event.getClickedBlock().getType().name()
-									.equals("BURNING_FURNACE")
-							|| event.getClickedBlock().getType().name()
-									.equals("WORKBENCH")
-							|| event.getClickedBlock().getType().name()
-									.equals("DISPENSER")
-							|| event.getClickedBlock().getType().name()
-									.equals("JUKEBOX")
-							|| event.getClickedBlock().getType().name()
-									.equals("LOCKED_CHEST")
-							|| event.getClickedBlock().getType().name()
-									.equals("ENCHANTMENT_TABLE")
-							|| event.getClickedBlock().getType().name()
-									.equals("BREWING_STAND")
-							|| event.getClickedBlock().getType().name()
-									.equals("CAULDRON")
-							|| event.getClickedBlock().getType().name()
-									.equals("STORAGE_MINECART")
-							|| event.getClickedBlock().getType().name()
-									.equals("TRAPPED_CHEST")
-							|| event.getClickedBlock().getType().name()
-									.equals("DROPPER")
-							|| event.getClickedBlock().getType().name()
-									.equals("HOPPER")) {
-						event.setCancelled(true);
-						boosChat.sendMessageToPlayer(player,
-								BoosConfigManager.getInteractBlockedMessage());
-					}
-				}
 
-			}
-		}
-	}
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    private void onPlayerInteract(PlayerInteractEvent event) {
+        Entity entity = event.getPlayer();
+        if (entity != null) {
+            Player player = (Player) entity;
+            if (!player
+            .hasPermission("booscooldowns.dontblock.interact")) {
+                if (BoosWarmUpManager.hasWarmUps(player)) {
+                    if (event.getClickedBlock().getType().name()
+                            .equals("CHEST")
+                            || event.getClickedBlock().getType().name()
+                            .equals("FURNACE")
+                            || event.getClickedBlock().getType().name()
+                            .equals("BURNING_FURNACE")
+                            || event.getClickedBlock().getType().name()
+                            .equals("WORKBENCH")
+                            || event.getClickedBlock().getType().name()
+                            .equals("DISPENSER")
+                            || event.getClickedBlock().getType().name()
+                            .equals("JUKEBOX")
+                            || event.getClickedBlock().getType().name()
+                            .equals("LOCKED_CHEST")
+                            || event.getClickedBlock().getType().name()
+                            .equals("ENCHANTMENT_TABLE")
+                            || event.getClickedBlock().getType().name()
+                            .equals("BREWING_STAND")
+                            || event.getClickedBlock().getType().name()
+                            .equals("CAULDRON")
+                            || event.getClickedBlock().getType().name()
+                            .equals("STORAGE_MINECART")
+                            || event.getClickedBlock().getType().name()
+                            .equals("TRAPPED_CHEST")
+                            || event.getClickedBlock().getType().name()
+                            .equals("DROPPER")
+                            || event.getClickedBlock().getType().name()
+                            .equals("HOPPER")) {
+                        event.setCancelled(true);
+                        boosChat.sendMessageToPlayer(player,
+                                BoosConfigManager.getInteractBlockedMessage());
+                    }
+                }
+
+            }
+        }
+    }
 }

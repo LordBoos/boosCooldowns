@@ -52,6 +52,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.zip.GZIPOutputStream;
 
+@SuppressWarnings("ALL")
 public class MetricsLite {
 
 	/**
@@ -206,7 +207,7 @@ public class MetricsLite {
 	 *
 	 * @return true if metrics should be opted out of it
 	 */
-	public boolean isOptOut() {
+	boolean isOptOut() {
 		synchronized (optOutLock) {
 			try {
 				// Reload the metrics file
@@ -283,7 +284,7 @@ public class MetricsLite {
 	 *
 	 * @return the File object for the config file
 	 */
-	public File getConfigFile() {
+	File getConfigFile() {
 		// I believe the easiest way to get the base folder (e.g craftbukkit set
 		// via -P) for plugins to use
 		// is to abuse the plugin object we already have
@@ -428,7 +429,7 @@ public class MetricsLite {
 	 * @param input
 	 * @return
 	 */
-	public static byte[] gzip(String input) {
+	private static byte[] gzip(String input) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		GZIPOutputStream gzos = null;
 

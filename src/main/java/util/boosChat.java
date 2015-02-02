@@ -8,25 +8,28 @@ import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+@SuppressWarnings("ALL")
 public class boosChat {
 
-	static Logger log = Logger.getLogger("Minecraft");
-	static List<String> Colors = new LinkedList<String>();
-	static Server server;
+	private static final Logger log = Logger.getLogger("Minecraft");
+	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+	private static final List<String> Colors = new LinkedList<>();
+	private static Server server;
 
+	@SuppressWarnings("UnusedDeclaration")
 	public static void broadcastMessage(String message) {
 		message = boosChat.replaceColorCodes(message);
 		log.info("[bColoredChat] " + message);
 		server.broadcastMessage(message);
 	}
 
-	static String replaceColorCodes(String line) {
+	private static String replaceColorCodes(String line) {
 		line = replaceTags(line);
 		line = line.replaceAll("(&([a-f0-9]))", "\u00A7$2");
 		return line;
 	}
 
-	static String replaceTags(String line) {
+	private static String replaceTags(String line) {
 		line = line.replaceAll("&black&", "&0");
 		line = line.replaceAll("&darkblue&", "&1");
 		line = line.replaceAll("&darkgreen&", "&2");
@@ -60,7 +63,7 @@ public class boosChat {
 		player.sendMessage(message);
 	}
 
-	public static void sendMessageToServer(String message) {
+	private static void sendMessageToServer(String message) {
 		message = boosChat.replaceColorCodes(message);
 		log.info(message);
 	}

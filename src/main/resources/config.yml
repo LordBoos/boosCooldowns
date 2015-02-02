@@ -57,6 +57,14 @@ options:
 commands:
   groups:
     default:
+      /day_command:
+        limit: 5
+        shared_limit:
+        - /night_command
+      /night_command:
+        limit: 5
+        shared_limit:
+        - /day_command
       /command parameter:
         cooldown: 2 hours
       /commandwithparameters *:

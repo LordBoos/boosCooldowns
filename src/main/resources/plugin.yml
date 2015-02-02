@@ -1,7 +1,7 @@
 name: boosCooldowns
 main: cz.boosik.boosCooldown.BoosCoolDown
-version: 3.9.5c
-authors: [LordBoos (ingame name boosik)]
+version: 3.9.6a
+authors: [LordBoos (boosik)]
 softdepend: [Vault]
 description: >
              Shortcuts
