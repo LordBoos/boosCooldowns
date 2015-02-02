@@ -1,7 +1,7 @@
 package cz.boosik.boosCooldown.Listeners;
 
-import cz.boosik.boosCooldown.BoosConfigManager;
-import cz.boosik.boosCooldown.BoosWarmUpManager;
+import cz.boosik.boosCooldown.Managers.BoosConfigManager;
+import cz.boosik.boosCooldown.Managers.BoosWarmUpManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,7 +22,6 @@ public class BoosPlayerMoveListener implements Listener {
             if (player != null
                     && !player.hasPermission("booscooldowns.nocancel.move")) {
                 if (BoosWarmUpManager.hasWarmUps(player) && (event.getFrom().getX() != event.getTo().getX() || event.getFrom().getZ() != event.getTo().getZ() || event.getFrom().getY() != event.getTo().getY())) {
-                    BoosWarmUpManager.clearLocWorld(player);
                     boosChat.sendMessageToPlayer(player,
                             BoosConfigManager.getWarmUpCancelledByMoveMessage());
                     BoosWarmUpManager.cancelWarmUps(player);

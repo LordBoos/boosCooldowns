@@ -1,10 +1,10 @@
-package cz.boosik.boosCooldown;
+package cz.boosik.boosCooldown.Managers;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import util.boosChat;
 
-class BoosXpCostManager {
+public class BoosXpCostManager {
 
     private static boolean payXPForCommand(Player player,
                                            String originalCommand, int xpPrice) {
@@ -25,9 +25,9 @@ class BoosXpCostManager {
         }
     }
 
-    static void payXPForCommand(PlayerCommandPreprocessEvent event,
-                                Player player, String regexCommand, String originalCommand,
-                                int xpPrice) {
+    public static void payXPForCommand(PlayerCommandPreprocessEvent event,
+                                       Player player, String regexCommand, String originalCommand,
+                                       int xpPrice) {
         if (xpPrice > 0) {
             if (!player.hasPermission("booscooldowns.noxpcost")
                     && !player.hasPermission("booscooldowns.noxpcost."

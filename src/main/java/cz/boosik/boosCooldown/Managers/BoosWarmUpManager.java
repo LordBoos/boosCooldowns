@@ -1,6 +1,7 @@
-package cz.boosik.boosCooldown;
+package cz.boosik.boosCooldown.Managers;
 
-import org.bukkit.Location;
+import cz.boosik.boosCooldown.BoosCoolDown;
+import cz.boosik.boosCooldown.Runnables.BoosWarmUpTimer;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import util.boosChat;
@@ -13,8 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class BoosWarmUpManager {
 
     private static final ConcurrentHashMap<String, BoosWarmUpTimer> playercommands = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<Player, Location> playerloc = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<Player, String> playerworld = new ConcurrentHashMap<>();
 
     private static void applyPotionEffect(Player player, String regexCommand,
                                           int warmUpSeconds) {
@@ -44,11 +43,6 @@ public class BoosWarmUpManager {
         }
     }
 
-    public static void clearLocWorld(Player player) {
-        BoosWarmUpManager.playerloc.remove(player);
-        BoosWarmUpManager.playerworld.remove(player);
-    }
-
     public static boolean hasWarmUps(Player player) {
         Map<String, BoosWarmUpTimer> playercommands2 = playercommands;
         for (String key : playercommands2.keySet()) {
@@ -59,7 +53,7 @@ public class BoosWarmUpManager {
         return false;
     }
 
-    static boolean checkWarmUpOK(Player player, String regexCommand) {
+    public static boolean checkWarmUpOK(Player player, String regexCommand) {
         int pre2 = regexCommand.toLowerCase().hashCode();
         int ok = 0;
         ok = BoosConfigManager.getConfusers().getInt(
@@ -67,7 +61,7 @@ public class BoosWarmUpManager {
         return ok == 1;
     }
 
-    static boolean isWarmUpProcess(Player player, String regexCommand) {
+    public static boolean isWarmUpProcess(Player player, String regexCommand) {
         regexCommand = regexCommand.toLowerCase();
         return playercommands.containsKey(player.getUniqueId() + "@"
                 + regexCommand);
@@ -82,30 +76,30 @@ public class BoosWarmUpManager {
         }
     }
 
-    static void removeWarmUp(Player player, String regexCommand) {
+    public static void removeWarmUp(Player player, String regexCommand) {
         int pre2 = regexCommand.toLowerCase().hashCode();
         BoosConfigManager.getConfusers().set(
                 "users." + player.getUniqueId() + ".warmup." + pre2, null);
     }
 
-    static void removeWarmUpOK(Player player, String regexCommand) {
+    public static void removeWarmUpOK(Player player, String regexCommand) {
         int pre2 = regexCommand.toLowerCase().hashCode();
         BoosConfigManager.getConfusers().set(
                 "users." + player.getUniqueId() + ".warmup." + pre2, null);
     }
 
-    static void removeWarmUpProcess(String tag) {
+    public static void removeWarmUpProcess(String tag) {
         BoosWarmUpManager.playercommands.remove(tag);
     }
 
-    static void setWarmUpOK(Player player, String regexCommand) {
+    public static void setWarmUpOK(Player player, String regexCommand) {
         int pre2 = regexCommand.toLowerCase().hashCode();
         BoosConfigManager.getConfusers().set(
                 "users." + player.getUniqueId() + ".warmup." + pre2, 1);
     }
 
-    static void startWarmUp(BoosCoolDown bCoolDown, Player player,
-                            String regexCommand, String originalCommand, int warmUpSeconds) {
+    public static void startWarmUp(BoosCoolDown bCoolDown, Player player,
+                                   String regexCommand, String originalCommand, int warmUpSeconds) {
         regexCommand = regexCommand.toLowerCase();
         long warmUpMinutes = (long) Math.ceil(warmUpSeconds / 60.0);
         long warmUpHours = (long) Math.ceil(warmUpMinutes / 60.0);
@@ -139,13 +133,5 @@ public class BoosWarmUpManager {
             msg = msg.replaceAll("&command&", originalCommand);
             boosChat.sendMessageToPlayer(player, msg);
         }
-    }
-
-    public static ConcurrentHashMap<Player, String> getPlayerworld() {
-        return playerworld;
-    }
-
-    public static ConcurrentHashMap<Player, Location> getPlayerloc() {
-        return playerloc;
     }
 }

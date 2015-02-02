@@ -1,5 +1,6 @@
 package cz.boosik.boosCooldown;
 
+import cz.boosik.boosCooldown.Managers.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

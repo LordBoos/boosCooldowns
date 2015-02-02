@@ -1,4 +1,4 @@
-package cz.boosik.boosCooldown;
+package cz.boosik.boosCooldown.Managers;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -7,7 +7,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import util.boosChat;
 
-class BoosItemCostManager {
+public class BoosItemCostManager {
 
     private static boolean payItemForCommand(Player player,
                                              String originalCommand, String item, int count) {
@@ -36,9 +36,9 @@ class BoosItemCostManager {
         }
     }
 
-    static void payItemForCommand(PlayerCommandPreprocessEvent event,
-                                  Player player, String regexCommand, String originalCommand,
-                                  String item, int count) {
+    public static void payItemForCommand(PlayerCommandPreprocessEvent event,
+                                         Player player, String regexCommand, String originalCommand,
+                                         String item, int count) {
         if (count > 0) {
             if (!player.hasPermission("booscooldowns.noitemcost")
                     && !player.hasPermission("booscooldowns.noitemcost."

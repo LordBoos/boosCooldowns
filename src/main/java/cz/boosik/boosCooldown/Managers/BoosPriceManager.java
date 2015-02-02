@@ -1,12 +1,13 @@
-package cz.boosik.boosCooldown;
+package cz.boosik.boosCooldown.Managers;
 
+import cz.boosik.boosCooldown.BoosCoolDown;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import util.boosChat;
 
-class BoosPriceManager {
+public class BoosPriceManager {
     private static final Economy economy = BoosCoolDown.getEconomy();
 
     private static boolean payForCommand(Player player,
@@ -30,9 +31,9 @@ class BoosPriceManager {
         }
     }
 
-    static void payForCommand(PlayerCommandPreprocessEvent event,
-                              Player player, String regexCommand, String originalCommand,
-                              double price) {
+    public static void payForCommand(PlayerCommandPreprocessEvent event,
+                                     Player player, String regexCommand, String originalCommand,
+                                     double price) {
         if (price > 0) {
             if (!player.hasPermission("booscooldowns.noprice")
                     && !player.hasPermission("booscooldowns.noprice."

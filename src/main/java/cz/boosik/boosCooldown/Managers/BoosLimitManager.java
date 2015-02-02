@@ -1,5 +1,6 @@
-package cz.boosik.boosCooldown;
+package cz.boosik.boosCooldown.Managers;
 
+import cz.boosik.boosCooldown.BoosCoolDown;
 import org.bukkit.entity.Player;
 import util.boosChat;
 
@@ -9,10 +10,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 
-class BoosLimitManager {
+public class BoosLimitManager {
 
-    static boolean blocked(Player player, String regexCommand,
-                           String originalCommand, int limit) {
+    public static boolean blocked(Player player, String regexCommand,
+                                  String originalCommand, int limit) {
         Date time = getTime(player, regexCommand);
         Date confTime = getTime(regexCommand);
         Calendar calcurrTime = Calendar.getInstance();
@@ -121,7 +122,7 @@ class BoosLimitManager {
         return uses;
     }
 
-    static void setUses(Player player, String regexCommand) {
+    public static void setUses(Player player, String regexCommand) {
         if (BoosConfigManager.getLimitsEnabled()) {
             if (BoosConfigManager.getCommands(player).contains(regexCommand)) {
                 int regexCommand2 = regexCommand.toLowerCase().hashCode();
@@ -143,7 +144,7 @@ class BoosLimitManager {
         }
     }
 
-    static void getLimitListMessages(Player send, String comm, int lim) {
+    public static void getLimitListMessages(Player send, String comm, int lim) {
         if (lim != -1) {
             int uses = getUses(send, comm);
             String message = BoosConfigManager.getLimitListMessage();
@@ -232,7 +233,7 @@ class BoosLimitManager {
         return secondsBetween;
     }
 
-    static void clearAllLimits(int hashedCommand) {
+    public static void clearAllLimits(int hashedCommand) {
         Set<String> players = BoosConfigManager.getAllPlayers();
         for (String player : players) {
             BoosConfigManager.clearSomething2("uses", player, hashedCommand);
@@ -241,7 +242,7 @@ class BoosLimitManager {
         BoosConfigManager.loadConfusers();
     }
 
-    static void setGlobalLimitResetDate() {
+    public static void setGlobalLimitResetDate() {
         for (String command : BoosConfigManager.getLimitResetCommandsGlobal()) {
             if (BoosConfigManager.getLimitResetDelayGlobal(command) == -65535) {
                 BoosConfigManager.getConfusers().set("global." + command, null);
@@ -253,7 +254,7 @@ class BoosLimitManager {
         BoosConfigManager.loadConfusers();
     }
 
-    static void setGlobalLimitResetDate(String command) {
+    public static void setGlobalLimitResetDate(String command) {
         setTime(command);
         BoosConfigManager.saveConfusers();
         BoosConfigManager.loadConfusers();

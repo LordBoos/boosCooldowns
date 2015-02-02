@@ -1,4 +1,4 @@
-package cz.boosik.boosCooldown;
+package cz.boosik.boosCooldown.Managers;
 
 import org.bukkit.entity.Player;
 import util.boosChat;
@@ -78,8 +78,8 @@ public class BoosCoolDownManager {
         }
     }
 
-    static boolean coolDown(Player player, String regexCommand,
-                            String originalCommand, int time) {
+    public static boolean coolDown(Player player, String regexCommand,
+                                   String originalCommand, int time) {
         regexCommand = regexCommand.toLowerCase();
         return time > 0 && !player.hasPermission("booscooldowns.nocooldown") && !player.hasPermission("booscooldowns.nocooldown." + originalCommand) && cd(player, regexCommand, originalCommand, time);
     }
@@ -119,8 +119,8 @@ public class BoosCoolDownManager {
         return null;
     }
 
-    static boolean checkCoolDownOK(Player player, String regexCommand,
-                                   String originalCommand, int time) {
+    public static boolean checkCoolDownOK(Player player, String regexCommand,
+                                          String originalCommand, int time) {
         regexCommand = regexCommand.toLowerCase();
         if (time > 0) {
             Date lastTime = getTime(player, regexCommand);

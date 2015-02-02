@@ -1,6 +1,6 @@
 package cz.boosik.boosCooldown.Listeners;
 
-import cz.boosik.boosCooldown.BoosConfigManager;
+import cz.boosik.boosCooldown.Managers.BoosConfigManager;
 import cz.boosik.boosCooldown.BoosCoolDown;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;

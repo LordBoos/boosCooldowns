@@ -1,6 +1,9 @@
 package cz.boosik.boosCooldown;
 
 import cz.boosik.boosCooldown.Listeners.*;
+import cz.boosik.boosCooldown.Managers.BoosConfigManager;
+import cz.boosik.boosCooldown.Managers.BoosLimitManager;
+import cz.boosik.boosCooldown.Runnables.BoosGlobalLimitResetRunnable;
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -94,7 +97,7 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
         }
     }
 
-    static void startLimitResetTimerGlobal(String key) {
+    public static void startLimitResetTimerGlobal(String key) {
         YamlConfiguration confusers = BoosConfigManager.getConfusers();
         BukkitScheduler scheduler = Bukkit.getScheduler();
         String confTime = confusers.getString("global." + key + ".reset");

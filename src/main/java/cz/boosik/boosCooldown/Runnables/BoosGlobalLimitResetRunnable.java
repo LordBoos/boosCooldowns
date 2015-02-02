@@ -1,8 +1,11 @@
-package cz.boosik.boosCooldown;
+package cz.boosik.boosCooldown.Runnables;
 
+import cz.boosik.boosCooldown.BoosCoolDown;
+import cz.boosik.boosCooldown.Managers.BoosConfigManager;
+import cz.boosik.boosCooldown.Managers.BoosLimitManager;
 import org.bukkit.Bukkit;
 
-class BoosGlobalLimitResetRunnable implements Runnable {
+public class BoosGlobalLimitResetRunnable implements Runnable {
 
     private final String command;
 

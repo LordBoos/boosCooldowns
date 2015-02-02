@@ -1,10 +1,10 @@
-package cz.boosik.boosCooldown;
+package cz.boosik.boosCooldown.Managers;
 
 import org.bukkit.entity.Player;
 
 import java.util.Set;
 
-class BoosAliasManager {
+public class BoosAliasManager {
 
     public static String checkCommandAlias(String originalCommand,
                                            Set<String> aliases, Player player) {

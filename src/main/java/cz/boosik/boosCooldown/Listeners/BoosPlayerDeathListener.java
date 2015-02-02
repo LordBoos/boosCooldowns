@@ -1,7 +1,7 @@
 package cz.boosik.boosCooldown.Listeners;
 
-import cz.boosik.boosCooldown.BoosConfigManager;
-import cz.boosik.boosCooldown.BoosCoolDownManager;
+import cz.boosik.boosCooldown.Managers.BoosConfigManager;
+import cz.boosik.boosCooldown.Managers.BoosCoolDownManager;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
