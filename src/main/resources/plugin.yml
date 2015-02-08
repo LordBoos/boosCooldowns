@@ -1,6 +1,6 @@
 name: boosCooldowns
 main: cz.boosik.boosCooldown.BoosCoolDown
-version: 3.9.7
+version: 3.9.7-GIT
 authors: [LordBoos (boosik)]
 softdepend: [Vault]
 description: >
