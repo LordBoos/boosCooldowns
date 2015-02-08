@@ -57,6 +57,9 @@ options:
 commands:
   groups:
     default:
+      /permissionstest:
+        permission: "nice.permission"
+        denied_message: You lack required permissions to use this command!
       /day_command:
         limit: 5
         shared_limit:

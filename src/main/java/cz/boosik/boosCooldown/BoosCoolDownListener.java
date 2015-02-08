@@ -25,6 +25,10 @@ class BoosCoolDownListener implements Listener {
                                    int warmupTime, int cooldownTime, double price, String item,
                                    int count, int limit, int xpPrice) {
         boolean blocked = false;
+        if (!player.hasPermission(BoosConfigManager.getPermission(player, regexCommad))){
+            boosChat.sendMessageToPlayer(player, BoosConfigManager.getPermissionMessage(player, regexCommad));
+            event.setCancelled(true);
+        }
         if (limit != -1) {
             blocked = BoosLimitManager.blocked(player, regexCommad,
                     originalCommand, limit);

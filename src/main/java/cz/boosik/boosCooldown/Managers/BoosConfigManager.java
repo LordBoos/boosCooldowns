@@ -654,4 +654,16 @@ public class BoosConfigManager {
         return conf.getString("options.messages.limit_reset_now",
                 "&6Reseting limits for command&e &command& &6now.&f");
     }
+
+    public static String getPermission(Player player, String regexCommad) {
+        String group = getCommandGroup(player);
+        return conf.getString("commands.groups." + group + "."
+                + regexCommad + ".permission");
+    }
+
+    public static String getPermissionMessage(Player player, String regexCommad) {
+        String group = getCommandGroup(player);
+        return conf.getString("commands.groups." + group + "."
+                + regexCommad + ".denied_message");
+    }
 }
