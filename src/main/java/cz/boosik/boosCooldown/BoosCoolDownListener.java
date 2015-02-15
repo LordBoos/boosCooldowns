@@ -39,7 +39,7 @@ class BoosCoolDownListener implements Listener {
             blocked = BoosLimitManager.blocked(player, regexCommad,
                     originalCommand, limit);
         }
-        if (!blocked) {
+        if (!blocked && !event.isCancelled()) {
             if (warmupTime > 0) {
                 if (!player.hasPermission("booscooldowns.nowarmup")
                         && !player.hasPermission("booscooldowns.nowarmup."
