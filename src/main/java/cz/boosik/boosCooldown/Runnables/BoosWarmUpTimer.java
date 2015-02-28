@@ -1,6 +1,7 @@
 package cz.boosik.boosCooldown.Runnables;
 
 import cz.boosik.boosCooldown.BoosCoolDown;
+import cz.boosik.boosCooldown.BoosCoolDownListener;
 import cz.boosik.boosCooldown.Managers.BoosWarmUpManager;
 import org.bukkit.entity.Player;
 
@@ -36,6 +37,7 @@ public class BoosWarmUpTimer extends TimerTask {
                 BoosWarmUpManager.setWarmUpOK(player, regexCommand);
                 BoosWarmUpManager.removeWarmUpProcess(player.getUniqueId()
                         + "@" + regexCommand);
+                BoosCoolDownListener.commandQueue.put(player.getUniqueId() + "@" + originalCommand, true);
                 player.chat(originalCommand);
             } else if (player.isOnline() && player.isDead()
                     && BoosWarmUpManager.hasWarmUps(player)) {

@@ -54,12 +54,20 @@ options:
     cannot_create_sign: '&6You are not allowed to create this kind of signs!&f'
     cannot_use_sign: '&6You are not allowed to use this sign!&f'
     invalid_command_syntax: '&6You are not allowed to use command syntax /<pluginname>:<command>!'
+    confirmation_cancel_command_execution: 'No'
+    confirmation_confirm_command_execution: 'Yes'
+    confirmation_price_of_command: '&6its price is&e &price& &currency& &6and you now have &e&balance& &currency&'
+    confirmation_message: '&6Would you like to use command&e &command& &6?'
+    confirmation_item_price_of_command: '&6its price is&e &itemprice& &itemname&'
+    confirmation_limit_of_command: '&6it is limited to&e &limit& &6uses'
+    confirmation_xp_price_of_command: '&6its price is&e &xpprice& experience levels'
+    confirmation_command_cancelled: '&6Execution of command&e &command& &6was cancelled'
 commands:
   groups:
     default:
       /permissionstest:
         permission: "nice.permission"
-        denied_message: You lack required permissions to use this command!
+        denied_message: '&cYou lack required permissions to use this command!'
       /day_command:
         limit: 5
         shared_limit:
@@ -98,6 +106,10 @@ commands:
         cooldown: 5
         warmup: 1
         limit: 10
+      /testitemcommand:
+        itemcost: STONE,5
+      /testxpcommand:
+        xpcost: 5
     vip:
       /command *:
         warmup: 5

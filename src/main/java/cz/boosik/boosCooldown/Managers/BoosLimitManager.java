@@ -113,7 +113,7 @@ public class BoosLimitManager {
         return false;
     }
 
-    private static int getUses(Player player, String regexCommand) {
+    public static int getUses(Player player, String regexCommand) {
         int regexCommand2 = regexCommand.toLowerCase().hashCode();
         int uses = 0;
         uses = BoosConfigManager.getConfusers().getInt(

@@ -27,11 +27,6 @@ public class BoosItemCostManager {
             boosChat.sendMessageToPlayer(player, msg);
             return true;
         } else {
-            // msg = String.format(
-            // BoosConfigManager.getInsufficientItemsMessage(), (count
-            // + " " + item));
-            // msg = msg.replaceAll("&command&", originalCommand);
-            // boosChat.sendMessageToPlayer(player, msg);
             return false;
         }
     }

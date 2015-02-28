@@ -666,4 +666,44 @@ public class BoosConfigManager {
         return conf.getString("commands.groups." + group + "."
                 + regexCommad + ".denied_message");
     }
+
+    public static String getCancelCommandMessage() {
+        return conf.getString("options.messages.confirmation_cancel_command_execution",
+                "No");
+    }
+
+    public static String getConfirmCommandMessage() {
+        return conf.getString("options.messages.confirmation_confirm_command_execution",
+                "Yes");
+    }
+
+    public static String getItsPriceMessage() {
+        return conf.getString("options.messages.confirmation_price_of_command",
+                "&6its price is&e &price& &currency& &6and you now have &e&balance& &currency&");
+    }
+
+    public static String getQuestionMessage() {
+        return conf.getString("options.messages.confirmation_message",
+                "&6Would you like to use command&e &command& &6?");
+    }
+
+    public static String getItsItemCostMessage() {
+        return conf.getString("options.messages.confirmation_item_price_of_command",
+                "&6its price is&e &itemprice& &itemname&");
+    }
+
+    public static String getItsLimitMessage() {
+        return conf.getString("options.messages.confirmation_limit_of_command",
+                "&6it is limited to&e &limit& &6uses and you can still use it&e &uses& &6times");
+    }
+
+    public static String getItsXpPriceMessage() {
+        return conf.getString("options.messages.confirmation_xp_price_of_command",
+                "&6its price is&e &xpprice& experience levels");
+    }
+
+    public static String getCommandCanceledMessage() {
+        return conf.getString("options.messages.confirmation_command_cancelled",
+                "&6Execution of command&e &command& &6was cancelled");
+    }
 }
