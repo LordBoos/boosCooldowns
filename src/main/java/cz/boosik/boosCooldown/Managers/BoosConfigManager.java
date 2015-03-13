@@ -679,7 +679,7 @@ public class BoosConfigManager {
 
     public static String getItsPriceMessage() {
         return conf.getString("options.messages.confirmation_price_of_command",
-                "&6its price is&e &price& &currency& &6and you now have &e&balance& &currency&");
+                "&6its price is&e &price& &6and you now have &e&balance&");
     }
 
     public static String getQuestionMessage() {
@@ -705,5 +705,10 @@ public class BoosConfigManager {
     public static String getCommandCanceledMessage() {
         return conf.getString("options.messages.confirmation_command_cancelled",
                 "&6Execution of command&e &command& &6was cancelled");
+    }
+
+    public static boolean getSyntaxBlocker() {
+        return conf.getBoolean("options.options.syntax_blocker_enabled",
+                true);
     }
 }

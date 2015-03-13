@@ -101,33 +101,49 @@ public class BoosWarmUpManager {
     public static void startWarmUp(BoosCoolDown bCoolDown, Player player,
                                    String regexCommand, String originalCommand, int warmUpSeconds) {
         regexCommand = regexCommand.toLowerCase();
-        long warmUpMinutes = (long) Math.ceil(warmUpSeconds / 60.0);
-        long warmUpHours = (long) Math.ceil(warmUpMinutes / 60.0);
+        int warmUpSecondsTem = warmUpSeconds;
+        long warmUpMinutes = (long) Math.floor(warmUpSeconds / 60.0);
+        long warmUpHours = (long) Math.floor(warmUpMinutes / 60.0);
         if (!isWarmUpProcess(player, regexCommand)) {
             BoosWarmUpManager.removeWarmUpOK(player, regexCommand);
             String msg = BoosConfigManager.getWarmUpMessage();
+            StringBuilder stringBuilder = new StringBuilder();
             msg = msg.replaceAll("&command&", originalCommand);
-            if (warmUpSeconds >= 60 && 3600 >= warmUpSeconds) {
-                msg = msg.replaceAll("&seconds&", Long.toString(warmUpMinutes));
-                msg = msg.replaceAll("&unit&",
-                        BoosConfigManager.getUnitMinutesMessage());
-            } else if (warmUpMinutes >= 60) {
-                msg = msg.replaceAll("&seconds&", Long.toString(warmUpHours));
-                msg = msg.replaceAll("&unit&",
-                        BoosConfigManager.getUnitHoursMessage());
-            } else {
-                msg = msg.replaceAll("&seconds&", Long.toString(warmUpSeconds));
-                msg = msg.replaceAll("&unit&",
-                        BoosConfigManager.getUnitSecondsMessage());
+            if (warmUpSeconds >= 3600) {
+                stringBuilder.append(Long.toString(warmUpHours));
+                stringBuilder.append(" ");
+                stringBuilder.append(BoosConfigManager.getUnitHoursMessage());
+                stringBuilder.append(", ");
+                warmUpSeconds = (int) (warmUpSeconds - (warmUpHours * 3600));
             }
+            if (warmUpSeconds >= 60) {
+                warmUpMinutes = warmUpMinutes - (warmUpHours * 60);
+                stringBuilder.append(Long.toString(warmUpMinutes));
+                stringBuilder.append(" ");
+                stringBuilder.append(BoosConfigManager.getUnitMinutesMessage());
+                stringBuilder.append(", ");
+                warmUpSeconds = (int) (warmUpSeconds - (warmUpMinutes * 60));
+            }
+            String secs = Long.toString(warmUpSeconds);
+            if (secs.equals("0")) {
+                secs = "1";
+            }
+            stringBuilder.append(secs);
+            stringBuilder.append(" ");
+            stringBuilder.append(BoosConfigManager.getUnitSecondsMessage());
+
+            msg = msg.replaceAll("&seconds&", stringBuilder.toString());
+            msg = msg.replaceAll("&unit&", "");
+            msg = msg.replaceAll(" +", " ");
+
             boosChat.sendMessageToPlayer(player, msg);
 
             Timer scheduler = new Timer();
             BoosWarmUpTimer scheduleMe = new BoosWarmUpTimer(bCoolDown, player, regexCommand, originalCommand);
             playercommands.put(player.getUniqueId() + "@" + regexCommand,
                     scheduleMe);
-            scheduler.schedule(scheduleMe, warmUpSeconds * 1000);
-            applyPotionEffect(player, regexCommand, warmUpSeconds);
+            scheduler.schedule(scheduleMe, warmUpSecondsTem * 1000);
+            applyPotionEffect(player, regexCommand, warmUpSecondsTem);
         } else {
             String msg = BoosConfigManager.getWarmUpAlreadyStartedMessage();
             msg = msg.replaceAll("&command&", originalCommand);

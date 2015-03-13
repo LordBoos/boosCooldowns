@@ -17,6 +17,22 @@ public class BoosCoolDownManager {
                 "users." + player.getUniqueId() + ".cooldown." + pre2, null);
     }
 
+    public static boolean isCoolingdown(Player player, String regexCommand, int time){
+        Date lastTime = getTime(player, regexCommand);
+        if (lastTime == null){
+            return false;
+        }
+        Calendar calcurrTime = Calendar.getInstance();
+        calcurrTime.setTime(getCurrTime());
+        Calendar callastTime = Calendar.getInstance();
+        callastTime.setTime(lastTime);
+        long secondsBetween = secondsBetween(callastTime, calcurrTime);
+        if ((secondsBetween > time) || secondsBetween == 0){
+            return false;
+        }
+        return true;
+    }
+
     private static boolean cd(Player player, String regexCommand,
                               String originalCommand, int coolDownSeconds) {
         Date lastTime = getTime(player, regexCommand);
@@ -39,8 +55,8 @@ public class BoosCoolDownManager {
             callastTime.setTime(lastTime);
             long secondsBetween = secondsBetween(callastTime, calcurrTime);
             long waitSeconds = coolDownSeconds - secondsBetween;
-            long waitMinutes = (long) Math.ceil(waitSeconds / 60.0);
-            long waitHours = (long) Math.ceil(waitMinutes / 60.0);
+            long waitMinutes = (long) Math.floor(waitSeconds / 60.0);
+            long waitHours = (long) Math.floor(waitMinutes / 60.0);
             if (secondsBetween > coolDownSeconds) {
                 if (linkGroup.isEmpty()) {
                     setTime(player, regexCommand);
@@ -53,25 +69,35 @@ public class BoosCoolDownManager {
                 return false;
             } else {
                 String msg = BoosConfigManager.getCoolDownMessage();
+                StringBuilder stringBuilder = new StringBuilder();
                 msg = msg.replaceAll("&command&", originalCommand);
-                if (waitSeconds >= 60 && 3600 >= waitSeconds) {
-                    msg = msg.replaceAll("&seconds&",
-                            Long.toString(waitMinutes));
-                    msg = msg.replaceAll("&unit&",
-                            BoosConfigManager.getUnitMinutesMessage());
-                } else if (waitMinutes >= 60) {
-                    msg = msg.replaceAll("&seconds&", Long.toString(waitHours));
-                    msg = msg.replaceAll("&unit&",
-                            BoosConfigManager.getUnitHoursMessage());
-                } else {
-                    String secs = Long.toString(waitSeconds);
-                    if (secs.equals("0")) {
-                        secs = "1";
-                    }
-                    msg = msg.replaceAll("&seconds&", secs);
-                    msg = msg.replaceAll("&unit&",
-                            BoosConfigManager.getUnitSecondsMessage());
+                if (waitSeconds >= 3600) {
+                    stringBuilder.append(Long.toString(waitHours));
+                    stringBuilder.append(" ");
+                    stringBuilder.append(BoosConfigManager.getUnitHoursMessage());
+                    stringBuilder.append(", ");
+                    waitSeconds = waitSeconds - (waitHours * 3600);
                 }
+                if (waitSeconds >= 60) {
+                    waitMinutes = waitMinutes - (waitHours * 60);
+                    stringBuilder.append(Long.toString(waitMinutes));
+                    stringBuilder.append(" ");
+                    stringBuilder.append(BoosConfigManager.getUnitMinutesMessage());
+                    stringBuilder.append(", ");
+                    waitSeconds = waitSeconds - (waitMinutes * 60);
+                }
+                String secs = Long.toString(waitSeconds);
+                if (secs.equals("0")) {
+                    secs = "1";
+                }
+                stringBuilder.append(secs);
+                stringBuilder.append(" ");
+                stringBuilder.append(BoosConfigManager.getUnitSecondsMessage());
+
+                msg = msg.replaceAll("&seconds&", stringBuilder.toString());
+                msg = msg.replaceAll("&unit&", "");
+                msg = msg.replaceAll(" +", " ");
+
                 boosChat.sendMessageToPlayer(player, msg);
                 return true;
             }
@@ -133,29 +159,41 @@ public class BoosCoolDownManager {
                 callastTime.setTime(lastTime);
                 long secondsBetween = secondsBetween(callastTime, calcurrTime);
                 long waitSeconds = time - secondsBetween;
-                long waitMinutes = (long) Math.ceil(waitSeconds / 60.0);
-                long waitHours = (long) Math.ceil(waitMinutes / 60.0);
+                long waitMinutes = (long) Math.floor(waitSeconds / 60.0);
+                long waitHours = (long) Math.floor(waitMinutes / 60.0);
                 if (secondsBetween > time) {
                     return true;
                 } else {
                     String msg = BoosConfigManager.getCoolDownMessage();
+                    StringBuilder stringBuilder = new StringBuilder();
                     msg = msg.replaceAll("&command&", originalCommand);
-                    if (waitSeconds >= 60 && 3600 >= waitSeconds) {
-                        msg = msg.replaceAll("&seconds&",
-                                Long.toString(waitMinutes));
-                        msg = msg.replaceAll("&unit&",
-                                BoosConfigManager.getUnitMinutesMessage());
-                    } else if (waitMinutes >= 60) {
-                        msg = msg.replaceAll("&seconds&",
-                                Long.toString(waitHours));
-                        msg = msg.replaceAll("&unit&",
-                                BoosConfigManager.getUnitHoursMessage());
-                    } else {
-                        msg = msg.replaceAll("&seconds&",
-                                Long.toString(waitSeconds));
-                        msg = msg.replaceAll("&unit&",
-                                BoosConfigManager.getUnitSecondsMessage());
+                    if (waitSeconds >= 3600) {
+                        stringBuilder.append(Long.toString(waitHours));
+                        stringBuilder.append(" ");
+                        stringBuilder.append(BoosConfigManager.getUnitHoursMessage());
+                        stringBuilder.append(", ");
+                        waitSeconds = waitSeconds - (waitHours * 3600);
                     }
+                    if (waitSeconds >= 60) {
+                        waitMinutes = waitMinutes - (waitHours * 60);
+                        stringBuilder.append(Long.toString(waitMinutes));
+                        stringBuilder.append(" ");
+                        stringBuilder.append(BoosConfigManager.getUnitMinutesMessage());
+                        stringBuilder.append(", ");
+                        waitSeconds = waitSeconds - (waitMinutes * 60);
+                    }
+                    String secs = Long.toString(waitSeconds);
+                    if (secs.equals("0")) {
+                        secs = "1";
+                    }
+                    stringBuilder.append(secs);
+                    stringBuilder.append(" ");
+                    stringBuilder.append(BoosConfigManager.getUnitSecondsMessage());
+
+                    msg = msg.replaceAll("&seconds&", stringBuilder.toString());
+                    msg = msg.replaceAll("&unit&", "");
+                    msg = msg.replaceAll(" +", " ");
+
                     boosChat.sendMessageToPlayer(player, msg);
                     return false;
                 }

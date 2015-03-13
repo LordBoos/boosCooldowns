@@ -78,19 +78,14 @@ public class BoosCoolDownListener implements Listener {
                             regexCommad, originalCommand, xpPrice);
                 }
             } else {
+                boolean warmupInProgress = BoosWarmUpManager.isWarmUpProcess(player, regexCommad);
+                boolean cooldownInProgress = BoosCoolDownManager.isCoolingdown(player,regexCommad,cooldownTime);
                 if (!BoosPriceManager.has(player, price)
-                        & !BoosWarmUpManager.isWarmUpProcess(player,
-                        regexCommad)) {
-                    String unit;
+                        && !warmupInProgress && !cooldownInProgress) {
                     String msg = "";
-                    if (price == 1) {
-                        unit = BoosCoolDown.getEconomy().currencyNameSingular();
-                    } else {
-                        unit = BoosCoolDown.getEconomy().currencyNamePlural();
-                    }
                     msg = String.format(
                             BoosConfigManager.getInsufficientFundsMessage(),
-                            (price + " " + unit),
+                            BoosCoolDown.getEconomy().format(price),
                             BoosCoolDown.getEconomy().format(
                                     BoosCoolDown.getEconomy()
                                             .getBalance(player)));
@@ -98,8 +93,7 @@ public class BoosCoolDownListener implements Listener {
                     boosChat.sendMessageToPlayer(player, msg);
                 }
                 if (!BoosItemCostManager.has(player, item, count)
-                        & !BoosWarmUpManager.isWarmUpProcess(player,
-                        regexCommad)) {
+                        && !warmupInProgress && !cooldownInProgress) {
                     String msg = "";
                     msg = String.format(
                             BoosConfigManager.getInsufficientItemsMessage(),
@@ -108,8 +102,7 @@ public class BoosCoolDownListener implements Listener {
                     boosChat.sendMessageToPlayer(player, msg);
                 }
                 if (!BoosXpCostManager.has(player, xpPrice)
-                        & !BoosWarmUpManager.isWarmUpProcess(player,
-                        regexCommad)) {
+                        && !warmupInProgress && !cooldownInProgress) {
                     String msg = "";
                     msg = String.format(
                             BoosConfigManager.getInsufficientXpMessage(),
@@ -155,15 +148,17 @@ public class BoosCoolDownListener implements Listener {
     private void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        if (event.getMessage().contains(":")) {
-            Pattern p = Pattern.compile("^/([a-zA-Z0-9_]+):");
-            Matcher m = p.matcher(event.getMessage());
-            if (m.find()) {
-                {
-                    boosChat.sendMessageToPlayer(player, BoosConfigManager
-                            .getInvalidCommandSyntaxMessage());
-                    event.setCancelled(true);
-                    return;
+        if (BoosConfigManager.getSyntaxBlocker() && !player.isOp() && !player.hasPermission("booscooldowns.syntaxblockerexception")) {
+            if (event.getMessage().contains(":")) {
+                Pattern p = Pattern.compile("^/([a-zA-Z0-9_]+):");
+                Matcher m = p.matcher(event.getMessage());
+                if (m.find()) {
+                    {
+                        boosChat.sendMessageToPlayer(player, BoosConfigManager
+                                .getInvalidCommandSyntaxMessage());
+                        event.setCancelled(true);
+                        return;
+                    }
                 }
             }
         }
@@ -238,7 +233,7 @@ public class BoosCoolDownListener implements Listener {
                         warmupTime, cooldownTime, price, item, count, limit,
                         xpPrice);
             } else {
-                if (price > 0 || xpPrice > 0 || count > 0 || limit > 0) {
+                if ((price > 0 || xpPrice > 0 || count > 0 || limit > 0) && !BoosWarmUpManager.isWarmUpProcess(player, regexCommad) && !BoosCoolDownManager.isCoolingdown(player,regexCommad,cooldownTime)) {
                     commandQueue.put(uuid + "@" + originalCommand, false);
                     String questionMessage = BoosConfigManager.getQuestionMessage();
                     questionMessage = questionMessage.replace("&command&", originalCommand);
@@ -247,15 +242,8 @@ public class BoosCoolDownListener implements Listener {
                         if (BoosConfigManager.getPriceEnabled()) {
                             if (price > 0) {
                                 String priceMessage = BoosConfigManager.getItsPriceMessage();
-                                if (price > 1) {
-                                    priceMessage = priceMessage.replace("&price&", String.valueOf(price))
-                                            .replace("&currency&", BoosCoolDown.getEconomy().currencyNamePlural())
-                                            .replace("&balance&", String.valueOf(BoosCoolDown.getEconomy().getBalance(player)));
-                                } else {
-                                    priceMessage = priceMessage.replace("&price&", String.valueOf(price))
-                                            .replace("&currency&", BoosCoolDown.getEconomy().currencyNameSingular())
-                                            .replace("&balance&", String.valueOf(BoosCoolDown.getEconomy().getBalance(player)));
-                                }
+                                priceMessage = priceMessage.replace("&price&", BoosCoolDown.getEconomy().format(price))
+                                            .replace("&balance&", BoosCoolDown.getEconomy().format(BoosCoolDown.getEconomy().getBalance(player)));
                                 boosChat.sendMessageToPlayer(player, "    " + priceMessage);
                             }
                         }
@@ -282,14 +270,16 @@ public class BoosCoolDownListener implements Listener {
                     event.setCancelled(true);
                     return;
                 } else {
-                    commandQueue.put(player.getUniqueId() + "@" + originalCommand, true);
+                    this.checkRestrictions(event, player, regexCommad, originalCommand,
+                            warmupTime, cooldownTime, price, item, count, limit,
+                            xpPrice);
                 }
             }
         }
-
         originalCommand = originalCommand.replace("SdollarS", "$");
         event.setMessage(originalCommand);
     }
+
     @EventHandler(priority = EventPriority.NORMAL)
     private void onPlayerChatEvent(AsyncPlayerChatEvent event){
         Player player = event.getPlayer();
