@@ -21,6 +21,7 @@ options:
     command_logging: false
     command_signs: false
     syntax_blocker_enabled: true
+    command_confirmation: true
   units:
     seconds: seconds
     minutes: minutes
@@ -63,6 +64,8 @@ options:
     confirmation_confirm_command_execution: 'Yes'
     confirmation_cancel_command_execution: 'No'
     confirmation_command_cancelled: '&6Execution of command&e &command& &6was cancelled'
+    confirmation_toggle_disable: 'Confirmation messages are now disabled for you!'
+    confirmation_toggle_enable: 'Confirmation messages are now enabled for you!'
 commands:
   groups:
     default:

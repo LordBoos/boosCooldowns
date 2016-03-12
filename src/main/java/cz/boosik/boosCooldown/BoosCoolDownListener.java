@@ -161,7 +161,7 @@ public class BoosCoolDownListener implements Listener {
                 }
             }
         }
-        if (BoosConfigManager.getConfirmCommandEnabled()) {
+        if (BoosConfigManager.getConfirmCommandEnabled(player)) {
             for (String key : commandQueue.keySet()) {
                 String[] keyList = key.split("@");
                 if (keyList[0].equals(String.valueOf(uuid))) {
@@ -229,13 +229,13 @@ public class BoosCoolDownListener implements Listener {
                     break;
                 }
             }
-            if (!BoosConfigManager.getConfirmCommandEnabled() || (commandQueue.keySet().contains(uuid + "@" + originalCommand) && commandQueue.get(uuid + "@" + originalCommand))) {
+            if (!BoosConfigManager.getConfirmCommandEnabled(player) || (commandQueue.keySet().contains(uuid + "@" + originalCommand) && commandQueue.get(uuid + "@" + originalCommand))) {
                 this.checkRestrictions(event, player, regexCommad, originalCommand,
                         warmupTime, cooldownTime, price, item, count, limit,
                         xpPrice);
             } else {
                 if ((price > 0 || xpPrice > 0 || count > 0 || limit > 0) && !BoosWarmUpManager.isWarmUpProcess(player, regexCommad) && !BoosCoolDownManager.isCoolingdown(player,regexCommad,cooldownTime)) {
-                    if (BoosConfigManager.getConfirmCommandEnabled()) {
+                    if (BoosConfigManager.getConfirmCommandEnabled(player)) {
                         commandQueue.put(uuid + "@" + originalCommand, false);
                         String questionMessage = BoosConfigManager.getQuestionMessage();
                         questionMessage = questionMessage.replace("&command&", originalCommand);
@@ -287,7 +287,7 @@ public class BoosCoolDownListener implements Listener {
     private void onPlayerChatEvent(AsyncPlayerChatEvent event){
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        if (BoosConfigManager.getConfirmCommandEnabled()) {
+        if (BoosConfigManager.getConfirmCommandEnabled(player)) {
             for (String key : commandQueue.keySet()) {
                 String[] keyList = key.split("@");
                 if (keyList[0].equals(String.valueOf(uuid))) {
