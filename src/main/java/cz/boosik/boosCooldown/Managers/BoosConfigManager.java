@@ -711,4 +711,9 @@ public class BoosConfigManager {
         return conf.getBoolean("options.options.syntax_blocker_enabled",
                 true);
     }
+
+    public static boolean getConfirmCommandEnabled() {
+        return conf.getBoolean("options.options.command_confirmation",
+                true);
+    }
 }

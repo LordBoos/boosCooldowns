@@ -12,6 +12,7 @@ public class BoosItemCostManager {
     private static boolean payItemForCommand(Player player,
                                              String originalCommand, String item, int count) {
         Material material = Material.getMaterial(item);
+
         Inventory inventory = player.getInventory();
         Boolean trans = false;
         if (inventory.contains(material, count)) {

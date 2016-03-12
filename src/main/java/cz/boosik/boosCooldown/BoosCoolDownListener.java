@@ -1,7 +1,6 @@
 package cz.boosik.boosCooldown;
 
 import cz.boosik.boosCooldown.Managers.*;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -10,8 +9,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import util.boosChat;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,7 +24,7 @@ public class BoosCoolDownListener implements Listener {
         plugin = instance;
     }
 
-    public static ConcurrentHashMap<String,Boolean> commandQueue = new ConcurrentHashMap();
+    public static Map<String,Boolean> commandQueue = new ConcurrentHashMap();
 
     private void checkRestrictions(PlayerCommandPreprocessEvent event,
                                    Player player, String regexCommad, String originalCommand,
@@ -162,16 +161,18 @@ public class BoosCoolDownListener implements Listener {
                 }
             }
         }
-        for (String key : commandQueue.keySet()) {
-            String[] keyList = key.split("@");
-            if (keyList[0].equals(String.valueOf(uuid))) {
-                if (!keyList[1].equals(event.getMessage())){
-                    commandQueue.remove(key);
-                    String commandCancelMessage = BoosConfigManager.getCommandCanceledMessage();
-                    commandCancelMessage = commandCancelMessage.replace("&command&", keyList[1]);
-                    boosChat.sendMessageToPlayer(player, commandCancelMessage);
-                    event.setCancelled(true);
-                    return;
+        if (BoosConfigManager.getConfirmCommandEnabled()) {
+            for (String key : commandQueue.keySet()) {
+                String[] keyList = key.split("@");
+                if (keyList[0].equals(String.valueOf(uuid))) {
+                    if (!keyList[1].equals(event.getMessage())) {
+                        commandQueue.remove(key);
+                        String commandCancelMessage = BoosConfigManager.getCommandCanceledMessage();
+                        commandCancelMessage = commandCancelMessage.replace("&command&", keyList[1]);
+                        boosChat.sendMessageToPlayer(player, commandCancelMessage);
+                        event.setCancelled(true);
+                        return;
+                    }
                 }
             }
         }
@@ -198,7 +199,7 @@ public class BoosCoolDownListener implements Listener {
         }
         if (on && commands != null) {
             for (String group : commands) {
-                String group2 = group.replace("*", ".+");
+                String group2 = group.replace("*", ".*");
                 if (originalCommand.matches("(?i)" + group2)) {
                     regexCommad = group;
                     if (BoosConfigManager.getWarmupEnabled()) {
@@ -228,16 +229,18 @@ public class BoosCoolDownListener implements Listener {
                     break;
                 }
             }
-            if (commandQueue.keySet().contains(uuid + "@" + originalCommand) && commandQueue.get(uuid + "@" + originalCommand)) {
+            if (!BoosConfigManager.getConfirmCommandEnabled() || (commandQueue.keySet().contains(uuid + "@" + originalCommand) && commandQueue.get(uuid + "@" + originalCommand))) {
                 this.checkRestrictions(event, player, regexCommad, originalCommand,
                         warmupTime, cooldownTime, price, item, count, limit,
                         xpPrice);
             } else {
                 if ((price > 0 || xpPrice > 0 || count > 0 || limit > 0) && !BoosWarmUpManager.isWarmUpProcess(player, regexCommad) && !BoosCoolDownManager.isCoolingdown(player,regexCommad,cooldownTime)) {
-                    commandQueue.put(uuid + "@" + originalCommand, false);
-                    String questionMessage = BoosConfigManager.getQuestionMessage();
-                    questionMessage = questionMessage.replace("&command&", originalCommand);
-                    boosChat.sendMessageToPlayer(player, questionMessage);
+                    if (BoosConfigManager.getConfirmCommandEnabled()) {
+                        commandQueue.put(uuid + "@" + originalCommand, false);
+                        String questionMessage = BoosConfigManager.getQuestionMessage();
+                        questionMessage = questionMessage.replace("&command&", originalCommand);
+                        boosChat.sendMessageToPlayer(player, questionMessage);
+                    }
                     if (BoosCoolDown.getEconomy() != null) {
                         if (BoosConfigManager.getPriceEnabled()) {
                             if (price > 0) {
@@ -284,19 +287,21 @@ public class BoosCoolDownListener implements Listener {
     private void onPlayerChatEvent(AsyncPlayerChatEvent event){
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        for(String key : commandQueue.keySet()) {
-            String[] keyList = key.split("@");
-            if (keyList[0].equals(String.valueOf(uuid))) {
-                if (event.getMessage().equalsIgnoreCase(BoosConfigManager.getConfirmCommandMessage())) {
-                    commandQueue.put(key, true);
-                    player.chat(keyList[1]);
-                    event.setCancelled(true);
-                } else {
-                    commandQueue.remove(key);
-                    String commandCancelMessage = BoosConfigManager.getCommandCanceledMessage();
-                    commandCancelMessage = commandCancelMessage.replace("&command&", keyList[1]);
-                    boosChat.sendMessageToPlayer(player, commandCancelMessage);
-                    event.setCancelled(true);
+        if (BoosConfigManager.getConfirmCommandEnabled()) {
+            for (String key : commandQueue.keySet()) {
+                String[] keyList = key.split("@");
+                if (keyList[0].equals(String.valueOf(uuid))) {
+                    if (event.getMessage().equalsIgnoreCase(BoosConfigManager.getConfirmCommandMessage())) {
+                        commandQueue.put(key, true);
+                        player.chat(keyList[1]);
+                        event.setCancelled(true);
+                    } else {
+                        commandQueue.remove(key);
+                        String commandCancelMessage = BoosConfigManager.getCommandCanceledMessage();
+                        commandCancelMessage = commandCancelMessage.replace("&command&", keyList[1]);
+                        boosChat.sendMessageToPlayer(player, commandCancelMessage);
+                        event.setCancelled(true);
+                    }
                 }
             }
         }

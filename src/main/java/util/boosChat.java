@@ -1,12 +1,12 @@
 package util;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Logger;
-
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Logger;
 
 @SuppressWarnings("ALL")
 public class boosChat {
@@ -25,7 +25,7 @@ public class boosChat {
 
 	private static String replaceColorCodes(String line) {
 		line = replaceTags(line);
-		line = line.replaceAll("(&([a-f0-9]))", "\u00A7$2");
+		line = line.replaceAll("&", "§");
 		return line;
 	}
 
