@@ -1,14 +1,5 @@
 package cz.boosik.boosCooldown;
 
-import cz.boosik.boosCooldown.Managers.*;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import util.boosChat;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,6 +8,24 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+
+import cz.boosik.boosCooldown.Managers.BoosAliasManager;
+import cz.boosik.boosCooldown.Managers.BoosConfigManager;
+import cz.boosik.boosCooldown.Managers.BoosCoolDownManager;
+import cz.boosik.boosCooldown.Managers.BoosItemCostManager;
+import cz.boosik.boosCooldown.Managers.BoosLimitManager;
+import cz.boosik.boosCooldown.Managers.BoosPriceManager;
+import cz.boosik.boosCooldown.Managers.BoosWarmUpManager;
+import cz.boosik.boosCooldown.Managers.BoosXpCostManager;
+import util.boosChat;
+
 public class BoosCoolDownListener implements Listener {
     private static BoosCoolDown plugin;
 
@@ -24,7 +33,7 @@ public class BoosCoolDownListener implements Listener {
         plugin = instance;
     }
 
-    public static Map<String,Boolean> commandQueue = new ConcurrentHashMap();
+    public static Map<String, Boolean> commandQueue = new ConcurrentHashMap();
 
     private void checkRestrictions(PlayerCommandPreprocessEvent event,
                                    Player player, String regexCommad, String originalCommand,
@@ -35,7 +44,7 @@ public class BoosCoolDownListener implements Listener {
         if (!(perm == null)) {
             if (!player.hasPermission(perm)) {
                 String msg = BoosConfigManager.getPermissionMessage(player, regexCommad);
-                if (!(msg == null)){
+                if (!(msg == null)) {
                     boosChat.sendMessageToPlayer(player, msg);
                 }
                 event.setCancelled(true);
@@ -78,7 +87,7 @@ public class BoosCoolDownListener implements Listener {
                 }
             } else {
                 boolean warmupInProgress = BoosWarmUpManager.isWarmUpProcess(player, regexCommad);
-                boolean cooldownInProgress = BoosCoolDownManager.isCoolingdown(player,regexCommad,cooldownTime);
+                boolean cooldownInProgress = BoosCoolDownManager.isCoolingdown(player, regexCommad, cooldownTime);
                 if (!BoosPriceManager.has(player, price)
                         && !warmupInProgress && !cooldownInProgress) {
                     String msg = "";
@@ -124,20 +133,20 @@ public class BoosCoolDownListener implements Listener {
         if (!event.isCancelled()) {
             List<String> linkGroup = BoosConfigManager.getSharedLimits(
                     regexCommad, player);
-                if (linkGroup.isEmpty()) {
-                    BoosLimitManager.setUses(player, regexCommad);
-                } else {
-                    BoosLimitManager.setUses(player, regexCommad);
-                    for (String a : linkGroup) {
-                        BoosLimitManager.setUses(player, a);
-                    }
+            if (linkGroup.isEmpty()) {
+                BoosLimitManager.setUses(player, regexCommad);
+            } else {
+                BoosLimitManager.setUses(player, regexCommad);
+                for (String a : linkGroup) {
+                    BoosLimitManager.setUses(player, a);
                 }
+            }
             if (BoosConfigManager.getCommandLogging()) {
                 BoosCoolDown.commandLogger(player.getName(), originalCommand);
             }
         }
-        for (String key : commandQueue.keySet()){
-            if (key.startsWith(String.valueOf(player.getUniqueId()))){
+        for (String key : commandQueue.keySet()) {
+            if (key.startsWith(String.valueOf(player.getUniqueId()))) {
                 commandQueue.remove(key);
             }
         }
@@ -229,12 +238,15 @@ public class BoosCoolDownListener implements Listener {
                     break;
                 }
             }
-            if (!BoosConfigManager.getConfirmCommandEnabled(player) || (commandQueue.keySet().contains(uuid + "@" + originalCommand) && commandQueue.get(uuid + "@" + originalCommand))) {
+            if (!BoosConfigManager.getConfirmCommandEnabled(player) || (commandQueue
+                    .keySet()
+                    .contains(uuid + "@" + originalCommand) && commandQueue.get(uuid + "@" + originalCommand))) {
                 this.checkRestrictions(event, player, regexCommad, originalCommand,
                         warmupTime, cooldownTime, price, item, count, limit,
                         xpPrice);
             } else {
-                if ((price > 0 || xpPrice > 0 || count > 0 || limit > 0) && !BoosWarmUpManager.isWarmUpProcess(player, regexCommad) && !BoosCoolDownManager.isCoolingdown(player,regexCommad,cooldownTime)) {
+                if ((price > 0 || xpPrice > 0 || count > 0 || limit > 0) && !BoosWarmUpManager.isWarmUpProcess(player,
+                        regexCommad) && !BoosCoolDownManager.isCoolingdown(player, regexCommad, cooldownTime)) {
                     if (BoosConfigManager.getConfirmCommandEnabled(player)) {
                         commandQueue.put(uuid + "@" + originalCommand, false);
                         String questionMessage = BoosConfigManager.getQuestionMessage();
@@ -246,7 +258,7 @@ public class BoosCoolDownListener implements Listener {
                             if (price > 0) {
                                 String priceMessage = BoosConfigManager.getItsPriceMessage();
                                 priceMessage = priceMessage.replace("&price&", BoosCoolDown.getEconomy().format(price))
-                                            .replace("&balance&", BoosCoolDown.getEconomy().format(BoosCoolDown.getEconomy().getBalance(player)));
+                                        .replace("&balance&", BoosCoolDown.getEconomy().format(BoosCoolDown.getEconomy().getBalance(player)));
                                 boosChat.sendMessageToPlayer(player, "    " + priceMessage);
                             }
                         }
@@ -284,16 +296,21 @@ public class BoosCoolDownListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
-    private void onPlayerChatEvent(AsyncPlayerChatEvent event){
-        Player player = event.getPlayer();
+    private void onPlayerChatEvent(AsyncPlayerChatEvent event) {
+        final Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         if (BoosConfigManager.getConfirmCommandEnabled(player)) {
             for (String key : commandQueue.keySet()) {
-                String[] keyList = key.split("@");
+                final String[] keyList = key.split("@");
                 if (keyList[0].equals(String.valueOf(uuid))) {
                     if (event.getMessage().equalsIgnoreCase(BoosConfigManager.getConfirmCommandMessage())) {
                         commandQueue.put(key, true);
-                        player.chat(keyList[1]);
+                        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                            @Override
+                            public void run() {
+                                player.chat(keyList[1]);
+                            }
+                        });
                         event.setCancelled(true);
                     } else {
                         commandQueue.remove(key);
@@ -306,6 +323,7 @@ public class BoosCoolDownListener implements Listener {
             }
         }
     }
+
     private void start(PlayerCommandPreprocessEvent event, Player player,
                        String regexCommad, String originalCommand, int warmupTime,
                        int cooldownTime) {
