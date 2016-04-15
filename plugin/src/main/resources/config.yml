@@ -1,0 +1,232 @@
+options:
+  options:
+    #should warmups be enabled?
+    warmups_enabled: true
+    #should cooldowns be enabled?
+    cooldowns_enabled: true
+    #should prices be enabled?
+    prices_enabled: true
+    #should item costs be enabled?
+    item_cost_enabled: true
+    #should xp costs be enabled?
+    xp_cost_enabled: true
+    #should limits be enabled?
+    limits_enabled: true
+    #do not ever use this if you like your server
+    auto_save_enabled_CAN_CAUSE_BIG_LAGS: false
+    #if you have enabled the forbidden option above, this is how often in minutes will your server lag
+    save_interval_in_minutes: 15
+    #should warmups be canceled when player takes damage?
+    cancel_warmup_on_damage: false
+    #should warmups be canceled when player moves?
+    cancel_warmup_on_move: false
+    #should warmups be canceled when player toggles sneak?
+    cancel_warmup_on_sneak: false
+    #should warmups be canceled when player starts sprinting?
+    cancel_warmup_on_sprint: false
+    #should warmups be canceled when player changes gamemode?
+    cancel_warmup_on_gamemode_change: false
+    #should container access be disable during warmups?
+    block_interact_during_warmup: false
+    #should cooldowns be cleared on server restart?
+    clear_on_restart: false
+    #should limits (counts of how many times player used limited command) be cleared on server restart?
+    clear_uses_on_death: false
+    #should cooldowns be cleared on players death?
+    clear_cooldowns_on_death: false
+    #should cooldowns be started on players death?
+    start_cooldowns_on_death: false
+    #should command usages be logged to console? (not needed as spigot logs it already)
+    command_logging: false
+    #should commands signs be enabled?
+    command_signs: false
+    #should syntax blocker (blocks usage of commands with syntax /pluginname:command) be enabled?
+    syntax_blocker_enabled: true
+    #should command confirmations (when command has price, xp price or itemcost) be enabled?
+    command_confirmation: true
+  units:
+    #time unit for seconds that will be shown in messages
+    seconds: seconds
+    #time unit for minutes that will be shown in messages
+    minutes: minutes
+    #time unit for hours that will be shown in messages
+    hours: hours
+  messages:
+    warmup_cancelled_by_damage: '&6Warm-ups have been cancelled due to receiving damage.&f'
+    warmup_cancelled_by_move: '&6Warm-ups have been cancelled due to moving.&f'
+    warmup_cancelled_by_sprint: '&6Warm-ups have been cancelled due to sprinting.&f'
+    warmup_cancelled_by_sneak: '&6Warm-ups have been cancelled due to sneaking.&f'
+    warmup_cancelled_by_gamemode_change: '&6Warm-ups have been cancelled due to changing
+      gamemode.&f'
+    cooling_down: '&6Wait&e &seconds& &unit&&6 before you can use command&e &command&
+      &6again.&f'
+    warming_up: '&6Wait&e &seconds& &unit&&6 before command&e &command& &6has warmed
+      up.&f'
+    warmup_already_started: '&6Warm-Up process for&e &command& &6has already started.&f'
+    paid_error: '&6An error has occured:&e %s'
+    insufficient_funds: '&6You have insufficient funds!&e &command& &6costs &e%s &6but
+      you only have &e%s'
+    paid_for_command: '&6Price of&e &command& &6was&e %s &6and you now have&e %s'
+    paid_items_for_command: '&6Price of&e &command& &6was &e%s'
+    paid_xp_for_command: '&6Price of&e &command& &6was &e%s levels'
+    insufficient_items: '&6You have not enough items!&e &command& &6needs &e%s'
+    insufficient_xp: '&6You have not enough XP!&e &command& &6needs &e%s'
+    limit_achieved: '&6You cannot use this command anymore!&f'
+    limit_reset: '&6Wait&e &seconds& &unit&&6 before your limit for command&e &command&
+      &6is reset.&f'
+    limit_reset_now: '&6Reseting limits for command&e &command& &6now!&f'
+    limit_list: '&6Limit for command &e&command&&6 is &e&limit&&6. You can still use
+      it &e&times&&6 times.&f'
+    interact_blocked_during_warmup: '&6You can''t do this when command is warming-up!&f'
+    cannot_create_sign: '&6You are not allowed to create this kind of signs!&f'
+    cannot_use_sign: '&6You are not allowed to use this sign!&f'
+    invalid_command_syntax: '&6You are not allowed to use command syntax /<pluginname>:<command>!'
+    confirmation_message: '&6Would you like to use command&e &command& &6?'
+    confirmation_price_of_command: '&6its price is&e &price& &6and you now have &e&balance&'
+    confirmation_item_price_of_command: '&6its price is&e &itemprice& &itemname&'
+    confirmation_limit_of_command: '&6it is limited to&e &limit& &6uses and you can still use it&e &uses& &6times'
+    confirmation_xp_price_of_command: '&6its price is&e &xpprice& experience levels'
+    confirmation_confirm_command_execution: 'Yes'
+    confirmation_cancel_command_execution: 'No'
+    confirmation_command_cancelled: '&6Execution of command&e &command& &6was cancelled'
+    confirmation_toggle_disable: 'Confirmation messages are now disabled for you!'
+    confirmation_toggle_enable: 'Confirmation messages are now enabled for you!'
+commands:
+  #plugin is disabled for OPs so keep that in mind while testing!
+  groups:
+    #this group will work for all players without any booscooldowns permission
+    default:
+      /permissionstest:
+        #permission required to use this command
+        permission: "nice.permission"
+        #message that is sent to players who does not have above permission and attepts to use this command
+        denied_message: '&cYou lack required permissions to use this command!'
+      /day_command:
+        #limited to 5 uses per player
+        limit: 5
+        #shared limit with /night_command, when player uses this command it will also reduce players limit for all shared_limit commands
+        shared_limit:
+        - /night_command
+      /night_command:
+        #limited to 5 uses but not shared, so when used it will only reduce players limit for itself
+        limit: 5
+      #this will only put cooldown on exactly /command parameter
+      /command parameter:
+        cooldown: 2 hours
+      #this will put cooldown on /commandwithparameters with parameters only eg.:
+      #     /commandwithparameters home
+      #     /commandwithparameters warp spawn hell
+      #     this will not be affected: /commandwithparameters
+      /commandwithparameters *:
+        cooldown: 5 seconds
+      #this will put cooldown on /commandnewparams and all its parameters and continuations eg.:
+      #     /commandnewparams
+      #     /commandnewparams home
+      #     /commandnewparams warp spawn hell
+      #     /commandnewparamsprettylong
+      #     /commandnewparamsprettylong and cool
+      /commandnewparams*:
+        cooldown: 5 hours
+      /anothercommand:
+        cooldown: 2 minute
+      /yetanothercommand:
+        #5 second delay between sending the command to chat and actually executing it
+        warmup: 5
+        #price of 10 money
+        price: 10.0
+        limit: 5
+        #potion effect and its strength that will affect player for the warmup time (5 seconds here) has to be one from this list: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionEffectType.html
+        potion: WEAKNESS,3
+      /test:
+        #message that is sent to player when he uses this command
+        message: You just used /test!
+        limit: 1
+      /shared_example:
+        cooldown: 6 hours
+        #same as shared_limit except for cooldown, will start cooldown on itself and all commands listed below shared_cooldown
+        shared_cooldown:
+        - /this_commands_cooldown_will_also_be_started
+        - /another_one
+      /this_commands_cooldown_will_also_be_started:
+        cooldown: 1 week
+      /another_one:
+        cooldown: 1 month
+      /per_time_interval_limit:
+        limit: 1
+        #limit will be automatically cleared after set time (you can set something like 5 uses per hour and so)
+        limit_reset_delay: 120
+      /original *:
+        cooldown: 5
+        warmup: 1
+        limit: 10
+      /testitemcommand:
+        #price in items required to use this command
+        itemcost:
+          #item type (material) has to be one from this list: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+          item: STONE
+          #number of items required to use command
+          count: 5
+          #name of required item
+          name: "Super Stone"
+          #lore of required item (any number of lines)
+          lore:
+          - "first line of lore"
+          - "second line of lore"
+          #enchants of required item and enchant level enchant name has to be one from this list: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/enchantments/Enchantment.html
+          enchants:
+          - ARROW_DAMAGE,1
+          - ARROW_FIRE,1
+      /testitemcommand2:
+        #item cost without enchants
+        itemcost:
+          item: STONE
+          count: 5
+          name: "Super"
+          lore:
+          - "1"
+          - "2"
+      /testitemcommand3:
+        #item cost without lore
+        itemcost:
+          item: STONE
+          count: 5
+          name: "Super"
+          enchants:
+          - DAMAGE_ARTHROPODS,5
+      /testitemcommand4:
+        #item cost without name
+        itemcost:
+          item: STONE
+          count: 5
+          lore:
+          - "1"
+          - "2"
+          enchants:
+          - DAMAGE_ARTHROPODS,5
+      /testitemcommand5:
+        #item cost without enchants, lore and name
+        itemcost:
+          item: STONE
+          count: 5
+      /testxpcommand:
+        #this command costs 5 experience levels to be used
+        xpcost: 5
+    #this group will only work for players that have booscooldowns.vip permission (player can only have one group at a time and no inheritance is possible atm
+    vip:
+      /command *:
+        warmup: 5
+  #players can use /newcommand and it will execute /originalcommand instead
+  #/ja * works for parameters and executes /me firstParameter secondParameter remainingParameters worldPlayerIsIn playerName
+  aliases:
+    /newcommand: /originalcommand
+    /ja *: /me $1 $2 $* $world $player
+#this will clear limits of command for all players at the same time
+#this delay can be started by /bcd startglobalreset
+#delay is calculated from the time of command usage (using command on midnight with 1 day delay will reset limits every midnight)
+#if the server is offline during limit reset time, it will reset limits as soon as the server starts again
+#to cancel delays, delete command from config below and run the command /bcd startglobalreset
+global:
+  /test:
+    limit_reset_delay: 1 hour
+  /original *:
+    limit_reset_delay: 360 minutes
