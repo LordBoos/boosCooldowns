@@ -614,6 +614,14 @@ public class BoosConfigManager {
         return conf.getString("options.messages.confirmation_confirm_command_execution", "Yes");
     }
 
+    public static String getCancelCommandHint() {
+        return conf.getString("options.messages.confirmation_cancel_command_execution_hint", "Click to cancel");
+    }
+
+    public static String getConfirmCommandHint() {
+        return conf.getString("options.messages.confirmation_confirm_command_execution_hint", "Click to confirm");
+    }
+
     public static String getConfirmToggleMessageTrue() {
         return conf.getString("options.messages.confirmation_toggle_enable", "Confirmation messages are now enabled for you!");
     }

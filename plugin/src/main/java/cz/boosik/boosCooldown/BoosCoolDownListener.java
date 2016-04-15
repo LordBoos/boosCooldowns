@@ -20,6 +20,10 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import com.coloredcarrot.mcapi.json.JSON;
+import com.coloredcarrot.mcapi.json.JSONClickAction;
+import com.coloredcarrot.mcapi.json.JSONColor;
+import com.coloredcarrot.mcapi.json.JSONComponent;
+import com.coloredcarrot.mcapi.json.JSONHoverAction;
 import cz.boosik.boosCooldown.Managers.BoosAliasManager;
 import cz.boosik.boosCooldown.Managers.BoosConfigManager;
 import cz.boosik.boosCooldown.Managers.BoosCoolDownManager;
@@ -295,8 +299,25 @@ public class BoosCoolDownListener implements Listener {
                                 .replace("&uses&", String.valueOf(limit - uses));
                         boosChat.sendMessageToPlayer(player, "    " + limitMessage);
                     }
-                    boosChat.sendMessageToPlayer(player, "    &2" + BoosConfigManager.getConfirmCommandMessage());
-                    boosChat.sendMessageToPlayer(player, "    &c" + BoosConfigManager.getCancelCommandMessage());
+                    String yesString = BoosConfigManager.getConfirmCommandMessage();
+                    JSONClickAction yesClick = new JSONClickAction.RunCommand(yesString);
+                    JSONHoverAction yesHover = new JSONHoverAction.ShowStringText(BoosConfigManager.getConfirmCommandHint());
+                    JSONComponent yes = new JSONComponent("    " + yesString);
+                    yes.setColor(JSONColor.GREEN).setBold(true);
+                    yes.setClickAction(yesClick);
+                    yes.setHoverAction(yesHover);
+                    String test = yes.get();
+                    yes.send(player);
+
+                    String noString = BoosConfigManager.getCancelCommandMessage();
+                    JSONClickAction noClick = new JSONClickAction.RunCommand(noString);
+                    JSONHoverAction noHover = new JSONHoverAction.ShowStringText(BoosConfigManager.getCancelCommandHint());
+                    JSONComponent no = new JSONComponent("    " + noString);
+                    no.setColor(JSONColor.RED).setBold(true);
+                    no.setClickAction(noClick);
+                    no.setHoverAction(noHover);
+                    no.send(player);
+
                     event.setCancelled(true);
                     return;
                 } else {

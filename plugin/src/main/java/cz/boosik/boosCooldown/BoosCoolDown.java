@@ -209,7 +209,9 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
                 String jmeno = args[1];
                 Player player = Bukkit.getPlayerExact(jmeno);
                 UUID uuid = player.getUniqueId();
-                if (sender.hasPermission("booscooldowns.clearcooldowns") && args[0].equalsIgnoreCase("clearcooldowns")) {
+                if (args[0].equalsIgnoreCase("chat")) {
+                    player.chat(args[1]);
+                } else if (sender.hasPermission("booscooldowns.clearcooldowns") && args[0].equalsIgnoreCase("clearcooldowns")) {
                     String co = "cooldown";
                     BoosConfigManager.clearSomething(co, uuid);
                     boosChat.sendMessageToCommandSender(sender,

@@ -96,6 +96,55 @@ public interface JSONHoverAction<T> {
     }
 
     /**
+     * Shows some JSON-formed text when hovering over the text in the chat.
+     */
+    public class ShowStringText
+            implements JSONHoverAction<String> {
+
+        /**
+         * The action name
+         *
+         * @see #getActionName()
+         */
+        public static final String NAME = "show_text";
+
+        private String value;
+
+        /**
+         * Constructs a {@link JSONHoverAction.ShowText}
+         *
+         * @param value (JSON) - the value associated with this JSONHoverAction
+         */
+        public ShowStringText(String value) {
+
+            this.value = value;
+
+        }
+
+        @Override
+        public String getValue() {
+            return value;
+        }
+
+        @Override
+        public JSONHoverAction<String> setValue(String newValue) {
+            value = newValue;
+            return this;
+        }
+
+        @Override
+        public String getValueString() {
+            return value + "\"";
+        }
+
+        @Override
+        public String getActionName() {
+            return NAME;
+        }
+
+    }
+
+    /**
      * Shows an item when hovering over the text in the chat.
      */
     public class ShowItem
