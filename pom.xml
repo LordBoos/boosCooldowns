@@ -9,6 +9,7 @@
         <module>nms/NMS_hook_1_8_R2</module>
         <module>nms/NMS_hook_1_8_R3</module>
         <module>nms/NMS_hook_1_9_R1</module>
+		<module>nms/NMS_hook_1_9_R2</module>
         <module>nms/NMS</module>
         <module>plugin</module>
         <module>jar</module>
@@ -16,7 +17,7 @@
     <packaging>pom</packaging>
 	<url>http://maven.apache.org</url>
 	<properties>
-        <boosCooldowns.version>3.11.0</boosCooldowns.version>
+		<boosCooldowns.version>3.11.1</boosCooldowns.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <minecraft.version>1.9.2</minecraft.version>
