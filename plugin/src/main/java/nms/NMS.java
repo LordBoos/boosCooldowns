@@ -29,7 +29,11 @@ public class NMS {
             return new NMSSetupResponse(null, false);
         }
 
-        hook = new NMSHook();
+        try {
+            hook = new NMSHook();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
         return new NMSSetupResponse(version, true);
 
