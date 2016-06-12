@@ -5,13 +5,6 @@
 	<artifactId>boosCooldowns</artifactId>
     <version>${boosCooldowns.version}</version>
     <modules>
-        <module>nms/NMS_hook_1_8_R1</module>
-        <module>nms/NMS_hook_1_8_R2</module>
-        <module>nms/NMS_hook_1_8_R3</module>
-        <module>nms/NMS_hook_1_9_R1</module>
-		<module>nms/NMS_hook_1_9_R2</module>
-		<module>nms/NMS_hook_1_10_R1</module>
-        <module>nms/NMS</module>
         <module>plugin</module>
         <module>jar</module>
 	</modules>

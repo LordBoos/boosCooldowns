@@ -15,48 +15,6 @@
     <dependencies>
         <dependency>
             <groupId>cz.boosik</groupId>
-            <artifactId>NMS</artifactId>
-            <version>${boosCooldowns.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>cz.boosik</groupId>
-            <artifactId>NMS_hook_1_8_R3</artifactId>
-            <version>${boosCooldowns.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>cz.boosik</groupId>
-            <artifactId>NMS_hook_1_8_R1</artifactId>
-            <version>${boosCooldowns.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>cz.boosik</groupId>
-            <artifactId>NMS_hook_1_8_R2</artifactId>
-            <version>${boosCooldowns.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>cz.boosik</groupId>
-            <artifactId>NMS_hook_1_9_R1</artifactId>
-            <version>${boosCooldowns.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>cz.boosik</groupId>
-            <artifactId>NMS_hook_1_9_R2</artifactId>
-            <version>${boosCooldowns.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>cz.boosik</groupId>
-            <artifactId>NMS_hook_1_10_R1</artifactId>
-            <version>${boosCooldowns.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>cz.boosik</groupId>
             <artifactId>plugin</artifactId>
             <version>${boosCooldowns.version}</version>
             <scope>compile</scope>

@@ -7,22 +7,22 @@ import org.bukkit.entity.Player;
  *
  * @author ColoredCarrot
  */
-public interface NMSHook {
+public interface INMSHook {
 
     /**
      * Sends a JSON message to a player.
      *
-     * @param json   (String) - the plain JSON
+     * @param json (String) - the plain JSON
      * @param player (Player) - the player
      */
-    public void sendJSON(String json, Player player);
+    void sendJSON(String json, Player player);
 
     /**
      * Sends an actionbar to a player.
      *
-     * @param json   (String) - the plain JSON
+     * @param json (String) - the plain JSON
      * @param player (Player) - the player
      */
-    public void sendActionBar(String json, Player player);
+    void sendActionBar(String json, Player player);
 
 }

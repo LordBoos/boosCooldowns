@@ -9,9 +9,9 @@ import org.bukkit.plugin.Plugin;
  */
 public class NMS {
 
-    private static NMSHook hook;
+    private static INMSHook hook;
     private static String version;
-    private static boolean compatible = false;
+    private static boolean compatible = true;
 
     /**
      * Gets the server version and adjusts this API accordingly.
@@ -29,33 +29,19 @@ public class NMS {
             return new NMSSetupResponse(null, false);
         }
 
-        if (version.equals("v1_9_R1")) {
-            hook = new NMSHook_v1_9_R1();
-        } else if (version.equals("v1_9_R2")) {
-            hook = new NMSHook_v1_9_R2();
-        } else if (version.equals("v1_8_R3")) {
-            hook = new NMSHook_v1_8_R3();
-        } else if (version.equals("v1_8_R2")) {
-            hook = new NMSHook_v1_8_R2();
-        } else if (version.equals("v1_8_R1")) {
-            hook = new NMSHook_v1_8_R1();
-        } else if (version.equals("v1_10_R1")) {
-            hook = new NMSHook_v1_10_R1();
-        }
+        hook = new NMSHook();
 
-        compatible = hook != null;
-
-        return new NMSSetupResponse(version, compatible);
+        return new NMSSetupResponse(version, true);
 
     }
 
     /**
      * Gets the NMS hook, if NMS is hooked.
      *
-     * @return (NMSHook) - the NMSHook.
+     * @return (INMSHook) - the INMSHook.
      * @throws NMSNotHookedException if NMS is not hooked (by using {@link #setup(Plugin)})
      */
-    public static NMSHook getHook()
+    public static INMSHook getHook()
             throws NMSNotHookedException {
 
         if (!compatible) {
