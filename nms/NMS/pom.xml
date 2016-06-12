@@ -56,6 +56,12 @@
             <version>${boosCooldowns.version}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>cz.boosik</groupId>
+            <artifactId>NMS_hook_1_10_R1</artifactId>
+            <version>${boosCooldowns.version}</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 </project>

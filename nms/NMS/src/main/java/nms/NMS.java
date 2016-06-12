@@ -32,13 +32,15 @@ public class NMS {
         if (version.equals("v1_9_R1")) {
             hook = new NMSHook_v1_9_R1();
         } else if (version.equals("v1_9_R2")) {
-            hook = new NMSHook_v1_9_R2();
+            hook = new NMSHook_v1_10_R1();
         } else if (version.equals("v1_8_R3")) {
             hook = new NMSHook_v1_8_R3();
         } else if (version.equals("v1_8_R2")) {
             hook = new NMSHook_v1_8_R2();
         } else if (version.equals("v1_8_R1")) {
             hook = new NMSHook_v1_8_R1();
+        } else if (version.equals("v1_10_R1")) {
+            hook = new NMSHook_v1_10_R1();
         }
 
         compatible = hook != null;

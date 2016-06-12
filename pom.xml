@@ -10,19 +10,20 @@
         <module>nms/NMS_hook_1_8_R3</module>
         <module>nms/NMS_hook_1_9_R1</module>
 		<module>nms/NMS_hook_1_9_R2</module>
+		<module>nms/NMS_hook_1_10_R1</module>
         <module>nms/NMS</module>
         <module>plugin</module>
         <module>jar</module>
-    </modules>
+	</modules>
     <packaging>pom</packaging>
 	<url>http://maven.apache.org</url>
 	<properties>
-		<boosCooldowns.version>3.11.1</boosCooldowns.version>
+		<boosCooldowns.version>3.11.2</boosCooldowns.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <minecraft.version>1.9.2</minecraft.version>
+		<minecraft.version>1.10</minecraft.version>
 		<bukkit.version>R0.1</bukkit.version>
-		<bukkit.packet>v1_9_R1</bukkit.packet>
+		<bukkit.packet>v1_10_R1</bukkit.packet>
 	</properties>
 	<pluginRepositories>
 		<pluginRepository>
