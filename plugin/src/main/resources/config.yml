@@ -71,6 +71,7 @@ options:
     paid_xp_for_command: '&6Price of&e &command& &6was &e%s levels'
     insufficient_items: '&6You have not enough items!&e &command& &6needs &e%s'
     insufficient_xp: '&6You have not enough XP!&e &command& &6needs &e%s'
+    insufficient_xp_requirement: '&6Your level is too low to use this!&e &command& &6needs &e%s'
     limit_achieved: '&6You cannot use this command anymore!&f'
     limit_reset: '&6Wait&e &seconds& &unit&&6 before your limit for command&e &command&
       &6is reset.&f'
@@ -213,6 +214,9 @@ commands:
       /testxpcommand:
         #this command costs 5 experience levels to be used
         xpcost: 5
+      /testxpreq:
+        #this command needs player to have 30 experience levels to be used, but does not take experience levels from player
+        xprequirement: 30
     #this group will only work for players that have booscooldowns.vip permission (player can only have one group at a time and no inheritance is possible atm
     vip:
       /command *:

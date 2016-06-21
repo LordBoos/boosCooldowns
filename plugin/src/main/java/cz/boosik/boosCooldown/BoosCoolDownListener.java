@@ -35,17 +35,17 @@ import cz.boosik.boosCooldown.Managers.BoosXpCostManager;
 import util.boosChat;
 
 public class BoosCoolDownListener implements Listener {
-    public static Map<String, Boolean> commandQueue = new ConcurrentHashMap();
+    public static Map<String, Boolean> commandQueue = new ConcurrentHashMap<>();
     private static BoosCoolDown plugin;
 
-    public BoosCoolDownListener(BoosCoolDown instance) {
+    BoosCoolDownListener(BoosCoolDown instance) {
         plugin = instance;
     }
 
     private void checkRestrictions(PlayerCommandPreprocessEvent event,
                                    Player player, String regexCommad, String originalCommand,
                                    int warmupTime, int cooldownTime, double price, String item,
-                                   int count, String name, List<String> lore, List<String> enchants, int limit, int xpPrice) {
+                                   int count, String name, List<String> lore, List<String> enchants, int limit, int xpPrice, int xpRequirement) {
         boolean blocked = false;
         String perm = BoosConfigManager.getPermission(player, regexCommad);
         if (!(perm == null)) {
@@ -71,7 +71,8 @@ public class BoosCoolDownListener implements Listener {
                 }
             } else if (BoosPriceManager.has(player, price)
                     & BoosItemCostManager.has(player, item, count, name, lore, enchants)
-                    & BoosXpCostManager.has(player, xpPrice)) {
+                    & BoosXpCostManager.has(player, xpPrice)
+                    & BoosXpCostManager.has(player, xpRequirement)) {
                 if (BoosCoolDownManager.coolDown(player, regexCommad,
                         originalCommand, cooldownTime)) {
                     event.setCancelled(true);
@@ -79,7 +80,8 @@ public class BoosCoolDownListener implements Listener {
             }
             if (BoosPriceManager.has(player, price)
                     & BoosItemCostManager.has(player, item, count, name, lore, enchants)
-                    & BoosXpCostManager.has(player, xpPrice)) {
+                    & BoosXpCostManager.has(player, xpPrice)
+                    & BoosXpCostManager.has(player, xpRequirement)) {
                 if (!event.isCancelled()) {
                     BoosPriceManager.payForCommand(event, player, regexCommad,
                             originalCommand, price);
@@ -97,7 +99,7 @@ public class BoosCoolDownListener implements Listener {
                 boolean cooldownInProgress = BoosCoolDownManager.isCoolingdown(player, regexCommad, cooldownTime);
                 if (!BoosPriceManager.has(player, price)
                         && !warmupInProgress && !cooldownInProgress) {
-                    String msg = "";
+                    String msg;
                     msg = String.format(
                             BoosConfigManager.getInsufficientFundsMessage(),
                             BoosCoolDown.getEconomy().format(price),
@@ -109,7 +111,7 @@ public class BoosCoolDownListener implements Listener {
                 }
                 if (!BoosItemCostManager.has(player, item, count, name, lore, enchants)
                         && !warmupInProgress && !cooldownInProgress) {
-                    String msg = "";
+                    String msg;
                     msg = String.format(
                             BoosConfigManager.getInsufficientItemsMessage(), "");
                     JSON json = getItemStackJson(1, item, count, name, lore, enchants);
@@ -117,9 +119,18 @@ public class BoosCoolDownListener implements Listener {
                     boosChat.sendMessageToPlayer(player, msg);
                     json.send(player);
                 }
+                if (!BoosXpCostManager.has(player, xpRequirement)
+                        && !warmupInProgress && !cooldownInProgress) {
+                    String msg;
+                    msg = String.format(
+                            BoosConfigManager.getInsufficientXpRequirementMessage(),
+                            (xpRequirement));
+                    msg = msg.replaceAll("&command&", originalCommand);
+                    boosChat.sendMessageToPlayer(player, msg);
+                }
                 if (!BoosXpCostManager.has(player, xpPrice)
                         && !warmupInProgress && !cooldownInProgress) {
-                    String msg = "";
+                    String msg;
                     msg = String.format(
                             BoosConfigManager.getInsufficientXpMessage(),
                             (xpPrice));
@@ -129,8 +140,8 @@ public class BoosCoolDownListener implements Listener {
                 event.setCancelled(true);
             }
             if (!event.isCancelled()) {
-                String msg = String.format(BoosConfigManager.getMessage(
-                        regexCommad, player));
+                String msg = BoosConfigManager.getMessage(
+                        regexCommad, player);
                 if (!msg.equals("")) {
                     boosChat.sendMessageToPlayer(player, msg);
                 }
@@ -211,6 +222,7 @@ public class BoosCoolDownListener implements Listener {
         int limit = -1;
         int cooldownTime = 0;
         int xpPrice = 0;
+        int xpRequirement = 0;
         on = BoosCoolDown.isPluginOnForPlayer(player);
         if (aliases != null) {
             originalCommand = BoosAliasManager.checkCommandAlias(
@@ -236,6 +248,7 @@ public class BoosCoolDownListener implements Listener {
                     if (BoosConfigManager.getXpPriceEnabled()) {
                         xpPrice = BoosConfigManager.getXpPrice(regexCommad,
                                 player);
+                        xpRequirement = BoosConfigManager.getXpRequirement(regexCommad, player);
                     }
                     if (BoosConfigManager.getItemCostEnabled()) {
                         item = BoosConfigManager.getItemCostItem(regexCommad,
@@ -260,7 +273,7 @@ public class BoosCoolDownListener implements Listener {
                     .contains(uuid + "@" + originalCommand) && commandQueue.get(uuid + "@" + originalCommand))) {
                 this.checkRestrictions(event, player, regexCommad, originalCommand,
                         warmupTime, cooldownTime, price, item, count, name, lore, enchants, limit,
-                        xpPrice);
+                        xpPrice, xpRequirement);
             } else {
                 if ((price > 0 || xpPrice > 0 || count > 0 || limit > 0) && !BoosWarmUpManager.isWarmUpProcess(player,
                         regexCommad) && !BoosCoolDownManager.isCoolingdown(player, regexCommad, cooldownTime)) {
@@ -306,7 +319,6 @@ public class BoosCoolDownListener implements Listener {
                     yes.setColor(JSONColor.GREEN).setBold(true);
                     yes.setClickAction(yesClick);
                     yes.setHoverAction(yesHover);
-                    String test = yes.get();
                     yes.send(player);
 
                     String noString = BoosConfigManager.getCancelCommandMessage();
@@ -323,7 +335,7 @@ public class BoosCoolDownListener implements Listener {
                 } else {
                     this.checkRestrictions(event, player, regexCommad, originalCommand,
                             warmupTime, cooldownTime, price, item, count, name, lore, enchants, limit,
-                            xpPrice);
+                            xpPrice, xpRequirement);
                 }
             }
         }

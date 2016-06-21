@@ -34,8 +34,7 @@ public class BoosWarmUpManager {
     }
 
     public static void cancelWarmUps(Player player) {
-        Map<String, BoosWarmUpTimer> playercommands2 = playercommands;
-        Iterator<String> iter = playercommands2.keySet().iterator();
+        Iterator<String> iter = ((Map<String, BoosWarmUpTimer>) playercommands).keySet().iterator();
         while (iter.hasNext()) {
             if (iter.next().startsWith(player.getUniqueId() + "@")) {
                 killTimer(player);
@@ -45,8 +44,7 @@ public class BoosWarmUpManager {
     }
 
     public static boolean hasWarmUps(Player player) {
-        Map<String, BoosWarmUpTimer> playercommands2 = playercommands;
-        for (String key : playercommands2.keySet()) {
+        for (String key : ((Map<String, BoosWarmUpTimer>) playercommands).keySet()) {
             if (key.startsWith(player.getUniqueId() + "@")) {
                 return true;
             }
@@ -69,8 +67,7 @@ public class BoosWarmUpManager {
     }
 
     private static void killTimer(Player player) {
-        Map<String, BoosWarmUpTimer> playercommands2 = playercommands;
-        for (String key : playercommands2.keySet()) {
+        for (String key : ((Map<String, BoosWarmUpTimer>) playercommands).keySet()) {
             if (key.startsWith(player.getUniqueId() + "@")) {
                 playercommands.get(key).cancel();
             }

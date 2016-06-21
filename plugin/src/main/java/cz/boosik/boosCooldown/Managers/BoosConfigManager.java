@@ -512,12 +512,23 @@ public class BoosConfigManager {
         return price;
     }
 
+    public static int getXpRequirement(String regexCommand, Player player) {
+        int price;
+        String group = getCommandGroup(player);
+        price = conf.getInt("commands.groups." + group + "." + regexCommand + ".xprequirement", 0);
+        return price;
+    }
+
     public static boolean getXpPriceEnabled() {
         return conf.getBoolean("options.options.xp_cost_enabled", true);
     }
 
     public static String getInsufficientXpMessage() {
         return conf.getString("options.messages.insufficient_xp", "&6You have not enough XP!&e &command& &6needs &e%s");
+    }
+
+    public static String getInsufficientXpRequirementMessage() {
+        return conf.getString("options.messages.insufficient_xp_requirement", "&6Your level is too low to use this!&e &command& &6needs &e%s");
     }
 
     public static String getInvalidCommandSyntaxMessage() {
