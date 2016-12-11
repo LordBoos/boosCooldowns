@@ -11,12 +11,12 @@
     <packaging>pom</packaging>
 	<url>http://maven.apache.org</url>
 	<properties>
-		<boosCooldowns.version>3.12.0</boosCooldowns.version>
+		<boosCooldowns.version>3.13.0</boosCooldowns.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<minecraft.version>1.10</minecraft.version>
+		<minecraft.version>1.11</minecraft.version>
 		<bukkit.version>R0.1</bukkit.version>
-		<bukkit.packet>v1_10_R1</bukkit.packet>
+		<bukkit.packet>v1_11_R1</bukkit.packet>
 	</properties>
 	<pluginRepositories>
 		<pluginRepository>
@@ -32,12 +32,17 @@
 	</pluginRepositories>
 	<repositories>
 		<repository>
+			<id>dakani</id>
+			<name>Dakani Nexus Repo</name>
+			<url>https://repo.dakanilabs.com/repository/maven-public/</url>
+		</repository>
+		<repository>
 			<id>bukkit-repo</id>
 			<url>http://repo.bukkit.org/content/groups/public/</url>
 		</repository>
 		<repository>
 			<id>vault-repo</id>
-			<url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
+			<url>http://nexus.hc.to/content/repositories/pub_releases</url>
 		</repository>
 		<repository>
 			<id>spigot-repo</id>
