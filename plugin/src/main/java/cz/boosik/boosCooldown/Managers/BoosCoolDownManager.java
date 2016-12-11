@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
-import util.boosChat;
+import util.BoosChat;
 
 public class BoosCoolDownManager {
 
@@ -99,7 +99,7 @@ public class BoosCoolDownManager {
                 msg = msg.replaceAll("&unit&", "");
                 msg = msg.replaceAll(" +", " ");
 
-                boosChat.sendMessageToPlayer(player, msg);
+                BoosChat.sendMessageToPlayer(player, msg);
                 return true;
             }
         }
@@ -199,7 +199,7 @@ public class BoosCoolDownManager {
                     msg = msg.replaceAll("&unit&", "");
                     msg = msg.replaceAll(" +", " ");
 
-                    boosChat.sendMessageToPlayer(player, msg);
+                    BoosChat.sendMessageToPlayer(player, msg);
                     return false;
                 }
             }

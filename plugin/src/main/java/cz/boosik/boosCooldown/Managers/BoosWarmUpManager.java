@@ -10,7 +10,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import cz.boosik.boosCooldown.BoosCoolDown;
 import cz.boosik.boosCooldown.Runnables.BoosWarmUpTimer;
-import util.boosChat;
+import util.BoosChat;
 
 public class BoosWarmUpManager {
 
@@ -134,7 +134,7 @@ public class BoosWarmUpManager {
             msg = msg.replaceAll("&unit&", "");
             msg = msg.replaceAll(" +", " ");
 
-            boosChat.sendMessageToPlayer(player, msg);
+            BoosChat.sendMessageToPlayer(player, msg);
 
             Timer scheduler = new Timer();
             BoosWarmUpTimer scheduleMe = new BoosWarmUpTimer(bCoolDown, player, regexCommand, originalCommand);
@@ -145,7 +145,7 @@ public class BoosWarmUpManager {
         } else {
             String msg = BoosConfigManager.getWarmUpAlreadyStartedMessage();
             msg = msg.replaceAll("&command&", originalCommand);
-            boosChat.sendMessageToPlayer(player, msg);
+            BoosChat.sendMessageToPlayer(player, msg);
         }
     }
 }

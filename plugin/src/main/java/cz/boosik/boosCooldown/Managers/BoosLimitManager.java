@@ -9,7 +9,7 @@ import java.util.Set;
 import org.bukkit.entity.Player;
 
 import cz.boosik.boosCooldown.BoosCoolDown;
-import util.boosChat;
+import util.BoosChat;
 
 public class BoosLimitManager {
 
@@ -75,7 +75,7 @@ public class BoosLimitManager {
                         msg = msg.replaceAll("&unit&",
                                 BoosConfigManager.getUnitSecondsMessage());
                     }
-                    boosChat.sendMessageToPlayer(player, msg);
+                    BoosChat.sendMessageToPlayer(player, msg);
                 } else if (limitResetDelayGlobal > 0) {
                     if (confTime != null) {
                         callastTimeGlobal.setTime(confTime);
@@ -101,12 +101,12 @@ public class BoosLimitManager {
                             msg = msg.replaceAll("&unit&",
                                     BoosConfigManager.getUnitSecondsMessage());
                         }
-                        boosChat.sendMessageToPlayer(player, msg);
+                        BoosChat.sendMessageToPlayer(player, msg);
                     }
                 } else {
                     String msg = String.format(BoosConfigManager
                             .getCommandBlockedMessage());
-                    boosChat.sendMessageToPlayer(player, msg);
+                    BoosChat.sendMessageToPlayer(player, msg);
                 }
                 return true;
             }
@@ -157,7 +157,7 @@ public class BoosLimitManager {
             message = message.replaceAll("&command&", comm);
             message = message.replaceAll("&limit&", String.valueOf(lim));
             message = message.replaceAll("&times&", String.valueOf(num));
-            boosChat.sendMessageToPlayer(send, message);
+            BoosChat.sendMessageToPlayer(send, message);
         }
     }
 

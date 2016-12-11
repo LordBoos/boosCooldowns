@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import cz.boosik.boosCooldown.BoosCoolDown;
 import cz.boosik.boosCooldown.Managers.BoosConfigManager;
-import util.boosChat;
+import util.BoosChat;
 
 public class BoosSignInteractListener implements Listener {
     private final BoosCoolDown plugin;
@@ -57,7 +57,7 @@ public class BoosSignInteractListener implements Listener {
                         plugin.getServer().dispatchCommand(
                                 plugin.getServer().getConsoleSender(), msg);
                     } else {
-                        boosChat.sendMessageToPlayer(player,
+                        BoosChat.sendMessageToPlayer(player,
                                 BoosConfigManager.getCannotUseSignMessage());
                     }
                 }

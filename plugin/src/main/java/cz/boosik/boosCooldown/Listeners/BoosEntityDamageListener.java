@@ -9,7 +9,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 
 import cz.boosik.boosCooldown.Managers.BoosConfigManager;
 import cz.boosik.boosCooldown.Managers.BoosWarmUpManager;
-import util.boosChat;
+import util.BoosChat;
 
 public class BoosEntityDamageListener implements Listener {
 
@@ -20,7 +20,7 @@ public class BoosEntityDamageListener implements Listener {
             Player player = (Player) entity;
             if (!player.hasPermission("booscooldowns.nocancel.damage")) {
                 if (BoosWarmUpManager.hasWarmUps(player)) {
-                    boosChat.sendMessageToPlayer(player, BoosConfigManager
+                    BoosChat.sendMessageToPlayer(player, BoosConfigManager
                             .getWarmUpCancelledByDamageMessage());
                     BoosWarmUpManager.cancelWarmUps(player);
                 }

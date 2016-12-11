@@ -10,6 +10,8 @@ options:
     item_cost_enabled: true
     #should xp costs be enabled?
     xp_cost_enabled: true
+    #should player points prices be enabled?
+    player_points_prices_enabled: true
     #should limits be enabled?
     limits_enabled: true
     #do not ever use this if you like your server
@@ -69,9 +71,11 @@ options:
     paid_for_command: '&6Price of&e &command& &6was&e %s &6and you now have&e %s'
     paid_items_for_command: '&6Price of&e &command& &6was &e%s'
     paid_xp_for_command: '&6Price of&e &command& &6was &e%s levels'
+    paid_player_points_for_command: '&6Price of&e &command& &6was &e%s PlayerPoints &6and you now have&e %s PlayerPoints'
     insufficient_items: '&6You have not enough items!&e &command& &6needs &e%s'
     insufficient_xp: '&6You have not enough XP!&e &command& &6needs &e%s'
     insufficient_xp_requirement: '&6Your level is too low to use this!&e &command& &6needs &e%s'
+    insufficient_player_points: '&6You have not enough PlayerPoints!&e &command& &6needs &e%s'
     limit_achieved: '&6You cannot use this command anymore!&f'
     limit_reset: '&6Wait&e &seconds& &unit&&6 before your limit for command&e &command&
       &6is reset.&f'
@@ -87,6 +91,7 @@ options:
     confirmation_item_price_of_command: '&6its price is&e &itemprice& &itemname&'
     confirmation_limit_of_command: '&6it is limited to&e &limit& &6uses and you can still use it&e &uses& &6times'
     confirmation_xp_price_of_command: '&6its price is&e &xpprice& experience levels'
+    confirmation_price_of_command: '&6its price is&e &ppprice& PlayerPoints &6and you now have &e&ppbalance& PlayerPoints'
     confirmation_confirm_command_execution: 'Yes'
     confirmation_confirm_command_execution_hint: 'Click to confirm'
     confirmation_cancel_command_execution: 'No'
@@ -99,6 +104,9 @@ commands:
   groups:
     #this group will work for all players without any booscooldowns permission
     default:
+      /playerpointstest:
+        #PlayerPoints required to use this command
+        playerpoints: 5
       /permissionstest:
         #permission required to use this command
         permission: "nice.permission"

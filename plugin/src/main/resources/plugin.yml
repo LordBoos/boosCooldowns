@@ -2,7 +2,7 @@ name: boosCooldowns
 main: cz.boosik.boosCooldown.BoosCoolDown
 version: 3.13.0
 authors: [LordBoos (boosik)]
-softdepend: [Vault]
+softdepend: [Vault, PlayerPoints]
 description: >
              Shortcuts
 commands:
@@ -59,6 +59,12 @@ permissions:
         default: false
     booscooldowns.noxpcost./command:
         description: Command "/command" will not be affected by xp cost for users with this permission.
+        default: false
+    booscooldowns.noplayerpoints:
+        description: Players commands will always be free of charge (PlayerPoints).
+        default: false
+    booscooldowns.noplayerpoints./command:
+        description: Command "/command" will not be affected by price for users with this permission (PlayerPoints).
         default: false
     booscooldowns.nocooldown:
         description: Player wont be affected by cooldowns.

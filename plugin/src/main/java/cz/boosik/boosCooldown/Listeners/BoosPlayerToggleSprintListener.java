@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerToggleSprintEvent;
 
 import cz.boosik.boosCooldown.Managers.BoosConfigManager;
 import cz.boosik.boosCooldown.Managers.BoosWarmUpManager;
-import util.boosChat;
+import util.BoosChat;
 
 public class BoosPlayerToggleSprintListener implements Listener {
 
@@ -18,7 +18,7 @@ public class BoosPlayerToggleSprintListener implements Listener {
         if (player != null
                 && !player.hasPermission("booscooldowns.nocancel.sprint")) {
             if (BoosWarmUpManager.hasWarmUps(player)) {
-                boosChat.sendMessageToPlayer(player,
+                BoosChat.sendMessageToPlayer(player,
                         BoosConfigManager.getCancelWarmupOnSprintMessage());
                 BoosWarmUpManager.cancelWarmUps(player);
             }

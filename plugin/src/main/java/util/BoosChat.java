@@ -9,13 +9,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @SuppressWarnings("ALL")
-public class boosChat {
+public class BoosChat {
 
     private static final Logger log = Logger.getLogger("Minecraft");
     private static final List<String> Colors = new LinkedList<>();
     private static Server server;
 
-    public boosChat(Server server) {
+    public BoosChat(Server server) {
         Colors.add("&black&");
         Colors.add("&darkblue&");
         Colors.add("&darkgreen&");
@@ -48,11 +48,11 @@ public class boosChat {
         Colors.add("&d");
         Colors.add("&e");
         Colors.add("&f");
-        boosChat.server = server;
+        BoosChat.server = server;
     }
 
     public static void broadcastMessage(String message) {
-        message = boosChat.replaceColorCodes(message);
+        message = BoosChat.replaceColorCodes(message);
         log.info("[bColoredChat] " + message);
         server.broadcastMessage(message);
     }
@@ -86,19 +86,19 @@ public class boosChat {
     public static void sendMessageToCommandSender(CommandSender sender,
                                                   String message) {
         if (sender instanceof Player) {
-            boosChat.sendMessageToPlayer((Player) sender, message);
+            BoosChat.sendMessageToPlayer((Player) sender, message);
         } else {
-            boosChat.sendMessageToServer(message);
+            BoosChat.sendMessageToServer(message);
         }
     }
 
     public static void sendMessageToPlayer(Player player, String message) {
-        message = boosChat.replaceColorCodes(message);
+        message = BoosChat.replaceColorCodes(message);
         player.sendMessage(message);
     }
 
     private static void sendMessageToServer(String message) {
-        message = boosChat.replaceColorCodes(message);
+        message = BoosChat.replaceColorCodes(message);
         log.info(message);
     }
 }

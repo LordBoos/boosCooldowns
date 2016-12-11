@@ -13,7 +13,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import cz.boosik.boosCooldown.BoosCoolDown;
-import util.boosChat;
+import util.BoosChat;
 
 public class BoosConfigManager {
 
@@ -473,9 +473,9 @@ public class BoosConfigManager {
         Boolean def = confusers.getBoolean("users." + player.getUniqueId() + ".confirmations", getConfirmCommandEnabled(player));
         confusers.set("users." + player.getUniqueId() + ".confirmations", !def);
         if (def) {
-            boosChat.sendMessageToPlayer(player, "&6[boosCooldowns]&e " + getConfirmToggleMessageFalse());
+            BoosChat.sendMessageToPlayer(player, "&6[boosCooldowns]&e " + getConfirmToggleMessageFalse());
         } else {
-            boosChat.sendMessageToPlayer(player, "&6[boosCooldowns]&e " + getConfirmToggleMessageTrue());
+            BoosChat.sendMessageToPlayer(player, "&6[boosCooldowns]&e " + getConfirmToggleMessageTrue());
         }
         saveConfusers();
         loadConfusers();
@@ -499,6 +499,17 @@ public class BoosConfigManager {
 
     public static boolean getItemCostEnabled() {
         return conf.getBoolean("options.options.item_cost_enabled", true);
+    }
+
+    public static boolean getPlayerPointsEnabled() {
+        return conf.getBoolean("options.options.player_points_prices_enabled", true);
+    }
+
+    public static int getPlayerPointsPrice(String regexCommand, Player player) {
+        int price;
+        String group = getCommandGroup(player);
+        price = conf.getInt("commands.groups." + group + "." + regexCommand + ".playerpoints", 0);
+        return price;
     }
 
     static String getPaidXPForCommandMessage() {
@@ -529,6 +540,10 @@ public class BoosConfigManager {
 
     public static String getInsufficientXpRequirementMessage() {
         return conf.getString("options.messages.insufficient_xp_requirement", "&6Your level is too low to use this!&e &command& &6needs &e%s");
+    }
+
+    public static String getInsufficientPlayerPointsMessage() {
+        return conf.getString("options.messages.insufficient_player_points", "'&6You have not enough PlayerPoints!&e &command& &6needs &e%s'");
     }
 
     public static String getInvalidCommandSyntaxMessage() {
@@ -662,6 +677,10 @@ public class BoosConfigManager {
         return conf.getString("options.messages.confirmation_xp_price_of_command", "&6its price is&e &xpprice& experience levels");
     }
 
+    public static String getItsPlayerPointsPriceMessage() {
+        return conf.getString("options.messages.confirmation_player_points_price_of_command", "&6its price is&e &ppprice& PlayerPoints &6and you now have &e&ppbalance& PlayerPoints");
+    }
+
     public static String getCommandCanceledMessage() {
         return conf.getString("options.messages.confirmation_command_cancelled", "&6Execution of command&e &command& &6was cancelled");
     }
@@ -677,5 +696,10 @@ public class BoosConfigManager {
         } else {
             return conf.getBoolean("options.options.command_confirmation", true);
         }
+    }
+
+    public static String getPlayerPointsForCommandMessage() {
+        return conf.getString("options.messages.paid_player_points_for_command", "Price of &command& was %s PlayerPoints and you now have %s" +
+                " PlayerPoints");
     }
 }

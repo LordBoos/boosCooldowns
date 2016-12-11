@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 import cz.boosik.boosCooldown.Managers.BoosConfigManager;
 import cz.boosik.boosCooldown.Managers.BoosWarmUpManager;
-import util.boosChat;
+import util.BoosChat;
 
 public class BoosPlayerMoveListener implements Listener {
     private int tempTimer = 0;
@@ -25,7 +25,7 @@ public class BoosPlayerMoveListener implements Listener {
                 if (BoosWarmUpManager.hasWarmUps(player) && (event.getFrom().getX() != event.getTo().getX() || event.getFrom().getZ() != event
                         .getTo()
                         .getZ() || event.getFrom().getY() != event.getTo().getY())) {
-                    boosChat.sendMessageToPlayer(player,
+                    BoosChat.sendMessageToPlayer(player,
                             BoosConfigManager.getWarmUpCancelledByMoveMessage());
                     BoosWarmUpManager.cancelWarmUps(player);
                 }

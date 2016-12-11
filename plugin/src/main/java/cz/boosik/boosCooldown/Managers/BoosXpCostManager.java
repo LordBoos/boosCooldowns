@@ -3,7 +3,7 @@ package cz.boosik.boosCooldown.Managers;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-import util.boosChat;
+import util.BoosChat;
 
 public class BoosXpCostManager {
 
@@ -19,7 +19,7 @@ public class BoosXpCostManager {
             String msg = String.format(BoosConfigManager.getPaidXPForCommandMessage(),
                     xpPrice);
             msg = msg.replaceAll("&command&", originalCommand);
-            boosChat.sendMessageToPlayer(player, msg);
+            BoosChat.sendMessageToPlayer(player, msg);
             return true;
         } else {
             return false;

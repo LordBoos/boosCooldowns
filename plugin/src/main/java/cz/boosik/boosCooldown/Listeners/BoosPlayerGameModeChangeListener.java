@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerGameModeChangeEvent;
 
 import cz.boosik.boosCooldown.Managers.BoosConfigManager;
 import cz.boosik.boosCooldown.Managers.BoosWarmUpManager;
-import util.boosChat;
+import util.BoosChat;
 
 public class BoosPlayerGameModeChangeListener implements Listener {
 
@@ -21,7 +21,7 @@ public class BoosPlayerGameModeChangeListener implements Listener {
             if (!player
                     .hasPermission("booscooldowns.nocancel.gamemodechange")) {
                 if (BoosWarmUpManager.hasWarmUps(player)) {
-                    boosChat.sendMessageToPlayer(player, BoosConfigManager
+                    BoosChat.sendMessageToPlayer(player, BoosConfigManager
                             .getCancelWarmupByGameModeChangeMessage());
                     BoosWarmUpManager.cancelWarmUps(player);
                 }

@@ -14,7 +14,7 @@ import com.coloredcarrot.mcapi.json.JSON;
 import com.coloredcarrot.mcapi.json.JSONColor;
 import com.coloredcarrot.mcapi.json.JSONComponent;
 import com.coloredcarrot.mcapi.json.JSONHoverAction;
-import util.boosChat;
+import util.BoosChat;
 
 public class BoosItemCostManager {
 
@@ -35,7 +35,7 @@ public class BoosItemCostManager {
                     BoosConfigManager.getPaidItemsForCommandMessage(), "");
             JSON json = getItemStackJson(1, item, count, name, lore, enchants);
             msg = msg.replaceAll("&command&", originalCommand);
-            boosChat.sendMessageToPlayer(player, msg);
+            BoosChat.sendMessageToPlayer(player, msg);
             json.send(player);
             return true;
         } else {

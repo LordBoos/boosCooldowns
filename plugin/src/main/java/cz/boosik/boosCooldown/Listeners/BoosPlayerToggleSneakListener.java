@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 import cz.boosik.boosCooldown.Managers.BoosConfigManager;
 import cz.boosik.boosCooldown.Managers.BoosWarmUpManager;
-import util.boosChat;
+import util.BoosChat;
 
 public class BoosPlayerToggleSneakListener implements Listener {
 
@@ -18,7 +18,7 @@ public class BoosPlayerToggleSneakListener implements Listener {
         if (player != null
                 && !player.hasPermission("booscooldowns.nocancel.sneak")) {
             if (BoosWarmUpManager.hasWarmUps(player)) {
-                boosChat.sendMessageToPlayer(player,
+                BoosChat.sendMessageToPlayer(player,
                         BoosConfigManager.getCancelWarmupOnSneakMessage());
                 BoosWarmUpManager.cancelWarmUps(player);
             }

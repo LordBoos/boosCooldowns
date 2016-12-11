@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import org.black_ixx.playerpoints.PlayerPoints;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -40,13 +41,14 @@ import cz.boosik.boosCooldown.Runnables.BoosGlobalLimitResetRunnable;
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
 import nms.NMSSetupResponse;
-import util.boosChat;
+import util.BoosChat;
 
 public class BoosCoolDown extends JavaPlugin implements Runnable {
 
     private static final Logger log = Logger.getLogger("Minecraft");
     private static PluginDescriptionFile pdfFile;
     private static Economy economy = null;
+    private static PlayerPoints playerPoints = null;
     private static boolean usingVault = false;
     private PluginManager pm;
 
@@ -56,6 +58,10 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 
     public static Economy getEconomy() {
         return economy;
+    }
+
+    public static PlayerPoints getPlayerPoints() {
+        return playerPoints;
     }
 
     public static Logger getLog() {
@@ -183,7 +189,7 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
             if (args.length == 1) {
                 if (sender.hasPermission("booscooldowns.reload") && args[0].equalsIgnoreCase("reload")) {
                     reload();
-                    boosChat.sendMessageToCommandSender(sender, "&6[" + pdfFile.getName() + "]&e" + " config reloaded");
+                    BoosChat.sendMessageToCommandSender(sender, "&6[" + pdfFile.getName() + "]&e" + " config reloaded");
                     return true;
                 } else if (sender.hasPermission("booscooldowns.list.limits") && args[0].equalsIgnoreCase("limits")) {
                     try {
@@ -214,20 +220,20 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
                 } else if (sender.hasPermission("booscooldowns.clearcooldowns") && args[0].equalsIgnoreCase("clearcooldowns")) {
                     String co = "cooldown";
                     BoosConfigManager.clearSomething(co, uuid);
-                    boosChat.sendMessageToCommandSender(sender,
+                    BoosChat.sendMessageToCommandSender(sender,
                             "&6[" + pdfFile.getName() + "]&e" + " cooldowns of player " + jmeno + " cleared");
                     return true;
                 } else if (sender.hasPermission("booscooldowns.clearuses") && command.equalsIgnoreCase("booscooldowns") && args[0].equalsIgnoreCase(
                         "clearuses")) {
                     String co = "uses";
                     BoosConfigManager.clearSomething(co, uuid);
-                    boosChat.sendMessageToCommandSender(sender, "&6[" + pdfFile.getName() + "]&e" + " uses of player " + jmeno + " cleared");
+                    BoosChat.sendMessageToCommandSender(sender, "&6[" + pdfFile.getName() + "]&e" + " uses of player " + jmeno + " cleared");
                     return true;
                 } else if (sender.hasPermission("booscooldowns.clearwarmups") && command.equalsIgnoreCase("booscooldowns")
                         && args[0].equalsIgnoreCase("clearwarmups")) {
                     String co = "warmup";
                     BoosConfigManager.clearSomething(co, uuid);
-                    boosChat.sendMessageToCommandSender(sender, "&6[" + pdfFile.getName() + "]&e" + " warmups of player " + jmeno + " cleared");
+                    BoosChat.sendMessageToCommandSender(sender, "&6[" + pdfFile.getName() + "]&e" + " warmups of player " + jmeno + " cleared");
                     return true;
                 }
             } else if (args.length == 3) {
@@ -238,19 +244,19 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
                 if (sender.hasPermission("booscooldowns.clearcooldowns") && args[0].equalsIgnoreCase("clearcooldowns")) {
                     String co = "cooldown";
                     BoosConfigManager.clearSomething(co, uuid, command2);
-                    boosChat.sendMessageToCommandSender(sender,
+                    BoosChat.sendMessageToCommandSender(sender,
                             "&6[" + pdfFile.getName() + "]&e" + " cooldown for command " + command2 + " of player " + uuid + " cleared");
                     return true;
                 } else if (sender.hasPermission("booscooldowns.clearuses") && args[0].equalsIgnoreCase("clearuses")) {
                     String co = "uses";
                     BoosConfigManager.clearSomething(co, uuid, command2);
-                    boosChat.sendMessageToCommandSender(sender,
+                    BoosChat.sendMessageToCommandSender(sender,
                             "&6[" + pdfFile.getName() + "]&e" + " uses for command " + command2 + " of player " + jmeno + " cleared");
                     return true;
                 } else if (sender.hasPermission("booscooldowns.clearwarmups") && args[0].equalsIgnoreCase("clearwarmups")) {
                     String co = "warmup";
                     BoosConfigManager.clearSomething(co, uuid, command2);
-                    boosChat.sendMessageToCommandSender(sender,
+                    BoosChat.sendMessageToCommandSender(sender,
                             "&6[" + pdfFile.getName() + "]&e" + " warmups for command " + command2 + " of player " + jmeno + " cleared");
                     return true;
 
@@ -266,11 +272,11 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
                             comm = comm.replace("_", " ");
                         }
                         BoosConfigManager.setAddToConfigFile(group, comm, what, value);
-                        boosChat.sendMessageToCommandSender(sender,
+                        BoosChat.sendMessageToCommandSender(sender,
                                 "&6[" + pdfFile.getName() + "]&e " + what + " for command" + comm + " in group " + group + " is now set to " + value);
                         return true;
                     } else {
-                        boosChat.sendMessageToCommandSender(sender, "&6[" + pdfFile.getName() + "]&e" + " Command has to start with \"/\".");
+                        BoosChat.sendMessageToCommandSender(sender, "&6[" + pdfFile.getName() + "]&e" + " Command has to start with \"/\".");
                         return true;
                     }
                 }
@@ -286,17 +292,17 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
                             comm = comm.replace("_", " ");
                         }
                         BoosConfigManager.setAddToConfigFile(group, comm, what, value);
-                        boosChat.sendMessageToCommandSender(sender,
+                        BoosChat.sendMessageToCommandSender(sender,
                                 "&6[" + pdfFile.getName() + "]&e " + what + " for command" + comm + " in group " + group + " is now set to " + value);
                         return true;
                     } else {
-                        boosChat.sendMessageToCommandSender(sender, "&6[" + pdfFile.getName() + "]&e" + " Command has to start with \"/\".");
+                        BoosChat.sendMessageToCommandSender(sender, "&6[" + pdfFile.getName() + "]&e" + " Command has to start with \"/\".");
                         return true;
                     }
                 }
 
             } else {
-                //				boosChat.sendMessageToCommandSender(sender,
+                //				BoosChat.sendMessageToCommandSender(sender,
                 //						"&6[" + pdfFile.getName() + "]&e"
                 //								+ " Invalid command or access denied!");
                 return false;
@@ -330,6 +336,7 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
         pm = getServer().getPluginManager();
         registerListeners();
         initializeVault();
+        hookPlayerPoints();
         BukkitScheduler scheduler = this.getServer().getScheduler();
         startLimitResetTimersGlobal();
         if (BoosConfigManager.getAutoSave()) {
@@ -359,6 +366,15 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
             return;
         }
 
+    }
+
+    private boolean hookPlayerPoints() {
+        final Plugin plugin = this.getServer().getPluginManager().getPlugin("PlayerPoints");
+        playerPoints = PlayerPoints.class.cast(plugin);
+        if (playerPoints != null) {
+            log.info("[" + pdfFile.getName() + "]" + " found [PlayerPoints], enabling support.");
+        }
+        return playerPoints != null;
     }
 
     private void registerListeners() {

@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 
 import cz.boosik.boosCooldown.Managers.BoosConfigManager;
-import util.boosChat;
+import util.BoosChat;
 
 public class BoosSignChangeListener implements Listener {
 
@@ -20,7 +20,7 @@ public class BoosSignChangeListener implements Listener {
             if (line2.equals("player")
                     && !player
                     .hasPermission("booscooldowns.signs.player.place")) {
-                boosChat.sendMessageToPlayer(player,
+                BoosChat.sendMessageToPlayer(player,
                         BoosConfigManager.getCannotCreateSignMessage());
                 event.getBlock().breakNaturally();
                 event.setCancelled(true);
@@ -28,7 +28,7 @@ public class BoosSignChangeListener implements Listener {
             if (line2.equals("server")
                     && !player
                     .hasPermission("booscooldowns.signs.server.place")) {
-                boosChat.sendMessageToPlayer(player,
+                BoosChat.sendMessageToPlayer(player,
                         BoosConfigManager.getCannotCreateSignMessage());
                 event.getBlock().breakNaturally();
                 event.setCancelled(true);

@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import cz.boosik.boosCooldown.Managers.BoosConfigManager;
 import cz.boosik.boosCooldown.Managers.BoosWarmUpManager;
-import util.boosChat;
+import util.BoosChat;
 
 public class BoosPlayerInteractListener implements Listener {
 
@@ -50,7 +50,7 @@ public class BoosPlayerInteractListener implements Listener {
                             || event.getClickedBlock().getType().name()
                             .equals("HOPPER")) {
                         event.setCancelled(true);
-                        boosChat.sendMessageToPlayer(player,
+                        BoosChat.sendMessageToPlayer(player,
                                 BoosConfigManager.getInteractBlockedMessage());
                     }
                 }
