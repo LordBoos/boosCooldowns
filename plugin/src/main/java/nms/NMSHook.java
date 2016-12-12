@@ -16,7 +16,7 @@ public class NMSHook
         implements INMSHook {
 
     private String version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
-    private Class<?> chatSerializer = version.startsWith("1_7")
+    private Class<?> chatSerializer = version.startsWith("v1_7")
             ? Class.forName("net.minecraft.server." + version + ".ChatSerializer")
             : Class.forName("net.minecraft.server." + version + ".IChatBaseComponent$ChatSerializer");
     private Class<?> chatComponent = Class.forName("net.minecraft.server." + version + ".IChatBaseComponent");
