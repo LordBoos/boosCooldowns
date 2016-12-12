@@ -368,15 +368,6 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
 
     }
 
-    private boolean hookPlayerPoints() {
-        final Plugin plugin = this.getServer().getPluginManager().getPlugin("PlayerPoints");
-        playerPoints = PlayerPoints.class.cast(plugin);
-        if (playerPoints != null) {
-            log.info("[" + pdfFile.getName() + "]" + " found [PlayerPoints], enabling support.");
-        }
-        return playerPoints != null;
-    }
-
     private void registerListeners() {
         HandlerList.unregisterAll(this);
         pm.registerEvents(new BoosCoolDownListener(this), this);
@@ -430,5 +421,16 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
             return (economy != null);
         }
         return false;
+    }
+
+    private boolean hookPlayerPoints() {
+        RegisteredServiceProvider<PlayerPoints> playerPointsProvider = getServer()
+                .getServicesManager()
+                .getRegistration(org.black_ixx.playerpoints.PlayerPoints.class);
+        if (playerPointsProvider != null) {
+            playerPoints = playerPointsProvider.getProvider();
+            log.info("[" + pdfFile.getName() + "]" + " found [PlayerPoints], enabling support.");
+        }
+        return playerPoints != null;
     }
 }

@@ -35,10 +35,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.Collection;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.zip.GZIPOutputStream;
@@ -46,13 +48,11 @@ import java.util.zip.GZIPOutputStream;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitTask;
 
-import cz.boosik.boosCooldown.BoosCoolDown;
-
-@SuppressWarnings("ALL")
 public class MetricsLite {
 
     /**
@@ -128,8 +128,7 @@ public class MetricsLite {
 
         // Do we need to create the file?
         if (configuration.get("guid", null) == null) {
-            configuration.options().header("http://mcstats.org")
-                    .copyDefaults(true);
+            configuration.options().header("http://mcstats.org").copyDefaults(true);
             configuration.save(configurationFile);
         }
 
@@ -144,7 +143,7 @@ public class MetricsLite {
      * @param input
      * @return
      */
-    private static byte[] gzip(String input) {
+    public static byte[] gzip(String input) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         GZIPOutputStream gzos = null;
 
@@ -154,11 +153,9 @@ public class MetricsLite {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (gzos != null) {
-                try {
-                    gzos.close();
-                } catch (IOException ignore) {
-                }
+            if (gzos != null) try {
+                gzos.close();
+            } catch (IOException ignore) {
             }
         }
 
@@ -173,8 +170,7 @@ public class MetricsLite {
      * @param value
      * @throws UnsupportedEncodingException
      */
-    private static void appendJSONPair(StringBuilder json, String key,
-                                       String value) throws UnsupportedEncodingException {
+    private static void appendJSONPair(StringBuilder json, String key, String value) throws UnsupportedEncodingException {
         boolean isValueNumeric = false;
 
         try {
@@ -252,16 +248,14 @@ public class MetricsLite {
      * @param text the text to encode
      * @return the encoded text, as UTF-8
      */
-    private static String urlEncode(final String text)
-            throws UnsupportedEncodingException {
+    private static String urlEncode(final String text) throws UnsupportedEncodingException {
         return URLEncoder.encode(text, "UTF-8");
     }
 
     /**
-     * Start measuring statistics. This will immediately create an async
-     * repeating task as the plugin and send the initial data to the metrics
-     * backend, and then after that it will post in increments of PING_INTERVAL
-     * * 1200 ticks.
+     * Start measuring statistics. This will immediately create an async repeating task as the plugin and send
+     * the initial data to the metrics backend, and then after that it will post in increments of
+     * PING_INTERVAL * 1200 ticks.
      *
      * @return True if statistics measuring is running, otherwise false.
      */
@@ -278,44 +272,36 @@ public class MetricsLite {
             }
 
             // Begin hitting the server with glorious data
-            task = plugin.getServer().getScheduler()
-                    .runTaskTimerAsynchronously(plugin, new Runnable() {
+            task = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
 
-                        private boolean firstPost = true;
+                private boolean firstPost = true;
 
-                        public void run() {
-                            try {
-                                // This has to be synchronized or it can collide
-                                // with the disable method.
-                                synchronized (optOutLock) {
-                                    // Disable Task, if it is running and the
-                                    // server owner decided to opt-out
-                                    if (isOptOut() && task != null) {
-                                        task.cancel();
-                                        task = null;
-                                    }
-                                }
-
-                                // We use the inverse of firstPost because if it
-                                // is the first time we are posting,
-                                // it is not a interval ping, so it evaluates to
-                                // FALSE
-                                // Each time thereafter it will evaluate to
-                                // TRUE, i.e PING!
-                                postPlugin(!firstPost);
-
-                                // After the first post we set firstPost to
-                                // false
-                                // Each post thereafter will be a ping
-                                firstPost = false;
-                            } catch (IOException e) {
-                                if (debug) {
-                                    Bukkit.getLogger().log(Level.INFO,
-                                            "[Metrics] " + e.getMessage());
-                                }
+                public void run() {
+                    try {
+                        // This has to be synchronized or it can collide with the disable method.
+                        synchronized (optOutLock) {
+                            // Disable Task, if it is running and the server owner decided to opt-out
+                            if (isOptOut() && task != null) {
+                                task.cancel();
+                                task = null;
                             }
                         }
-                    }, 0, PING_INTERVAL * 1200);
+
+                        // We use the inverse of firstPost because if it is the first time we are posting,
+                        // it is not a interval ping, so it evaluates to FALSE
+                        // Each time thereafter it will evaluate to TRUE, i.e PING!
+                        postPlugin(!firstPost);
+
+                        // After the first post we set firstPost to false
+                        // Each post thereafter will be a ping
+                        firstPost = false;
+                    } catch (IOException e) {
+                        if (debug) {
+                            Bukkit.getLogger().log(Level.INFO, "[Metrics] " + e.getMessage());
+                        }
+                    }
+                }
+            }, 0, PING_INTERVAL * 1200);
 
             return true;
         }
@@ -326,21 +312,19 @@ public class MetricsLite {
      *
      * @return true if metrics should be opted out of it
      */
-    boolean isOptOut() {
+    public boolean isOptOut() {
         synchronized (optOutLock) {
             try {
                 // Reload the metrics file
                 configuration.load(getConfigFile());
             } catch (IOException ex) {
                 if (debug) {
-                    Bukkit.getLogger().log(Level.INFO,
-                            "[Metrics] " + ex.getMessage());
+                    Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
                 }
                 return true;
             } catch (InvalidConfigurationException ex) {
                 if (debug) {
-                    Bukkit.getLogger().log(Level.INFO,
-                            "[Metrics] " + ex.getMessage());
+                    Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
                 }
                 return true;
             }
@@ -349,17 +333,14 @@ public class MetricsLite {
     }
 
     /**
-     * Enables metrics for the server by setting "opt-out" to false in the
-     * config file and starting the metrics task.
+     * Enables metrics for the server by setting "opt-out" to false in the config file and starting the metrics task.
      *
      * @throws java.io.IOException
      */
     public void enable() throws IOException {
-        // This has to be synchronized or it can collide with the check in the
-        // task.
+        // This has to be synchronized or it can collide with the check in the task.
         synchronized (optOutLock) {
-            // Check if the server owner has already set opt-out, if not, set
-            // it.
+            // Check if the server owner has already set opt-out, if not, set it.
             if (isOptOut()) {
                 configuration.set("opt-out", false);
                 configuration.save(configurationFile);
@@ -373,17 +354,14 @@ public class MetricsLite {
     }
 
     /**
-     * Disables metrics for the server by setting "opt-out" to true in the
-     * config file and canceling the metrics task.
+     * Disables metrics for the server by setting "opt-out" to true in the config file and canceling the metrics task.
      *
      * @throws java.io.IOException
      */
     public void disable() throws IOException {
-        // This has to be synchronized or it can collide with the check in the
-        // task.
+        // This has to be synchronized or it can collide with the check in the task.
         synchronized (optOutLock) {
-            // Check if the server owner has already set opt-out, if not, set
-            // it.
+            // Check if the server owner has already set opt-out, if not, set it.
             if (!isOptOut()) {
                 configuration.set("opt-out", true);
                 configuration.save(configurationFile);
@@ -398,14 +376,12 @@ public class MetricsLite {
     }
 
     /**
-     * Gets the File object of the config file that should be used to store data
-     * such as the GUID and opt-out status
+     * Gets the File object of the config file that should be used to store data such as the GUID and opt-out status
      *
      * @return the File object for the config file
      */
-    File getConfigFile() {
-        // I believe the easiest way to get the base folder (e.g craftbukkit set
-        // via -P) for plugins to use
+    public File getConfigFile() {
+        // I believe the easiest way to get the base folder (e.g craftbukkit set via -P) for plugins to use
         // is to abuse the plugin object we already have
         // plugin.getDataFolder() => base/plugins/PluginA/
         // pluginsFolder => base/plugins/
@@ -417,37 +393,46 @@ public class MetricsLite {
     }
 
     /**
+     * Gets the online player (backwards compatibility)
+     *
+     * @return online player amount
+     */
+    private int getOnlinePlayers() {
+        try {
+            Method onlinePlayerMethod = Bukkit.class.getMethod("getOnlinePlayers");
+            if (onlinePlayerMethod.getReturnType().equals(Collection.class)) {
+                return ((Collection<?>) onlinePlayerMethod.invoke(Bukkit.class)).size();
+            } else {
+                return ((Player[]) onlinePlayerMethod.invoke(Bukkit.class)).length;
+            }
+        } catch (Exception ex) {
+            if (debug) {
+                Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
+            }
+        }
+
+        return 0;
+    }
+
+    /**
      * Generic method that posts a plugin to the metrics website
      */
     private void postPlugin(boolean isPing) throws IOException {
         // Server software specific section
         PluginDescriptionFile description = plugin.getDescription();
         String pluginName = description.getName();
-        boolean onlineMode = Bukkit.getServer().getOnlineMode(); // TRUE if
-        // online
-        // mode is
-        // enabled
+        boolean onlineMode = Bukkit.getServer().getOnlineMode(); // TRUE if online mode is enabled
         String pluginVersion = description.getVersion();
         String serverVersion = Bukkit.getVersion();
-        int playersOnline = 0;
-        try {
-            playersOnline = Bukkit.getServer().getOnlinePlayers().size();
-        } catch (Exception e) {
-            BoosCoolDown
-                    .getLog()
-                    .warning(
-                            "[boosCooldowns] This error was caused because you are using old CraftBukkit version. Please update to 1.7.10 (1.7.9-R0.3).");
-        }
+        int playersOnline = this.getOnlinePlayers();
 
-        // END server software specific section -- all code below does not use
-        // any code outside of this class / Java
+        // END server software specific section -- all code below does not use any code outside of this class / Java
 
         // Construct the post data
         StringBuilder json = new StringBuilder(1024);
         json.append('{');
 
-        // The plugin's description file containg all of the plugin data such as
-        // name, version, author, etc
+        // The plugin's description file containg all of the plugin data such as name, version, author, etc
         appendJSONPair(json, "guid", guid);
         appendJSONPair(json, "plugin_version", pluginVersion);
         appendJSONPair(json, "server_version", serverVersion);
@@ -481,8 +466,7 @@ public class MetricsLite {
         json.append('}');
 
         // Create the url
-        URL url = new URL(BASE_URL
-                + String.format(REPORT_URL, urlEncode(pluginName)));
+        URL url = new URL(BASE_URL + String.format(REPORT_URL, urlEncode(pluginName)));
 
         // Connect to the website
         URLConnection connection;
@@ -495,6 +479,7 @@ public class MetricsLite {
             connection = url.openConnection();
         }
 
+
         byte[] uncompressed = json.toString().getBytes();
         byte[] compressed = gzip(json.toString());
 
@@ -502,17 +487,15 @@ public class MetricsLite {
         connection.addRequestProperty("User-Agent", "MCStats/" + REVISION);
         connection.addRequestProperty("Content-Type", "application/json");
         connection.addRequestProperty("Content-Encoding", "gzip");
-        connection.addRequestProperty("Content-Length",
-                Integer.toString(compressed.length));
+        connection.addRequestProperty("Content-Length", Integer.toString(compressed.length));
         connection.addRequestProperty("Accept", "application/json");
         connection.addRequestProperty("Connection", "close");
 
         connection.setDoOutput(true);
 
         if (debug) {
-            System.out.println("[Metrics] Prepared request for " + pluginName
-                    + " uncompressed=" + uncompressed.length + " compressed="
-                    + compressed.length);
+            System.out.println("[Metrics] Prepared request for " + pluginName + " uncompressed=" + uncompressed.length + " compressed=" +
+                    compressed.length);
         }
 
         // Write the data
@@ -521,21 +504,18 @@ public class MetricsLite {
         os.flush();
 
         // Now read the response
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(
-                connection.getInputStream()));
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         String response = reader.readLine();
 
         // close resources
         os.close();
         reader.close();
 
-        if (response == null || response.startsWith("ERR")
-                || response.startsWith("7")) {
+        if (response == null || response.startsWith("ERR") || response.startsWith("7")) {
             if (response == null) {
                 response = "null";
             } else if (response.startsWith("7")) {
-                response = response
-                        .substring(response.startsWith("7,") ? 2 : 1);
+                response = response.substring(response.startsWith("7,") ? 2 : 1);
             }
 
             throw new IOException(response);
@@ -543,8 +523,7 @@ public class MetricsLite {
     }
 
     /**
-     * Check if mineshafter is present. If it is, we need to bypass it to send
-     * POST requests
+     * Check if mineshafter is present. If it is, we need to bypass it to send POST requests
      *
      * @return true if mineshafter is installed on the server
      */
