@@ -1,6 +1,6 @@
 name: boosCooldowns
 main: cz.boosik.boosCooldown.BoosCoolDown
-version: 3.13.1
+version: 3.13.2
 authors: [LordBoos (boosik)]
 softdepend: [Vault, PlayerPoints]
 description: >
