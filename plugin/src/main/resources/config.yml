@@ -91,7 +91,7 @@ options:
     confirmation_item_price_of_command: '&6its price is&e &itemprice& &itemname&'
     confirmation_limit_of_command: '&6it is limited to&e &limit& &6uses and you can still use it&e &uses& &6times'
     confirmation_xp_price_of_command: '&6its price is&e &xpprice& experience levels'
-    confirmation_price_of_command: '&6its price is&e &ppprice& PlayerPoints &6and you now have &e&ppbalance& PlayerPoints'
+    confirmation_player_points_price_of_command: '&6its price is&e &ppprice& PlayerPoints &6and you now have &e&ppbalance& PlayerPoints'
     confirmation_confirm_command_execution: 'Yes'
     confirmation_confirm_command_execution_hint: 'Click to confirm'
     confirmation_cancel_command_execution: 'No'
