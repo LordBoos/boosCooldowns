@@ -3,7 +3,9 @@ package cz.boosik.boosCooldown.Managers;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -313,30 +315,19 @@ public class BoosConfigManager {
         return conf.getString("options.messages.paid_for_command", "Price of &command& was %s and you now have %s");
     }
 
-    static String getPotionEffect(String regexCommand, Player player) {
-        String effect = "";
-        String temp;
-        String[] command;
+    static Map<String, Integer> getPotionEffects(String regexCommand, Player player) {
         String group = getCommandGroup(player);
-        temp = conf.getString("commands.groups." + group + "." + regexCommand + ".potion", "");
-        command = temp.split(",");
-        if (command.length == 2) {
-            effect = command[0];
-        }
-        return effect;
-    }
+        Map<String, Integer> result = new HashMap<>();
+        List<String> temp = conf.getStringList("commands.groups." + group + "." + regexCommand + ".potion");
+        temp.forEach(entry -> {
+            String[] item;
+            item = entry.split(",");
+            if (item.length == 2) {
+                result.put(item[0], Integer.valueOf(item[1]));
+            }
+        });
 
-    static int getPotionEffectStrength(String regexCommand, Player player) {
-        int effect = 0;
-        String temp;
-        String[] command;
-        String group = getCommandGroup(player);
-        temp = conf.getString("commands.groups." + group + "." + regexCommand + ".potion", "");
-        command = temp.split(",");
-        if (command.length == 2) {
-            effect = Integer.valueOf(command[1]);
-        }
-        return effect;
+        return result;
     }
 
     public static double getPrice(String regexCommand, Player player) {

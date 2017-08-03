@@ -16,21 +16,13 @@ public class BoosWarmUpManager {
 
     private static final ConcurrentHashMap<String, BoosWarmUpTimer> playercommands = new ConcurrentHashMap<>();
 
-    private static void applyPotionEffect(Player player, String regexCommand,
-                                          int warmUpSeconds) {
-        String potion = BoosConfigManager.getPotionEffect(regexCommand, player);
-        if (potion.equals("")) {
-            return;
-        }
-        int potionStrength = BoosConfigManager.getPotionEffectStrength(
-                regexCommand, player);
-        if (potionStrength == 0) {
-            return;
-        }
-        PotionEffectType effect = PotionEffectType.getByName(potion);
-        player.addPotionEffect(
-                effect.createEffect(warmUpSeconds * 40, potionStrength - 1),
-                true);
+    private static void applyPotionEffect(Player player, String regexCommand, int warmUpSeconds) {
+        BoosConfigManager.getPotionEffects(regexCommand, player).forEach((potion, potionStrength) -> {
+            PotionEffectType effect = PotionEffectType.getByName(potion);
+            player.addPotionEffect(
+                    effect.createEffect(warmUpSeconds * 20, potionStrength - 1),
+                    true);
+        });
     }
 
     public static void cancelWarmUps(Player player) {

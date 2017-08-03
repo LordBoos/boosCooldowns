@@ -147,7 +147,9 @@ commands:
         price: 10.0
         limit: 5
         #potion effect and its strength that will affect player for the warmup time (5 seconds here) has to be one from this list: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionEffectType.html
-        potion: WEAKNESS,3
+        potion:
+        - WEAKNESS,3
+        - SLOW,5
       /test:
         #message that is sent to player when he uses this command
         message: You just used /test!
