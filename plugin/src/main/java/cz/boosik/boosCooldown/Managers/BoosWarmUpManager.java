@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import cz.boosik.boosCooldown.BoosCoolDown;
@@ -17,18 +18,24 @@ public class BoosWarmUpManager {
     private static final ConcurrentHashMap<String, BoosWarmUpTimer> playercommands = new ConcurrentHashMap<>();
 
     private static void applyPotionEffect(Player player, String regexCommand, int warmUpSeconds) {
-        BoosConfigManager.getPotionEffects(regexCommand, player).forEach((potion, potionStrength) -> {
-            PotionEffectType effect = PotionEffectType.getByName(potion);
-            player.addPotionEffect(
-                    effect.createEffect(warmUpSeconds * 20, potionStrength - 1),
-                    true);
-        });
+        for (String potionUnparsed : BoosConfigManager.getPotionEffects(regexCommand, player)) {
+            String[] potionParsed = potionUnparsed.split(",");
+            PotionEffectType type = PotionEffectType.getByName(potionParsed[0]);
+            final int duration = potionParsed.length == 3 ? Integer.valueOf(potionParsed[2]) * 20 : warmUpSeconds * 20;
+            player.addPotionEffect(new PotionEffect(type, duration, Integer.valueOf(potionParsed[1]) - 1), true);
+        }
     }
 
     public static void cancelWarmUps(Player player) {
         Iterator<String> iter = ((Map<String, BoosWarmUpTimer>) playercommands).keySet().iterator();
         while (iter.hasNext()) {
-            if (iter.next().startsWith(player.getUniqueId() + "@")) {
+            final String key = iter.next();
+            if (key.startsWith(player.getUniqueId() + "@")) {
+                if (BoosConfigManager.getCancelPotionsOnWarmupCancel()) {
+                    for (String potionUnparsed : BoosConfigManager.getPotionEffects(playercommands.get(key).getRegexCommand(), player)) {
+                        player.removePotionEffect(PotionEffectType.getByName(potionUnparsed.split(",")[0]));
+                    }
+                }
                 killTimer(player);
                 iter.remove();
             }

@@ -28,6 +28,8 @@ options:
     cancel_warmup_on_sprint: false
     #should warmups be canceled when player changes gamemode?
     cancel_warmup_on_gamemode_change: false
+    #should potion effects be cancelled when warmups are cancelled?
+    cancel_potions_on_warmup_cancel: false
     #should container access be disable during warmups?
     block_interact_during_warmup: false
     #should cooldowns be cleared on server restart?
@@ -146,10 +148,10 @@ commands:
         #price of 10 money
         price: 10.0
         limit: 5
-        #potion effect and its strength that will affect player for the warmup time (5 seconds here) has to be one from this list: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionEffectType.html
+        #potion effect and its strength and its duration (duration is optional and defaults to warmup duration) that will affect player for the warmup time (5 seconds here) has to be one from this list: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionEffectType.html
         potion:
         - WEAKNESS,3
-        - SLOW,5
+        - SLOW,5,10
       /test:
         #message that is sent to player when he uses this command
         message: You just used /test!

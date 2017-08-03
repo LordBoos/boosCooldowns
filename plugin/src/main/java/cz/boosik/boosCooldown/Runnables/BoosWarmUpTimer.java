@@ -53,4 +53,8 @@ public class BoosWarmUpTimer extends TimerTask {
             }
         }
     }
+
+    public String getRegexCommand() {
+        return regexCommand;
+    }
 }

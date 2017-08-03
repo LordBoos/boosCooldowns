@@ -315,19 +315,13 @@ public class BoosConfigManager {
         return conf.getString("options.messages.paid_for_command", "Price of &command& was %s and you now have %s");
     }
 
-    static Map<String, Integer> getPotionEffects(String regexCommand, Player player) {
+    static List<String> getPotionEffects(String regexCommand, Player player) {
         String group = getCommandGroup(player);
-        Map<String, Integer> result = new HashMap<>();
-        List<String> temp = conf.getStringList("commands.groups." + group + "." + regexCommand + ".potion");
-        temp.forEach(entry -> {
-            String[] item;
-            item = entry.split(",");
-            if (item.length == 2) {
-                result.put(item[0], Integer.valueOf(item[1]));
-            }
-        });
+        return conf.getStringList("commands.groups." + group + "." + regexCommand + ".potion");
+    }
 
-        return result;
+    public static boolean getCancelPotionsOnWarmupCancel() {
+        return conf.getBoolean("options.options.cancel_potions_on_warmup_cancel", false);
     }
 
     public static double getPrice(String regexCommand, Player player) {
