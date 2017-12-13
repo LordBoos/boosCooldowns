@@ -11,7 +11,7 @@ options:
     #should xp costs be enabled?
     xp_cost_enabled: true
     #should player points prices be enabled?
-    player_points_prices_enabled: true
+    player_points_prices_enabled: false
     #should limits be enabled?
     limits_enabled: true
     #do not ever use this if you like your server
