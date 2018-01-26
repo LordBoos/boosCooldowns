@@ -36,13 +36,14 @@ public enum JSONColor {
 
     public static JSONColor fromString(String text) {
         if (text != null) {
+            text = text.replace("§", "&");
             for (JSONColor b : JSONColor.values()) {
                 if (text.equalsIgnoreCase(b.code)) {
                     return b;
                 }
             }
         }
-        return null;
+        return WHITE; // no color found, return default white to prevent errors
     }
 
     public String getCode() {

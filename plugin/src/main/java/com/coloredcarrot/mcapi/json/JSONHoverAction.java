@@ -247,7 +247,7 @@ public interface JSONHoverAction<T> {
         @Override
         public String getValueString() {
             String material = value.getData().getItemType().toString().toLowerCase();
-            String value2 = "{id:minecraft:" + material + ",Damage:" + value.getDurability() + ",tag:{";
+            String value2 = "{id:\\\"minecraft:" + material + "\\\",Damage:" + value.getDurability() + ",Count:" + value.getAmount() + ",tag:{";
 
             if (value.getItemMeta().hasEnchants()) {
                 value2 += "ench:[";
@@ -255,9 +255,9 @@ public interface JSONHoverAction<T> {
                 int size = value.getItemMeta().getEnchants().keySet().size();
                 for (Enchantment ench : value.getItemMeta().getEnchants().keySet()) {
                     if (i + 1 == size) {
-                        value2 += i + ":{lvl:" + value.getItemMeta().getEnchants().get(ench) + "s,id:" + ench.getId() + "}";
+                        value2 += "{lvl:" + value.getItemMeta().getEnchants().get(ench) + "s,id:" + ench.getId() + "s}";
                     } else {
-                        value2 += i + ":{lvl:" + value.getItemMeta().getEnchants().get(ench) + "s,id:" + ench.getId() + "},";
+                        value2 += "{lvl:" + value.getItemMeta().getEnchants().get(ench) + "s,id:" + ench.getId() + "s},";
                     }
                     i++;
                 }
@@ -274,7 +274,6 @@ public interface JSONHoverAction<T> {
 
             if (value.getItemMeta().hasLore()) {
                 value2 += ",Lore:[";
-                int i = 0;
                 for (String lore : value.getItemMeta().getLore()) {
                     value2 = value2 + (value.getItemMeta().getLore().size() == 1 || value
                             .getItemMeta()
@@ -282,8 +281,7 @@ public interface JSONHoverAction<T> {
                             .get(value
                                     .getItemMeta()
                                     .getLore()
-                                    .size() - 1) == lore ? (i + ":\\\"" + lore + "\\\"") : (i + ":\\\"" + lore + "\\\","));
-                    i++;
+                                    .size() - 1) == lore ? ("\\\"" + lore + "\\\"") : ("\\\"" + lore + "\\\","));
                 }
 
                 value2 += "]";
