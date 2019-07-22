@@ -4,3 +4,6 @@
 /.classpath
 /.project
 /.settings/
+/plugin/target/
+/.idea/
+/jar/target/

@@ -11,12 +11,12 @@
     <packaging>pom</packaging>
 	<url>http://maven.apache.org</url>
 	<properties>
-		<boosCooldowns.version>3.14.3</boosCooldowns.version>
+		<boosCooldowns.version>3.14.5</boosCooldowns.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<minecraft.version>1.12</minecraft.version>
+		<minecraft.version>1.14.2</minecraft.version>
 		<bukkit.version>R0.1</bukkit.version>
-		<bukkit.packet>v1_12_R1</bukkit.packet>
+		<bukkit.packet>v1_14_R1</bukkit.packet>
 	</properties>
 	<pluginRepositories>
 		<pluginRepository>

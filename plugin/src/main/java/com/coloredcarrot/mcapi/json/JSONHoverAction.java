@@ -255,9 +255,9 @@ public interface JSONHoverAction<T> {
                 int size = value.getItemMeta().getEnchants().keySet().size();
                 for (Enchantment ench : value.getItemMeta().getEnchants().keySet()) {
                     if (i + 1 == size) {
-                        value2 += "{lvl:" + value.getItemMeta().getEnchants().get(ench) + "s,id:" + ench.getId() + "s}";
+                        value2 += "{lvl:" + value.getItemMeta().getEnchants().get(ench) + "s,id:" + ench.getKey() + "s}";
                     } else {
-                        value2 += "{lvl:" + value.getItemMeta().getEnchants().get(ench) + "s,id:" + ench.getId() + "s},";
+                        value2 += "{lvl:" + value.getItemMeta().getEnchants().get(ench) + "s,id:" + ench.getKey() + "s},";
                     }
                     i++;
                 }

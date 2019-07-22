@@ -28,8 +28,27 @@ public class BoosSignInteractListener implements Listener {
         }
 
         if (event.hasBlock() && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (event.getClickedBlock().getType() == Material.SIGN_POST
-                    || event.getClickedBlock().getType() == Material.WALL_SIGN) {
+            if (event.getClickedBlock().getType() == Material.LEGACY_SIGN
+                    || event.getClickedBlock().getType() == Material.LEGACY_SIGN_POST
+                    || event.getClickedBlock().getType() == Material.LEGACY_WALL_SIGN
+
+                    || event.getClickedBlock().getType() == Material.ACACIA_SIGN
+                    || event.getClickedBlock().getType() == Material.ACACIA_WALL_SIGN
+
+                    || event.getClickedBlock().getType() == Material.DARK_OAK_SIGN
+                    || event.getClickedBlock().getType() == Material.DARK_OAK_WALL_SIGN
+
+                    || event.getClickedBlock().getType() == Material.JUNGLE_SIGN
+                    || event.getClickedBlock().getType() == Material.JUNGLE_WALL_SIGN
+
+                    || event.getClickedBlock().getType() == Material.OAK_SIGN
+                    || event.getClickedBlock().getType() == Material.OAK_WALL_SIGN
+
+                    || event.getClickedBlock().getType() == Material.SPRUCE_SIGN
+                    || event.getClickedBlock().getType() == Material.SPRUCE_WALL_SIGN
+
+                    || event.getClickedBlock().getType() == Material.BIRCH_SIGN
+                    || event.getClickedBlock().getType() == Material.BIRCH_WALL_SIGN) {
                 Sign s = (Sign) event.getClickedBlock().getState();
                 String line1 = s.getLine(0);
                 String line2 = s.getLine(1);
