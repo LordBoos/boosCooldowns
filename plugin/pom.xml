@@ -13,22 +13,9 @@
     <artifactId>plugin</artifactId>
 
     <dependencies>
-        <!--Spigot API-->
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>${minecraft.version}-${bukkit.version}-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency> <!-- Spigot (this includes Spigot API, Bukkit API, Craftbukkit and NMS) -->
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>${minecraft.version}-${bukkit.version}-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
             <version>${minecraft.version}-${bukkit.version}-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
@@ -38,7 +25,6 @@
             <version>LATEST</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>org.black_ixx</groupId>
             <artifactId>PlayerPoints</artifactId>
