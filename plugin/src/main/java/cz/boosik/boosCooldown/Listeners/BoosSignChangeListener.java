@@ -12,10 +12,10 @@ import util.BoosChat;
 public class BoosSignChangeListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    private void onSignChange(SignChangeEvent event) {
-        Player player = event.getPlayer();
-        String line1 = event.getLine(0);
-        String line2 = event.getLine(1);
+    private void onSignChange(final SignChangeEvent event) {
+        final Player player = event.getPlayer();
+        final String line1 = event.getLine(0);
+        final String line2 = event.getLine(1);
         if (line1.equals("[boosCooldowns]")) {
             if (line2.equals("player")
                     && !player

@@ -4,6 +4,8 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
+import cz.boosik.boosCooldown.BoosCoolDown;
+
 /**
  * Represents a hover action.
  * All rights reserved.
@@ -20,7 +22,7 @@ public interface JSONHoverAction<T> {
      * @return (?) - the value.
      * @see #setValue(Object)
      */
-    public T getValue();
+    T getValue();
 
     /**
      * Sets the value of this JSONHoverAction.
@@ -28,7 +30,7 @@ public interface JSONHoverAction<T> {
      * @param newValue (?) - the new value
      * @return (JSONHoverAction: ?) - this JSONHoverAction Object, for chaining.
      */
-    public JSONHoverAction<T> setValue(T newValue);
+    JSONHoverAction<T> setValue(T newValue);
 
     /**
      * Gets the value associated with this JSONHoverAction transformed to a String.
@@ -36,7 +38,7 @@ public interface JSONHoverAction<T> {
      * @return (String) - the value as a String.
      * @see #getValue()
      */
-    public String getValueString();
+    String getValueString();
 
     /**
      * Gets the action name associated with this JSONHoverAction.
@@ -44,12 +46,12 @@ public interface JSONHoverAction<T> {
      *
      * @return (String) - the action name.
      */
-    public String getActionName();
+    String getActionName();
 
     /**
      * Shows some JSON-formed text when hovering over the text in the chat.
      */
-    public class ShowText
+    class ShowText
             implements JSONHoverAction<JSON> {
 
         /**
@@ -66,7 +68,7 @@ public interface JSONHoverAction<T> {
          *
          * @param value (JSON) - the value associated with this JSONHoverAction
          */
-        public ShowText(JSON value) {
+        public ShowText(final JSON value) {
 
             this.value = value;
 
@@ -78,7 +80,7 @@ public interface JSONHoverAction<T> {
         }
 
         @Override
-        public JSONHoverAction<JSON> setValue(JSON newValue) {
+        public JSONHoverAction<JSON> setValue(final JSON newValue) {
             value = newValue;
             return this;
         }
@@ -98,7 +100,7 @@ public interface JSONHoverAction<T> {
     /**
      * Shows some JSON-formed text when hovering over the text in the chat.
      */
-    public class ShowStringText
+    class ShowStringText
             implements JSONHoverAction<String> {
 
         /**
@@ -115,7 +117,7 @@ public interface JSONHoverAction<T> {
          *
          * @param value (JSON) - the value associated with this JSONHoverAction
          */
-        public ShowStringText(String value) {
+        public ShowStringText(final String value) {
 
             this.value = value;
 
@@ -127,7 +129,7 @@ public interface JSONHoverAction<T> {
         }
 
         @Override
-        public JSONHoverAction<String> setValue(String newValue) {
+        public JSONHoverAction<String> setValue(final String newValue) {
             value = newValue;
             return this;
         }
@@ -147,7 +149,7 @@ public interface JSONHoverAction<T> {
     /**
      * Shows an item when hovering over the text in the chat.
      */
-    public class ShowItem
+    class ShowItem
             implements JSONHoverAction<Material> {
 
         /**
@@ -164,7 +166,7 @@ public interface JSONHoverAction<T> {
          *
          * @param value (JSON) - the value associated with this JSONHoverAction
          */
-        public ShowItem(Material value) {
+        public ShowItem(final Material value) {
 
             this.value = value;
 
@@ -176,7 +178,7 @@ public interface JSONHoverAction<T> {
         }
 
         @Override
-        public JSONHoverAction<Material> setValue(Material newValue) {
+        public JSONHoverAction<Material> setValue(final Material newValue) {
             value = newValue;
             return this;
         }
@@ -213,18 +215,18 @@ public interface JSONHoverAction<T> {
          *
          * @param value (JSON) - the value associated with this JSONHoverAction
          */
-        public ShowItemStack(ItemStack value) {
+        public ShowItemStack(final ItemStack value) {
 
             this.value = value;
 
         }
 
-        public static String toTitleCase(String givenString) {
+        public static String toTitleCase(final String givenString) {
             if (givenString == null || "".equals(givenString)) {
                 return "";
             }
-            String[] arr = givenString.split(" ");
-            StringBuffer sb = new StringBuffer();
+            final String[] arr = givenString.split(" ");
+            final StringBuffer sb = new StringBuffer();
 
             for (int i = 0; i < arr.length; i++) {
                 sb.append(Character.toUpperCase(arr[i].charAt(0)))
@@ -239,25 +241,25 @@ public interface JSONHoverAction<T> {
         }
 
         @Override
-        public JSONHoverAction<ItemStack> setValue(ItemStack newValue) {
+        public JSONHoverAction<ItemStack> setValue(final ItemStack newValue) {
             value = newValue;
             return this;
         }
 
         @Override
         public String getValueString() {
-            String material = value.getData().getItemType().toString().toLowerCase();
+            final String material = value.getData().getItemType().toString().toLowerCase();
             String value2 = "{id:\\\"minecraft:" + material + "\\\",Damage:" + value.getDurability() + ",Count:" + value.getAmount() + ",tag:{";
 
             if (value.getItemMeta().hasEnchants()) {
-                value2 += "ench:[";
+                value2 += "Enchantments:[";
                 int i = 0;
-                int size = value.getItemMeta().getEnchants().keySet().size();
-                for (Enchantment ench : value.getItemMeta().getEnchants().keySet()) {
+                final int size = value.getItemMeta().getEnchants().keySet().size();
+                for (final Enchantment ench : value.getItemMeta().getEnchants().keySet()) {
                     if (i + 1 == size) {
-                        value2 += "{lvl:" + value.getItemMeta().getEnchants().get(ench) + "s,id:" + ench.getKey() + "s}";
+                        value2 += "{lvl:" + value.getItemMeta().getEnchants().get(ench) + ",id:\\\"" + ench.getKey() + "\\\"}";
                     } else {
-                        value2 += "{lvl:" + value.getItemMeta().getEnchants().get(ench) + "s,id:" + ench.getKey() + "s},";
+                        value2 += "{lvl:" + value.getItemMeta().getEnchants().get(ench) + ",id:\\\"" + ench.getKey() + "\\\"},";
                     }
                     i++;
                 }
@@ -274,7 +276,7 @@ public interface JSONHoverAction<T> {
 
             if (value.getItemMeta().hasLore()) {
                 value2 += ",Lore:[";
-                for (String lore : value.getItemMeta().getLore()) {
+                for (final String lore : value.getItemMeta().getLore()) {
                     value2 = value2 + (value.getItemMeta().getLore().size() == 1 || value
                             .getItemMeta()
                             .getLore()

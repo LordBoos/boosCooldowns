@@ -16,7 +16,7 @@ public interface JSONClickAction<T> {
      * @return (?) - the value.
      * @see #setValue(Object)
      */
-    public T getValue();
+    T getValue();
 
     /**
      * Sets the value of this JSONClickAction.
@@ -24,7 +24,7 @@ public interface JSONClickAction<T> {
      * @param newValue (?) - the new value
      * @return (JSONHoverAction: ?) - this JSONClickAction Object, for chaining.
      */
-    public JSONClickAction<T> setValue(T newValue);
+    JSONClickAction<T> setValue(T newValue);
 
     /**
      * Gets the value associated with this JSONClickAction transformed to a String.
@@ -32,7 +32,7 @@ public interface JSONClickAction<T> {
      * @return (String) - the value as a String.
      * @see #getValue()
      */
-    public String getValueString();
+    String getValueString();
 
     /**
      * Gets the action name associated with this JSONClickAction.
@@ -40,12 +40,12 @@ public interface JSONClickAction<T> {
      *
      * @return (String) - the action name.
      */
-    public String getActionName();
+    String getActionName();
 
     /**
      * Runs a command as the player who clicks on the text in the chat.
      */
-    public class RunCommand
+    class RunCommand
             implements JSONClickAction<String> {
 
         /**
@@ -62,7 +62,7 @@ public interface JSONClickAction<T> {
          *
          * @param value (String) - the value associated with this JSONClickAction
          */
-        public RunCommand(String value) {
+        public RunCommand(final String value) {
 
             this.value = value;
 
@@ -74,7 +74,7 @@ public interface JSONClickAction<T> {
         }
 
         @Override
-        public JSONClickAction<String> setValue(String newValue) {
+        public JSONClickAction<String> setValue(final String newValue) {
             value = newValue;
             return this;
         }
@@ -94,7 +94,7 @@ public interface JSONClickAction<T> {
     /**
      * Pastes a command in the chat of the player who clicks on the text in the chat.
      */
-    public class SuggestCommand
+    class SuggestCommand
             implements JSONClickAction<String> {
 
         /**
@@ -111,7 +111,7 @@ public interface JSONClickAction<T> {
          *
          * @param value (String) - the value associated with this JSONClickAction
          */
-        public SuggestCommand(String value) {
+        public SuggestCommand(final String value) {
 
             this.value = value;
 
@@ -123,7 +123,7 @@ public interface JSONClickAction<T> {
         }
 
         @Override
-        public JSONClickAction<String> setValue(String newValue) {
+        public JSONClickAction<String> setValue(final String newValue) {
             value = newValue;
             return this;
         }
@@ -143,7 +143,7 @@ public interface JSONClickAction<T> {
     /**
      * Opens a URL in the default browser of the player who clicks on the text in the chat.
      */
-    public class OpenURL
+    class OpenURL
             implements JSONClickAction<String> {
 
         /**
@@ -160,7 +160,7 @@ public interface JSONClickAction<T> {
          *
          * @param value (String) - the value associated with this JSONClickAction
          */
-        public OpenURL(String value) {
+        public OpenURL(final String value) {
 
             this.value = value;
 
@@ -172,7 +172,7 @@ public interface JSONClickAction<T> {
         }
 
         @Override
-        public JSONClickAction<String> setValue(String newValue) {
+        public JSONClickAction<String> setValue(final String newValue) {
             value = newValue;
             return this;
         }

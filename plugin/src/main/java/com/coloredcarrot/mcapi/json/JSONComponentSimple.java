@@ -28,7 +28,7 @@ public class JSONComponentSimple {
      *
      * @param text (String) - the base text this JSONComponent contains
      */
-    public JSONComponentSimple(String text) {
+    public JSONComponentSimple(final String text) {
 
         if (text == null) {
             throw new IllegalArgumentException("text cannot be null!");
@@ -51,11 +51,11 @@ public class JSONComponentSimple {
      * @return (JSONComponent) - the JSONComponent matching the String or null if the String is invalid.
      * @see #toString()
      */
-    public static JSONComponentSimple fromString(String str) {
+    public static JSONComponentSimple fromString(final String str) {
 
         try {
 
-            String[] parts = str.split("|||");
+            final String[] parts = str.split("|||");
 
             if (parts == null || parts.length != 7) {
                 return null;
@@ -69,7 +69,7 @@ public class JSONComponentSimple {
                     .setUnderlined(Boolean.valueOf(parts[5]))
                     .setObfuscated(Boolean.valueOf(parts[6]));
 
-        } catch (Exception e) {
+        } catch (final Exception e) {
             return null;
         }
 
@@ -114,11 +114,11 @@ public class JSONComponentSimple {
      * @param withComponents (JSONComponent[]) - the JSONComponent Objects to combine this JSONComponent with
      * @return (JSON) - a newly created JSON Object containing this and all specified JSONComponent Objects.
      */
-    public JSON combine(JSONComponentSimple... withComponents) {
+    public JSON combine(final JSONComponentSimple... withComponents) {
 
-        JSON json = new JSON(this);
+        final JSON json = new JSON(this);
 
-        for (JSONComponentSimple with : withComponents) {
+        for (final JSONComponentSimple with : withComponents) {
             json.add(with);
         }
 
@@ -134,7 +134,7 @@ public class JSONComponentSimple {
      * @see JSON#add(JSONComponent)
      * @see JSONComponent#toJSON()
      */
-    public JSONComponentSimple addToJSON(JSON json) {
+    public JSONComponentSimple addToJSON(final JSON json) {
 
         json.add(this);
 
@@ -173,7 +173,7 @@ public class JSONComponentSimple {
      * @return (JSONComponent) - this JSONComponent Object, for chaining.
      * @see JSONComponent_old#get()
      */
-    public JSONComponentSimple send(Player to) {
+    public JSONComponentSimple send(final Player to) {
 
         JSON.sendJSON(to, get());
 
@@ -231,7 +231,7 @@ public class JSONComponentSimple {
      * @param text (String) - the new text
      * @return (JSONComponent) - this JSONComponent Object, for chaining.
      */
-    public JSONComponentSimple setText(String text) {
+    public JSONComponentSimple setText(final String text) {
         if (text == null) {
             throw new IllegalArgumentException("text cannot be null!");
         }
@@ -259,7 +259,7 @@ public class JSONComponentSimple {
      * @param color (JSONColor) - the color to set this JSONObject to
      * @return (JSONComponent) - this JSONComponent Object, for chaining.
      */
-    public JSONComponentSimple setColor(JSONColor color) {
+    public JSONComponentSimple setColor(final JSONColor color) {
         if (color == null) {
             throw new IllegalArgumentException("color cannot be null!");
         }
@@ -284,7 +284,7 @@ public class JSONComponentSimple {
      * @param bold (boolean) - whether the text should be bold
      * @return (JSONComponent) - this JSONComponent Object, for chaining.
      */
-    public JSONComponentSimple setBold(boolean bold) {
+    public JSONComponentSimple setBold(final boolean bold) {
         this.bold = bold;
         generated = false;
         return this;
@@ -306,7 +306,7 @@ public class JSONComponentSimple {
      * @param italic (boolean) - whether the text should be italic
      * @return (JSONComponent) - this JSONComponent Object, for chaining.
      */
-    public JSONComponentSimple setItalic(boolean italic) {
+    public JSONComponentSimple setItalic(final boolean italic) {
         this.italic = italic;
         generated = false;
         return this;
@@ -328,7 +328,7 @@ public class JSONComponentSimple {
      * @param strikethrough (boolean) - whether the text should be strikethrough
      * @return (JSONComponent) - this JSONComponent Object, for chaining.
      */
-    public JSONComponentSimple setStrikethrough(boolean strikethrough) {
+    public JSONComponentSimple setStrikethrough(final boolean strikethrough) {
         this.strikethrough = strikethrough;
         generated = false;
         return this;
@@ -350,7 +350,7 @@ public class JSONComponentSimple {
      * @param underlined (boolean) - whether the text should be underlined
      * @return (JSONComponent) - this JSONComponent Object, for chaining.
      */
-    public JSONComponentSimple setUnderlined(boolean underlined) {
+    public JSONComponentSimple setUnderlined(final boolean underlined) {
         this.underlined = underlined;
         generated = false;
         return this;
@@ -372,7 +372,7 @@ public class JSONComponentSimple {
      * @param obfuscated (boolean) - whether the text should be obfuscated
      * @return (JSONComponent) - this JSONComponent Object, for chaining.
      */
-    public JSONComponentSimple setObfuscated(boolean obfuscated) {
+    public JSONComponentSimple setObfuscated(final boolean obfuscated) {
         this.obfuscated = obfuscated;
         generated = false;
         return this;

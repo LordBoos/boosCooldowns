@@ -7,8 +7,8 @@ import org.bukkit.entity.Player;
 public class BoosAliasManager {
 
     public static String checkCommandAlias(String originalCommand,
-                                           Set<String> aliases, Player player) {
-        String[] splitCommand = originalCommand.split(" ", 4);
+                                           final Set<String> aliases, final Player player) {
+        final String[] splitCommand = originalCommand.split(" ", 4);
         String one = "";
         String two = "";
         String three = "";
@@ -21,8 +21,8 @@ public class BoosAliasManager {
                 }
             }
         }
-        for (String alias : aliases) {
-            String alias2 = alias.replace("*", ".+");
+        for (final String alias : aliases) {
+            final String alias2 = alias.replace("*", ".+");
             if (originalCommand.matches("(?i)" + alias2)) {
                 originalCommand = BoosConfigManager.getAlias(alias);
                 if (originalCommand.contains("$1")) {

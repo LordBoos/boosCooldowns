@@ -39,20 +39,21 @@ public class BoosCoolDownListener implements Listener {
     public static Map<String, Boolean> commandQueue = new ConcurrentHashMap<>();
     private static BoosCoolDown plugin;
 
-    BoosCoolDownListener(BoosCoolDown instance) {
+    BoosCoolDownListener(final BoosCoolDown instance) {
         plugin = instance;
     }
 
-    private void checkRestrictions(PlayerCommandPreprocessEvent event,
-                                   Player player, String regexCommad, String originalCommand,
-                                   int warmupTime, int cooldownTime, double price, String item,
-                                   int count, String name, List<String> lore, List<String> enchants, int limit, int xpPrice,
-                                   int xpRequirement, int playerPoints) {
+    private void checkRestrictions(
+            final PlayerCommandPreprocessEvent event,
+            final Player player, final String regexCommad, final String originalCommand,
+            final int warmupTime, final int cooldownTime, final double price, final String item,
+            final int count, final String name, final List<String> lore, final List<String> enchants, final int limit, final int xpPrice,
+            final int xpRequirement, final int playerPoints) {
         boolean blocked = false;
-        String perm = BoosConfigManager.getPermission(player, regexCommad);
+        final String perm = BoosConfigManager.getPermission(player, regexCommad);
         if (!(perm == null)) {
             if (!player.hasPermission(perm)) {
-                String msg = BoosConfigManager.getPermissionMessage(player, regexCommad);
+                final String msg = BoosConfigManager.getPermissionMessage(player, regexCommad);
                 if (!(msg == null)) {
                     BoosChat.sendMessageToPlayer(player, msg);
                 }
@@ -103,8 +104,8 @@ public class BoosCoolDownListener implements Listener {
                             regexCommad, originalCommand, playerPoints);
                 }
             } else {
-                boolean warmupInProgress = BoosWarmUpManager.isWarmUpProcess(player, regexCommad);
-                boolean cooldownInProgress = BoosCoolDownManager.isCoolingdown(player, regexCommad, cooldownTime);
+                final boolean warmupInProgress = BoosWarmUpManager.isWarmUpProcess(player, regexCommad);
+                final boolean cooldownInProgress = BoosCoolDownManager.isCoolingdown(player, regexCommad, cooldownTime);
                 if (!BoosPriceManager.has(player, price)
                         && !warmupInProgress && !cooldownInProgress) {
                     String msg;
@@ -121,7 +122,7 @@ public class BoosCoolDownListener implements Listener {
                         && !warmupInProgress && !cooldownInProgress) {
                     String msg;
                     msg = BoosConfigManager.getInsufficientItemsMessage();
-                    JSON json = getItemStackJson(1, item, count, name, lore, enchants);
+                    final JSON json = getItemStackJson(1, item, count, name, lore, enchants);
                     msg = msg.replaceAll("&command&", originalCommand);
                     BoosChat.sendMessageToPlayer(player, msg);
                     json.send(player);
@@ -156,7 +157,7 @@ public class BoosCoolDownListener implements Listener {
                 event.setCancelled(true);
             }
             if (!event.isCancelled()) {
-                String msg = BoosConfigManager.getMessage(
+                final String msg = BoosConfigManager.getMessage(
                         regexCommad, player);
                 if (!msg.equals("")) {
                     BoosChat.sendMessageToPlayer(player, msg);
@@ -166,13 +167,13 @@ public class BoosCoolDownListener implements Listener {
             event.setCancelled(true);
         }
         if (!event.isCancelled()) {
-            List<String> linkGroup = BoosConfigManager.getSharedLimits(
+            final List<String> linkGroup = BoosConfigManager.getSharedLimits(
                     regexCommad, player);
             if (linkGroup.isEmpty()) {
                 BoosLimitManager.setUses(player, regexCommad);
             } else {
                 BoosLimitManager.setUses(player, regexCommad);
-                for (String a : linkGroup) {
+                for (final String a : linkGroup) {
                     BoosLimitManager.setUses(player, a);
                 }
             }
@@ -180,7 +181,7 @@ public class BoosCoolDownListener implements Listener {
                 BoosCoolDown.commandLogger(player.getName(), originalCommand);
             }
         }
-        for (String key : commandQueue.keySet()) {
+        for (final String key : commandQueue.keySet()) {
             if (key.startsWith(String.valueOf(player.getUniqueId()))) {
                 commandQueue.remove(key);
             }
@@ -188,13 +189,13 @@ public class BoosCoolDownListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    private void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-        Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
+    private void onPlayerCommandPreprocess(final PlayerCommandPreprocessEvent event) {
+        final Player player = event.getPlayer();
+        final UUID uuid = player.getUniqueId();
         if (BoosConfigManager.getSyntaxBlocker() && !player.isOp() && !player.hasPermission("booscooldowns.syntaxblockerexception")) {
             if (event.getMessage().contains(":")) {
-                Pattern p = Pattern.compile("^/([a-zA-Z0-9_]+):");
-                Matcher m = p.matcher(event.getMessage());
+                final Pattern p = Pattern.compile("^/([a-zA-Z0-9_]+):");
+                final Matcher m = p.matcher(event.getMessage());
                 if (m.find()) {
                     {
                         BoosChat.sendMessageToPlayer(player, BoosConfigManager
@@ -206,8 +207,8 @@ public class BoosCoolDownListener implements Listener {
             }
         }
         if (BoosConfigManager.getConfirmCommandEnabled(player)) {
-            for (String key : commandQueue.keySet()) {
-                String[] keyList = key.split("@");
+            for (final String key : commandQueue.keySet()) {
+                final String[] keyList = key.split("@");
                 if (keyList[0].equals(String.valueOf(uuid))) {
                     if (!keyList[1].equals(event.getMessage())) {
                         commandQueue.remove(key);
@@ -225,9 +226,9 @@ public class BoosCoolDownListener implements Listener {
         originalCommand = originalCommand.replace("$", "SdollarS");
         originalCommand = originalCommand.trim().replaceAll(" +", " ");
         String regexCommad = "";
-        Set<String> aliases = BoosConfigManager.getAliases();
-        Set<String> commands = BoosConfigManager.getCommands(player);
-        boolean on;
+        final Set<String> aliases = BoosConfigManager.getAliases();
+        final Set<String> commands = BoosConfigManager.getCommands(player);
+        final boolean on;
         String item = "";
         String name = "";
         List<String> lore = new ArrayList<>();
@@ -247,8 +248,8 @@ public class BoosCoolDownListener implements Listener {
             event.setMessage(originalCommand);
         }
         if (on && commands != null) {
-            for (String group : commands) {
-                String group2 = group.replace("*", ".*");
+            for (final String group : commands) {
+                final String group2 = group.replace("*", ".*");
                 if (originalCommand.matches("(?i)" + group2)) {
                     regexCommad = group;
                     if (BoosConfigManager.getWarmupEnabled()) {
@@ -290,8 +291,7 @@ public class BoosCoolDownListener implements Listener {
                 }
             }
             if (!BoosConfigManager.getConfirmCommandEnabled(player) || (commandQueue
-                    .keySet()
-                    .contains(uuid + "@" + originalCommand) && commandQueue.get(uuid + "@" + originalCommand))) {
+                    .containsKey(uuid + "@" + originalCommand) && commandQueue.get(uuid + "@" + originalCommand))) {
                 this.checkRestrictions(event, player, regexCommad, originalCommand,
                         warmupTime, cooldownTime, price, item, count, name, lore, enchants, limit,
                         xpPrice, xpRequirement, playerPoints);
@@ -333,30 +333,30 @@ public class BoosCoolDownListener implements Listener {
                     if (count > 0) {
                         String itemMessage = BoosConfigManager.getItsItemCostMessage();
                         itemMessage = itemMessage.replace("&itemprice&", "").replace("&itemname&", "");
-                        JSON json = getItemStackJson(2, item, count, name, lore, enchants);
+                        final JSON json = getItemStackJson(2, item, count, name, lore, enchants);
                         BoosChat.sendMessageToPlayer(player, "    " + itemMessage);
                         json.send(player);
                     }
                     if (limit > 0) {
-                        int uses = BoosLimitManager.getUses(player, regexCommad);
+                        final int uses = BoosLimitManager.getUses(player, regexCommad);
                         String limitMessage = BoosConfigManager.getItsLimitMessage();
                         limitMessage = limitMessage.replace("&limit&", String.valueOf(limit))
                                 .replace("&uses&", String.valueOf(limit - uses));
                         BoosChat.sendMessageToPlayer(player, "    " + limitMessage);
                     }
-                    String yesString = BoosConfigManager.getConfirmCommandMessage();
-                    JSONClickAction yesClick = new JSONClickAction.RunCommand(yesString);
-                    JSONHoverAction yesHover = new JSONHoverAction.ShowStringText(BoosConfigManager.getConfirmCommandHint());
-                    JSONComponent yes = new JSONComponent("    " + yesString);
+                    final String yesString = BoosConfigManager.getConfirmCommandMessage();
+                    final JSONClickAction yesClick = new JSONClickAction.RunCommand(yesString);
+                    final JSONHoverAction yesHover = new JSONHoverAction.ShowStringText(BoosConfigManager.getConfirmCommandHint());
+                    final JSONComponent yes = new JSONComponent("    " + yesString);
                     yes.setColor(JSONColor.GREEN).setBold(true);
                     yes.setClickAction(yesClick);
                     yes.setHoverAction(yesHover);
                     yes.send(player);
 
-                    String noString = BoosConfigManager.getCancelCommandMessage();
-                    JSONClickAction noClick = new JSONClickAction.RunCommand(noString);
-                    JSONHoverAction noHover = new JSONHoverAction.ShowStringText(BoosConfigManager.getCancelCommandHint());
-                    JSONComponent no = new JSONComponent("    " + noString);
+                    final String noString = BoosConfigManager.getCancelCommandMessage();
+                    final JSONClickAction noClick = new JSONClickAction.RunCommand(noString);
+                    final JSONHoverAction noHover = new JSONHoverAction.ShowStringText(BoosConfigManager.getCancelCommandHint());
+                    final JSONComponent no = new JSONComponent("    " + noString);
                     no.setColor(JSONColor.RED).setBold(true);
                     no.setClickAction(noClick);
                     no.setHoverAction(noHover);
@@ -376,11 +376,11 @@ public class BoosCoolDownListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
-    private void onPlayerChatEvent(AsyncPlayerChatEvent event) {
+    private void onPlayerChatEvent(final AsyncPlayerChatEvent event) {
         final Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
+        final UUID uuid = player.getUniqueId();
         if (BoosConfigManager.getConfirmCommandEnabled(player)) {
-            for (String key : commandQueue.keySet()) {
+            for (final String key : commandQueue.keySet()) {
                 final String[] keyList = key.split("@");
                 if (keyList[0].equals(String.valueOf(uuid))) {
                     if (event.getMessage().equalsIgnoreCase(BoosConfigManager.getConfirmCommandMessage())) {
@@ -404,9 +404,10 @@ public class BoosCoolDownListener implements Listener {
         }
     }
 
-    private void start(PlayerCommandPreprocessEvent event, Player player,
-                       String regexCommad, String originalCommand, int warmupTime,
-                       int cooldownTime) {
+    private void start(
+            final PlayerCommandPreprocessEvent event, final Player player,
+            final String regexCommad, final String originalCommand, final int warmupTime,
+            final int cooldownTime) {
         if (!BoosWarmUpManager.checkWarmUpOK(player, regexCommad)) {
             if (BoosCoolDownManager.checkCoolDownOK(player, regexCommad,
                     originalCommand, cooldownTime)) {

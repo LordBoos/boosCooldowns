@@ -11,7 +11,7 @@ public class JSONComponent
     private JSONHoverAction<?> hoverAction;
     private JSONClickAction<?> clickAction;
 
-    public JSONComponent(String text) {
+    public JSONComponent(final String text) {
         super(text);
     }
 
@@ -77,7 +77,7 @@ public class JSONComponent
      * @return (JSONComponent) - this JSONComponent Object, for chaining.
      * @see #getHoverAction()
      */
-    public JSONComponent setHoverAction(JSONHoverAction<?> hoverAction) {
+    public JSONComponent setHoverAction(final JSONHoverAction<?> hoverAction) {
         if (hoverAction == null) {
             throw new IllegalArgumentException("hoverAction cannot be null!");
         }
@@ -102,7 +102,7 @@ public class JSONComponent
      * @return (JSONComponent) - this JSONComponent Object, for chaining.
      * @see #getClickAction()
      */
-    public JSONComponent setClickAction(JSONClickAction<?> clickAction) {
+    public JSONComponent setClickAction(final JSONClickAction<?> clickAction) {
         if (clickAction == null) {
             throw new IllegalArgumentException("clickAction cannot be null!");
         }

@@ -13,8 +13,8 @@ import util.BoosChat;
 public class BoosPlayerToggleSprintListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    private void onPlayerToggleSprint(PlayerToggleSprintEvent event) {
-        Player player = event.getPlayer();
+    private void onPlayerToggleSprint(final PlayerToggleSprintEvent event) {
+        final Player player = event.getPlayer();
         if (player != null
                 && !player.hasPermission("booscooldowns.nocancel.sprint")) {
             if (BoosWarmUpManager.hasWarmUps(player)) {

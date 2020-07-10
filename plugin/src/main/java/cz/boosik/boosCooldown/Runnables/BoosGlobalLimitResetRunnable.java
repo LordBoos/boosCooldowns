@@ -10,7 +10,7 @@ public class BoosGlobalLimitResetRunnable implements Runnable {
 
     private final String command;
 
-    public BoosGlobalLimitResetRunnable(String key) {
+    public BoosGlobalLimitResetRunnable(final String key) {
         this.command = key;
     }
 

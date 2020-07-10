@@ -40,6 +40,7 @@ import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -110,7 +111,7 @@ public class MetricsLite {
      */
     private volatile BukkitTask task = null;
 
-    public MetricsLite(Plugin plugin) throws IOException {
+    public MetricsLite(final Plugin plugin) throws IOException {
         if (plugin == null) {
             throw new IllegalArgumentException("Plugin cannot be null");
         }
@@ -143,19 +144,19 @@ public class MetricsLite {
      * @param input
      * @return
      */
-    public static byte[] gzip(String input) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    public static byte[] gzip(final String input) {
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         GZIPOutputStream gzos = null;
 
         try {
             gzos = new GZIPOutputStream(baos);
-            gzos.write(input.getBytes("UTF-8"));
-        } catch (IOException e) {
+            gzos.write(input.getBytes(StandardCharsets.UTF_8));
+        } catch (final IOException e) {
             e.printStackTrace();
         } finally {
             if (gzos != null) try {
                 gzos.close();
-            } catch (IOException ignore) {
+            } catch (final IOException ignore) {
             }
         }
 
@@ -170,7 +171,7 @@ public class MetricsLite {
      * @param value
      * @throws UnsupportedEncodingException
      */
-    private static void appendJSONPair(StringBuilder json, String key, String value) throws UnsupportedEncodingException {
+    private static void appendJSONPair(final StringBuilder json, final String key, final String value) throws UnsupportedEncodingException {
         boolean isValueNumeric = false;
 
         try {
@@ -178,7 +179,7 @@ public class MetricsLite {
                 Double.parseDouble(value);
                 isValueNumeric = true;
             }
-        } catch (NumberFormatException e) {
+        } catch (final NumberFormatException e) {
             isValueNumeric = false;
         }
 
@@ -202,12 +203,12 @@ public class MetricsLite {
      * @param text
      * @return
      */
-    private static String escapeJSON(String text) {
-        StringBuilder builder = new StringBuilder();
+    private static String escapeJSON(final String text) {
+        final StringBuilder builder = new StringBuilder();
 
         builder.append('"');
         for (int index = 0; index < text.length(); index++) {
-            char chr = text.charAt(index);
+            final char chr = text.charAt(index);
 
             switch (chr) {
                 case '"':
@@ -229,7 +230,7 @@ public class MetricsLite {
                     break;
                 default:
                     if (chr < ' ') {
-                        String t = "000" + Integer.toHexString(chr);
+                        final String t = "000" + Integer.toHexString(chr);
                         builder.append("\\u" + t.substring(t.length() - 4));
                     } else {
                         builder.append(chr);
@@ -295,7 +296,7 @@ public class MetricsLite {
                         // After the first post we set firstPost to false
                         // Each post thereafter will be a ping
                         firstPost = false;
-                    } catch (IOException e) {
+                    } catch (final IOException e) {
                         if (debug) {
                             Bukkit.getLogger().log(Level.INFO, "[Metrics] " + e.getMessage());
                         }
@@ -317,12 +318,12 @@ public class MetricsLite {
             try {
                 // Reload the metrics file
                 configuration.load(getConfigFile());
-            } catch (IOException ex) {
+            } catch (final IOException ex) {
                 if (debug) {
                     Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
                 }
                 return true;
-            } catch (InvalidConfigurationException ex) {
+            } catch (final InvalidConfigurationException ex) {
                 if (debug) {
                     Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
                 }
@@ -386,7 +387,7 @@ public class MetricsLite {
         // plugin.getDataFolder() => base/plugins/PluginA/
         // pluginsFolder => base/plugins/
         // The base is not necessarily relative to the startup directory.
-        File pluginsFolder = plugin.getDataFolder().getParentFile();
+        final File pluginsFolder = plugin.getDataFolder().getParentFile();
 
         // return => base/plugins/PluginMetrics/config.yml
         return new File(new File(pluginsFolder, "PluginMetrics"), "config.yml");
@@ -399,13 +400,13 @@ public class MetricsLite {
      */
     private int getOnlinePlayers() {
         try {
-            Method onlinePlayerMethod = Bukkit.class.getMethod("getOnlinePlayers");
+            final Method onlinePlayerMethod = Bukkit.class.getMethod("getOnlinePlayers");
             if (onlinePlayerMethod.getReturnType().equals(Collection.class)) {
                 return ((Collection<?>) onlinePlayerMethod.invoke(Bukkit.class)).size();
             } else {
                 return ((Player[]) onlinePlayerMethod.invoke(Bukkit.class)).length;
             }
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             if (debug) {
                 Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
             }
@@ -417,19 +418,19 @@ public class MetricsLite {
     /**
      * Generic method that posts a plugin to the metrics website
      */
-    private void postPlugin(boolean isPing) throws IOException {
+    private void postPlugin(final boolean isPing) throws IOException {
         // Server software specific section
-        PluginDescriptionFile description = plugin.getDescription();
-        String pluginName = description.getName();
-        boolean onlineMode = Bukkit.getServer().getOnlineMode(); // TRUE if online mode is enabled
-        String pluginVersion = description.getVersion();
-        String serverVersion = Bukkit.getVersion();
-        int playersOnline = this.getOnlinePlayers();
+        final PluginDescriptionFile description = plugin.getDescription();
+        final String pluginName = description.getName();
+        final boolean onlineMode = Bukkit.getServer().getOnlineMode(); // TRUE if online mode is enabled
+        final String pluginVersion = description.getVersion();
+        final String serverVersion = Bukkit.getVersion();
+        final int playersOnline = this.getOnlinePlayers();
 
         // END server software specific section -- all code below does not use any code outside of this class / Java
 
         // Construct the post data
-        StringBuilder json = new StringBuilder(1024);
+        final StringBuilder json = new StringBuilder(1024);
         json.append('{');
 
         // The plugin's description file containg all of the plugin data such as name, version, author, etc
@@ -439,11 +440,11 @@ public class MetricsLite {
         appendJSONPair(json, "players_online", Integer.toString(playersOnline));
 
         // New data as of R6
-        String osname = System.getProperty("os.name");
+        final String osname = System.getProperty("os.name");
         String osarch = System.getProperty("os.arch");
-        String osversion = System.getProperty("os.version");
-        String java_version = System.getProperty("java.version");
-        int coreCount = Runtime.getRuntime().availableProcessors();
+        final String osversion = System.getProperty("os.version");
+        final String java_version = System.getProperty("java.version");
+        final int coreCount = Runtime.getRuntime().availableProcessors();
 
         // normalize os arch .. amd64 -> x86_64
         if (osarch.equals("amd64")) {
@@ -466,10 +467,10 @@ public class MetricsLite {
         json.append('}');
 
         // Create the url
-        URL url = new URL(BASE_URL + String.format(REPORT_URL, urlEncode(pluginName)));
+        final URL url = new URL(BASE_URL + String.format(REPORT_URL, urlEncode(pluginName)));
 
         // Connect to the website
-        URLConnection connection;
+        final URLConnection connection;
 
         // Mineshafter creates a socks proxy, so we can safely bypass it
         // It does not reroute POST requests so we need to go around it
@@ -480,8 +481,8 @@ public class MetricsLite {
         }
 
 
-        byte[] uncompressed = json.toString().getBytes();
-        byte[] compressed = gzip(json.toString());
+        final byte[] uncompressed = json.toString().getBytes();
+        final byte[] compressed = gzip(json.toString());
 
         // Headers
         connection.addRequestProperty("User-Agent", "MCStats/" + REVISION);
@@ -499,7 +500,7 @@ public class MetricsLite {
         }
 
         // Write the data
-        OutputStream os = connection.getOutputStream();
+        final OutputStream os = connection.getOutputStream();
         os.write(compressed);
         os.flush();
 
@@ -531,7 +532,7 @@ public class MetricsLite {
         try {
             Class.forName("mineshafter.MineServer");
             return true;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             return false;
         }
     }

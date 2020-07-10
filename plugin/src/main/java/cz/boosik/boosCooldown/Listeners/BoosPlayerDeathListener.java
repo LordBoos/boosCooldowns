@@ -13,17 +13,17 @@ import cz.boosik.boosCooldown.Managers.BoosCoolDownManager;
 public class BoosPlayerDeathListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    private void onPlayerDeath(PlayerDeathEvent event) {
-        Entity entity = event.getEntity();
+    private void onPlayerDeath(final PlayerDeathEvent event) {
+        final Entity entity = event.getEntity();
         if (entity != null) {
-            Player player = (Player) entity;
+            final Player player = (Player) entity;
             clearCooldownsOnDeath(player);
             clearUsesOnDeath(player);
             startCooldownsOnDeath(player);
         }
     }
 
-    private void startCooldownsOnDeath(Player player) {
+    private void startCooldownsOnDeath(final Player player) {
         if (player != null) {
             if (BoosConfigManager.getStartCooldownsOnDeath()) {
                 BoosCoolDownManager.startAllCooldowns(player, "");
@@ -31,7 +31,7 @@ public class BoosPlayerDeathListener implements Listener {
         }
     }
 
-    private void clearUsesOnDeath(Player player) {
+    private void clearUsesOnDeath(final Player player) {
         if (player != null
                 && player.hasPermission("booscooldowns.clear.uses.death")) {
             if (BoosConfigManager.getCleanUsesOnDeath()) {
@@ -40,7 +40,7 @@ public class BoosPlayerDeathListener implements Listener {
         }
     }
 
-    private void clearCooldownsOnDeath(Player player) {
+    private void clearCooldownsOnDeath(final Player player) {
         if (player != null
                 && player.hasPermission("booscooldowns.clear.cooldowns.death")) {
             if (BoosConfigManager.getCleanCooldownsOnDeath()) {

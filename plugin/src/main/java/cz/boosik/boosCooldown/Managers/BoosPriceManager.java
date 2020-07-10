@@ -11,12 +11,13 @@ import util.BoosChat;
 public class BoosPriceManager {
     private static final Economy economy = BoosCoolDown.getEconomy();
 
-    private static boolean payForCommand(Player player,
-                                         String originalCommand, double price) {
+    private static boolean payForCommand(
+            final Player player,
+            final String originalCommand, final double price) {
         if (economy == null) {
             return true;
         }
-        EconomyResponse r = economy.withdrawPlayer(player, price);
+        final EconomyResponse r = economy.withdrawPlayer(player, price);
         String msg = "";
         if (r.transactionSuccess()) {
             msg = String.format(BoosConfigManager.getPaidForCommandMessage(),
@@ -32,9 +33,10 @@ public class BoosPriceManager {
         }
     }
 
-    public static void payForCommand(PlayerCommandPreprocessEvent event,
-                                     Player player, String regexCommand, String originalCommand,
-                                     double price) {
+    public static void payForCommand(
+            final PlayerCommandPreprocessEvent event,
+            final Player player, final String regexCommand, final String originalCommand,
+            final double price) {
         if (price > 0) {
             if (!player.hasPermission("booscooldowns.noprice")
                     && !player.hasPermission("booscooldowns.noprice."
@@ -47,7 +49,7 @@ public class BoosPriceManager {
         }
     }
 
-    public static boolean has(Player player, double price) {
+    public static boolean has(final Player player, final double price) {
         return economy == null || price <= 0 || economy.has(player, price);
     }
 }

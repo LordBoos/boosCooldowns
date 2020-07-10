@@ -16,12 +16,12 @@ import util.BoosChat;
 public class BoosSignInteractListener implements Listener {
     private final BoosCoolDown plugin;
 
-    public BoosSignInteractListener(BoosCoolDown instance) {
+    public BoosSignInteractListener(final BoosCoolDown instance) {
         plugin = instance;
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    private void onSignInteract(PlayerInteractEvent event) {
+    private void onSignInteract(final PlayerInteractEvent event) {
         String msg;
         if (event.isCancelled()) {
             return;
@@ -49,12 +49,12 @@ public class BoosSignInteractListener implements Listener {
 
                     || event.getClickedBlock().getType() == Material.BIRCH_SIGN
                     || event.getClickedBlock().getType() == Material.BIRCH_WALL_SIGN) {
-                Sign s = (Sign) event.getClickedBlock().getState();
-                String line1 = s.getLine(0);
-                String line2 = s.getLine(1);
-                String line3 = s.getLine(2);
-                String line4 = s.getLine(3);
-                Player player = event.getPlayer();
+                final Sign s = (Sign) event.getClickedBlock().getState();
+                final String line1 = s.getLine(0);
+                final String line2 = s.getLine(1);
+                final String line3 = s.getLine(2);
+                final String line4 = s.getLine(3);
+                final Player player = event.getPlayer();
                 if (line1.equals("[boosCooldowns]")) {
                     if (line2.equals("player")
                             && player

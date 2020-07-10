@@ -14,10 +14,10 @@ import util.BoosChat;
 public class BoosPlayerGameModeChangeListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    private void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
-        Entity entity = event.getPlayer();
+    private void onPlayerGameModeChange(final PlayerGameModeChangeEvent event) {
+        final Entity entity = event.getPlayer();
         if (entity != null) {
-            Player player = (Player) entity;
+            final Player player = (Player) entity;
             if (!player
                     .hasPermission("booscooldowns.nocancel.gamemodechange")) {
                 if (BoosWarmUpManager.hasWarmUps(player)) {

@@ -14,10 +14,10 @@ import util.BoosChat;
 public class BoosPlayerInteractListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    private void onPlayerInteract(PlayerInteractEvent event) {
-        Entity entity = event.getPlayer();
+    private void onPlayerInteract(final PlayerInteractEvent event) {
+        final Entity entity = event.getPlayer();
         if (entity != null) {
-            Player player = (Player) entity;
+            final Player player = (Player) entity;
             if (!player
                     .hasPermission("booscooldowns.dontblock.interact")) {
                 if (BoosWarmUpManager.hasWarmUps(player)) {

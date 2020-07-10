@@ -13,8 +13,8 @@ import util.BoosChat;
 public class BoosPlayerToggleSneakListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    private void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
-        Player player = event.getPlayer();
+    private void onPlayerToggleSneak(final PlayerToggleSneakEvent event) {
+        final Player player = event.getPlayer();
         if (player != null
                 && !player.hasPermission("booscooldowns.nocancel.sneak")) {
             if (BoosWarmUpManager.hasWarmUps(player)) {

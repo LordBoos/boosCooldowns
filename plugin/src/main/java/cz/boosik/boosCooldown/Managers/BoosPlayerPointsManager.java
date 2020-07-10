@@ -10,8 +10,9 @@ import util.BoosChat;
 public class BoosPlayerPointsManager {
     private static final PlayerPoints playerPoints = BoosCoolDown.getPlayerPoints();
 
-    private static boolean payForCommand(Player player,
-                                         String originalCommand, int price) {
+    private static boolean payForCommand(
+            final Player player,
+            final String originalCommand, final int price) {
         if (playerPoints == null) {
             return true;
         }
@@ -30,9 +31,10 @@ public class BoosPlayerPointsManager {
         }
     }
 
-    public static void payForCommand(PlayerCommandPreprocessEvent event,
-                                     Player player, String regexCommand, String originalCommand,
-                                     int price) {
+    public static void payForCommand(
+            final PlayerCommandPreprocessEvent event,
+            final Player player, final String regexCommand, final String originalCommand,
+            final int price) {
         if (price > 0) {
             if (!player.hasPermission("booscooldowns.noplayerpoints")
                     && !player.hasPermission("booscooldowns.noplayerpoints."
@@ -45,7 +47,7 @@ public class BoosPlayerPointsManager {
         }
     }
 
-    public static boolean has(Player player, int price) {
+    public static boolean has(final Player player, final int price) {
         return playerPoints == null || price <= 0 || playerPoints.getAPI().look(player.getUniqueId()) >= price;
     }
 }

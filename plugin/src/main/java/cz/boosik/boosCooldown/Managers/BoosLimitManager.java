@@ -13,18 +13,19 @@ import util.BoosChat;
 
 public class BoosLimitManager {
 
-    public static boolean blocked(Player player, String regexCommand,
-                                  String originalCommand, int limit) {
+    public static boolean blocked(
+            final Player player, final String regexCommand,
+            final String originalCommand, final int limit) {
         Date time = getTime(player, regexCommand);
-        Date confTime = getTime(regexCommand);
-        Calendar calcurrTime = Calendar.getInstance();
+        final Date confTime = getTime(regexCommand);
+        final Calendar calcurrTime = Calendar.getInstance();
         calcurrTime.setTime(getCurrTime());
-        Calendar callastTime = Calendar.getInstance();
-        Calendar callastTimeGlobal = Calendar.getInstance();
+        final Calendar callastTime = Calendar.getInstance();
+        final Calendar callastTimeGlobal = Calendar.getInstance();
         int uses = getUses(player, regexCommand);
-        long limitResetDelay = BoosConfigManager.getLimitResetDelay(
+        final long limitResetDelay = BoosConfigManager.getLimitResetDelay(
                 regexCommand, player);
-        long limitResetDelayGlobal = BoosConfigManager
+        final long limitResetDelayGlobal = BoosConfigManager
                 .getLimitResetDelayGlobal(regexCommand);
         if (time != null) {
             callastTime.setTime(time);
@@ -53,10 +54,10 @@ public class BoosLimitManager {
                 return false;
             } else if (limit <= uses) {
                 if (limitResetDelay > 0) {
-                    long waitSeconds = secondsBetween(callastTime,
+                    final long waitSeconds = secondsBetween(callastTime,
                             calcurrTime, limitResetDelay);
-                    long waitMinutes = Math.round(waitSeconds / 60) + 1;
-                    long waitHours = Math.round(waitMinutes / 60) + 1;
+                    final long waitMinutes = Math.round(waitSeconds / 60) + 1;
+                    final long waitHours = Math.round(waitMinutes / 60) + 1;
                     String msg = BoosConfigManager.getLimitResetMessage();
                     msg = msg.replaceAll("&command&", originalCommand);
                     if (waitSeconds >= 60 && 3600 >= waitSeconds) {
@@ -79,10 +80,10 @@ public class BoosLimitManager {
                 } else if (limitResetDelayGlobal > 0) {
                     if (confTime != null) {
                         callastTimeGlobal.setTime(confTime);
-                        long waitSeconds = secondsBetween(callastTimeGlobal,
+                        final long waitSeconds = secondsBetween(callastTimeGlobal,
                                 calcurrTime, limitResetDelayGlobal);
-                        long waitMinutes = (long) Math.ceil(waitSeconds / 60.0);
-                        long waitHours = (long) Math.ceil(waitMinutes / 60.0);
+                        final long waitMinutes = (long) Math.ceil(waitSeconds / 60.0);
+                        final long waitHours = (long) Math.ceil(waitMinutes / 60.0);
                         String msg = BoosConfigManager.getLimitResetMessage();
                         msg = msg.replaceAll("&command&", originalCommand);
                         if (waitSeconds >= 60 && 3600 >= waitSeconds) {
@@ -104,7 +105,7 @@ public class BoosLimitManager {
                         BoosChat.sendMessageToPlayer(player, msg);
                     }
                 } else {
-                    String msg = String.format(BoosConfigManager
+                    final String msg = String.format(BoosConfigManager
                             .getCommandBlockedMessage());
                     BoosChat.sendMessageToPlayer(player, msg);
                 }
@@ -114,8 +115,8 @@ public class BoosLimitManager {
         return false;
     }
 
-    public static int getUses(Player player, String regexCommand) {
-        int regexCommand2 = regexCommand.toLowerCase().hashCode();
+    public static int getUses(final Player player, final String regexCommand) {
+        final int regexCommand2 = regexCommand.toLowerCase().hashCode();
         int uses = 0;
         uses = BoosConfigManager.getConfusers().getInt(
                 "users." + player.getUniqueId() + ".uses." + regexCommand2,
@@ -123,17 +124,17 @@ public class BoosLimitManager {
         return uses;
     }
 
-    public static void setUses(Player player, String regexCommand) {
+    public static void setUses(final Player player, final String regexCommand) {
         if (BoosConfigManager.getLimitsEnabled()) {
             if (BoosConfigManager.getCommands(player).contains(regexCommand)) {
-                int regexCommand2 = regexCommand.toLowerCase().hashCode();
+                final int regexCommand2 = regexCommand.toLowerCase().hashCode();
                 int uses = getUses(player, regexCommand);
                 uses = uses + 1;
                 try {
                     BoosConfigManager.getConfusers().set(
                             "users." + player.getUniqueId() + ".uses."
                                     + regexCommand2, uses);
-                } catch (IllegalArgumentException e) {
+                } catch (final IllegalArgumentException e) {
                     BoosCoolDown
                             .getLog()
                             .warning(
@@ -145,9 +146,9 @@ public class BoosLimitManager {
         }
     }
 
-    public static void getLimitListMessages(Player send, String comm, int lim) {
+    public static void getLimitListMessages(final Player send, final String comm, final int lim) {
         if (lim != -1) {
-            int uses = getUses(send, comm);
+            final int uses = getUses(send, comm);
             String message = BoosConfigManager.getLimitListMessage();
             int num = lim - uses;
             if (num < 0) {
@@ -163,80 +164,81 @@ public class BoosLimitManager {
 
     private static Date getCurrTime() {
         String currTime = "";
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        final Calendar cal = Calendar.getInstance();
+        final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
         currTime = sdf.format(cal.getTime());
         Date time = null;
 
         try {
             time = sdf.parse(currTime);
             return time;
-        } catch (ParseException e) {
+        } catch (final ParseException e) {
             return null;
         }
     }
 
-    private static Date getTime(Player player, String regexCommand) {
-        int pre2 = regexCommand.toLowerCase().hashCode();
+    private static Date getTime(final Player player, final String regexCommand) {
+        final int pre2 = regexCommand.toLowerCase().hashCode();
         String confTime = "";
         confTime = BoosConfigManager.getConfusers().getString(
                 "users." + player.getUniqueId() + ".lastused." + pre2, null);
 
         if (confTime != null && !confTime.equals("")) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+            final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
             Date lastDate = null;
 
             try {
                 lastDate = sdf.parse(confTime);
                 return lastDate;
-            } catch (ParseException e) {
+            } catch (final ParseException e) {
                 return null;
             }
         }
         return null;
     }
 
-    private static Date getTime(String regexCommand) {
+    private static Date getTime(final String regexCommand) {
         String confTime = "";
         confTime = BoosConfigManager.getConfusers().getString(
                 "global." + regexCommand + ".reset", null);
 
         if (confTime != null && !confTime.equals("")) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+            final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
             Date lastDate = null;
 
             try {
                 lastDate = sdf.parse(confTime);
                 return lastDate;
-            } catch (ParseException e) {
+            } catch (final ParseException e) {
                 return null;
             }
         }
         return null;
     }
 
-    private static void setTime(Player player, String regexCommand) {
-        int pre2 = regexCommand.toLowerCase().hashCode();
+    private static void setTime(final Player player, final String regexCommand) {
+        final int pre2 = regexCommand.toLowerCase().hashCode();
         String currTime = "";
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        final Calendar cal = Calendar.getInstance();
+        final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
         currTime = sdf.format(cal.getTime());
         BoosConfigManager.getConfusers()
                 .set("users." + player.getUniqueId() + ".lastused." + pre2,
                         currTime);
     }
 
-    private static long secondsBetween(Calendar startDate, Calendar endDate,
-                                       long limitResetDelay) {
+    private static long secondsBetween(
+            final Calendar startDate, final Calendar endDate,
+            final long limitResetDelay) {
         long secondsBetween = 0;
         secondsBetween = ((startDate.getTimeInMillis() - endDate
                 .getTimeInMillis()) / 1000) + limitResetDelay;
         return secondsBetween;
     }
 
-    public static void clearAllLimits(int hashedCommand) {
-        Set<String> players = BoosConfigManager.getAllPlayers();
-        for (String player : players) {
+    public static void clearAllLimits(final int hashedCommand) {
+        final Set<String> players = BoosConfigManager.getAllPlayers();
+        for (final String player : players) {
             BoosConfigManager.clearSomething2("uses", player, hashedCommand);
         }
         BoosConfigManager.saveConfusers();
@@ -244,7 +246,7 @@ public class BoosLimitManager {
     }
 
     public static void setGlobalLimitResetDate() {
-        for (String command : BoosConfigManager.getLimitResetCommandsGlobal()) {
+        for (final String command : BoosConfigManager.getLimitResetCommandsGlobal()) {
             if (BoosConfigManager.getLimitResetDelayGlobal(command) == -65535) {
                 BoosConfigManager.getConfusers().set("global." + command, null);
             } else {
@@ -255,16 +257,16 @@ public class BoosLimitManager {
         BoosConfigManager.loadConfusers();
     }
 
-    public static void setGlobalLimitResetDate(String command) {
+    public static void setGlobalLimitResetDate(final String command) {
         setTime(command);
         BoosConfigManager.saveConfusers();
         BoosConfigManager.loadConfusers();
     }
 
-    private static void setTime(String command) {
+    private static void setTime(final String command) {
         String currTime = "";
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        final Calendar cal = Calendar.getInstance();
+        final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
         currTime = sdf.format(cal.getTime());
         BoosConfigManager.getConfusers().set("global." + command + ".reset",
                 currTime);

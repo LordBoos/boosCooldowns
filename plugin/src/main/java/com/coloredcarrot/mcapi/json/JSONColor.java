@@ -30,14 +30,14 @@ public enum JSONColor {
 
     private final String code;
 
-    JSONColor(String code) {
+    JSONColor(final String code) {
         this.code = code;
     }
 
     public static JSONColor fromString(String text) {
         if (text != null) {
             text = text.replace("§", "&");
-            for (JSONColor b : JSONColor.values()) {
+            for (final JSONColor b : JSONColor.values()) {
                 if (text.equalsIgnoreCase(b.code)) {
                     return b;
                 }

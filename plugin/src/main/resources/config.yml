@@ -74,7 +74,7 @@ options:
     paid_items_for_command: '&6Price of&e &command& &6was &e%s'
     paid_xp_for_command: '&6Price of&e &command& &6was &e%s levels'
     paid_player_points_for_command: '&6Price of&e &command& &6was &e%s PlayerPoints &6and you now have&e %s PlayerPoints'
-    insufficient_items: '&6You have not enough items!&e &command& &6needs &e%s'
+    insufficient_items: '&6You have not enough items!&e &command& &6needs'
     insufficient_xp: '&6You have not enough XP!&e &command& &6needs &e%s'
     insufficient_xp_requirement: '&6Your level is too low to use this!&e &command& &6needs &e%s'
     insufficient_player_points: '&6You have not enough PlayerPoints!&e &command& &6needs &e%s'

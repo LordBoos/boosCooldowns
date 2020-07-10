@@ -5,11 +5,8 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
-import nms.NMS;
-import nms.NMSNotHookedException;
-import nms.NMSSetupResponse;
+import net.md_5.bungee.chat.ComponentSerializer;
 
 /**
  * A JSON Object is the base for any JSON message using this library.
@@ -21,16 +18,16 @@ import nms.NMSSetupResponse;
  */
 public class JSON {
 
-    private List<JSONComponentSimple> components = new ArrayList<JSONComponentSimple>();
+    private final List<JSONComponentSimple> components = new ArrayList<JSONComponentSimple>();
     private String generatedJSON;
     private boolean generated;
 
     /**
      * Constructs a new JSON Object with a base JSONComponentSimple Object.
      *
-     * @param JSONComponentSimple (JSONComponentSimple) - the base JSONComponentSimple Object
+     * @param jsonComponent (JSONComponentSimple) - the base JSONComponentSimple Object
      */
-    public JSON(JSONComponentSimple jsonComponent) {
+    public JSON(final JSONComponentSimple jsonComponent) {
 
         if (jsonComponent == null) {
             throw new IllegalArgumentException("component cannot be null!");
@@ -48,14 +45,14 @@ public class JSON {
      *
      * @param components (JSONComponentSimple[]) - the JSONComponentSimple Objects
      */
-    public JSON(JSONComponentSimple... components) {
+    public JSON(final JSONComponentSimple... components) {
 
         if (components == null) {
             throw new IllegalArgumentException("component cannot be null!");
         }
 
         if (components.length > 0) {
-            for (JSONComponentSimple component : components) {
+            for (final JSONComponentSimple component : components) {
                 this.components.add(component);
             }
         }
@@ -66,21 +63,12 @@ public class JSON {
     }
 
     /**
-     * This method needs to be called in the onEnable() method.
-     *
-     * @see NMS#setup()
-     */
-    public static NMSSetupResponse setup(Plugin pl) {
-        return NMS.setup(pl);
-    }
-
-    /**
      * Sends a JSON message to a player.
      *
      * @param to   (Player) - the player to send the message to
      * @param json (String) - the raw JSON to send
      */
-    public static void sendJSON(Player to, String json) {
+    public static void sendJSON(final Player to, final String json) {
 
         if (to == null) {
             throw new IllegalArgumentException("player cannot be null!");
@@ -88,12 +76,7 @@ public class JSON {
         if (json == null) {
             throw new IllegalArgumentException("json cannot be null!");
         }
-
-        try {
-            NMS.getHook().sendJSON(json, to);
-        } catch (NMSNotHookedException e) {
-            e.printStackTrace();
-        }
+        to.spigot().sendMessage(ComponentSerializer.parse(json));
     }
 
     /**
@@ -103,7 +86,7 @@ public class JSON {
      * @param to   (Player) - the player to send the message to
      * @param json (JSON) - the JSON Object to send
      */
-    public static void sendJSON(Player to, JSON json) {
+    public static void sendJSON(final Player to, final JSON json) {
         sendJSON(to, json.get());
     }
 
@@ -113,14 +96,14 @@ public class JSON {
      * @param jsons (JSON[]) - the JSON Objects to combine
      * @return (JSON) - the combined JSON.
      */
-    public static JSON combineToNewJSON(JSON... jsons) {
+    public static JSON combineToNewJSON(final JSON... jsons) {
 
-        JSON baseJSON;
+        final JSON baseJSON;
 
-        baseJSON = (JSON) jsons[0].clone();
+        baseJSON = jsons[0].clone();
 
         for (int i = 1; i < jsons.length; i++) {
-            for (JSONComponentSimple comp : jsons[i].getComponents()) {
+            for (final JSONComponentSimple comp : jsons[i].getComponents()) {
                 baseJSON.add(comp.clone());
             }
         }
@@ -135,7 +118,7 @@ public class JSON {
     @Override
     public JSON clone() {
 
-        JSONComponentSimple[] comps = new JSONComponentSimple[components.size()];
+        final JSONComponentSimple[] comps = new JSONComponentSimple[components.size()];
 
         for (int i = 0; i < components.size(); i++) {
             comps[i] = components.get(i).clone();
@@ -151,7 +134,7 @@ public class JSON {
      * @param component (JSONComponentSimple) - the JSONComponentSimple to add.
      * @return (JSON) - this JSON Object, for chaining.
      */
-    public JSON add(JSONComponentSimple component) {
+    public JSON add(final JSONComponentSimple component) {
 
         if (component == null) {
             throw new IllegalArgumentException("component cannot be null!");
@@ -171,7 +154,7 @@ public class JSON {
      * @param component (JSONComponentSimple) - the JSONComponentSimple to remove.
      * @return (JSON) - this JSON Object, for chaining.
      */
-    public JSON remove(JSONComponentSimple component) {
+    public JSON remove(final JSONComponentSimple component) {
 
         if (component == null) {
             throw new IllegalArgumentException("component cannot be null!");
@@ -201,10 +184,10 @@ public class JSON {
      * @param jsons (JSON[]) - the JSON Objects to add to this one
      * @return JSON - this JSON Object, with all other JSON Objects added.
      */
-    public JSON combine(JSON... jsons) {
+    public JSON combine(final JSON... jsons) {
 
-        for (JSON json : jsons) {
-            for (JSONComponentSimple component : json.getComponents()) {
+        for (final JSON json : jsons) {
+            for (final JSONComponentSimple component : json.getComponents()) {
                 this.add(component);
             }
         }
@@ -223,7 +206,7 @@ public class JSON {
 
         generatedJSON = "{\"text\":\"\",\"extra\":[";
 
-        for (JSONComponentSimple component : components) {
+        for (final JSONComponentSimple component : components) {
             generatedJSON += component.get() + ",";
         }
 
@@ -256,7 +239,7 @@ public class JSON {
      * @param player (Player) - the player to send the message to
      * @return (JSON) - this JSON Object, for chaining.
      */
-    public JSON send(Player player) {
+    public JSON send(final Player player) {
 
         if (player == null) {
             throw new IllegalArgumentException("player cannot be null!");
@@ -278,7 +261,7 @@ public class JSON {
 
         String s = "";
 
-        for (JSONComponentSimple comp : components) {
+        for (final JSONComponentSimple comp : components) {
             s += ChatColor.RESET + comp.getChatColorVersion();
         }
 

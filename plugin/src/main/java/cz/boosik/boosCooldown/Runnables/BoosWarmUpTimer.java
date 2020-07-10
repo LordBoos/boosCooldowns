@@ -15,8 +15,9 @@ public class BoosWarmUpTimer extends TimerTask {
     private final String originalCommand;
     private final String regexCommand;
 
-    public BoosWarmUpTimer(BoosCoolDown bCoolDown, Player player,
-                           String regexCommand, String originalCommand) {
+    public BoosWarmUpTimer(
+            final BoosCoolDown bCoolDown, final Player player,
+            final String regexCommand, final String originalCommand) {
         this.bCoolDown = bCoolDown;
         this.player = player;
         this.regexCommand = regexCommand;

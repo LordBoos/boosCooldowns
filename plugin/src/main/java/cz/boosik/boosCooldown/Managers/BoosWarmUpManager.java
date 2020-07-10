@@ -17,22 +17,22 @@ public class BoosWarmUpManager {
 
     private static final ConcurrentHashMap<String, BoosWarmUpTimer> playercommands = new ConcurrentHashMap<>();
 
-    private static void applyPotionEffect(Player player, String regexCommand, int warmUpSeconds) {
-        for (String potionUnparsed : BoosConfigManager.getPotionEffects(regexCommand, player)) {
-            String[] potionParsed = potionUnparsed.split(",");
-            PotionEffectType type = PotionEffectType.getByName(potionParsed[0]);
+    private static void applyPotionEffect(final Player player, final String regexCommand, final int warmUpSeconds) {
+        for (final String potionUnparsed : BoosConfigManager.getPotionEffects(regexCommand, player)) {
+            final String[] potionParsed = potionUnparsed.split(",");
+            final PotionEffectType type = PotionEffectType.getByName(potionParsed[0]);
             final int duration = potionParsed.length == 3 ? Integer.valueOf(potionParsed[2]) * 20 : warmUpSeconds * 20;
             player.addPotionEffect(new PotionEffect(type, duration, Integer.valueOf(potionParsed[1]) - 1), true);
         }
     }
 
-    public static void cancelWarmUps(Player player) {
-        Iterator<String> iter = ((Map<String, BoosWarmUpTimer>) playercommands).keySet().iterator();
+    public static void cancelWarmUps(final Player player) {
+        final Iterator<String> iter = ((Map<String, BoosWarmUpTimer>) playercommands).keySet().iterator();
         while (iter.hasNext()) {
             final String key = iter.next();
             if (key.startsWith(player.getUniqueId() + "@")) {
                 if (BoosConfigManager.getCancelPotionsOnWarmupCancel()) {
-                    for (String potionUnparsed : BoosConfigManager.getPotionEffects(playercommands.get(key).getRegexCommand(), player)) {
+                    for (final String potionUnparsed : BoosConfigManager.getPotionEffects(playercommands.get(key).getRegexCommand(), player)) {
                         player.removePotionEffect(PotionEffectType.getByName(potionUnparsed.split(",")[0]));
                     }
                 }
@@ -42,8 +42,8 @@ public class BoosWarmUpManager {
         }
     }
 
-    public static boolean hasWarmUps(Player player) {
-        for (String key : ((Map<String, BoosWarmUpTimer>) playercommands).keySet()) {
+    public static boolean hasWarmUps(final Player player) {
+        for (final String key : ((Map<String, BoosWarmUpTimer>) playercommands).keySet()) {
             if (key.startsWith(player.getUniqueId() + "@")) {
                 return true;
             }
@@ -51,63 +51,64 @@ public class BoosWarmUpManager {
         return false;
     }
 
-    public static boolean checkWarmUpOK(Player player, String regexCommand) {
-        int pre2 = regexCommand.toLowerCase().hashCode();
+    public static boolean checkWarmUpOK(final Player player, final String regexCommand) {
+        final int pre2 = regexCommand.toLowerCase().hashCode();
         int ok = 0;
         ok = BoosConfigManager.getConfusers().getInt(
                 "users." + player.getUniqueId() + ".warmup." + pre2, ok);
         return ok == 1;
     }
 
-    public static boolean isWarmUpProcess(Player player, String regexCommand) {
+    public static boolean isWarmUpProcess(final Player player, String regexCommand) {
         regexCommand = regexCommand.toLowerCase();
         return playercommands.containsKey(player.getUniqueId() + "@"
                 + regexCommand);
     }
 
-    private static void killTimer(Player player) {
-        for (String key : ((Map<String, BoosWarmUpTimer>) playercommands).keySet()) {
+    private static void killTimer(final Player player) {
+        for (final String key : ((Map<String, BoosWarmUpTimer>) playercommands).keySet()) {
             if (key.startsWith(player.getUniqueId() + "@")) {
                 playercommands.get(key).cancel();
             }
         }
     }
 
-    public static void removeWarmUp(Player player, String regexCommand) {
-        int pre2 = regexCommand.toLowerCase().hashCode();
+    public static void removeWarmUp(final Player player, final String regexCommand) {
+        final int pre2 = regexCommand.toLowerCase().hashCode();
         BoosConfigManager.getConfusers().set(
                 "users." + player.getUniqueId() + ".warmup." + pre2, null);
     }
 
-    public static void removeWarmUpOK(Player player, String regexCommand) {
-        int pre2 = regexCommand.toLowerCase().hashCode();
+    public static void removeWarmUpOK(final Player player, final String regexCommand) {
+        final int pre2 = regexCommand.toLowerCase().hashCode();
         BoosConfigManager.getConfusers().set(
                 "users." + player.getUniqueId() + ".warmup." + pre2, null);
     }
 
-    public static void removeWarmUpProcess(String tag) {
+    public static void removeWarmUpProcess(final String tag) {
         BoosWarmUpManager.playercommands.remove(tag);
     }
 
-    public static void setWarmUpOK(Player player, String regexCommand) {
-        int pre2 = regexCommand.toLowerCase().hashCode();
+    public static void setWarmUpOK(final Player player, final String regexCommand) {
+        final int pre2 = regexCommand.toLowerCase().hashCode();
         BoosConfigManager.getConfusers().set(
                 "users." + player.getUniqueId() + ".warmup." + pre2, 1);
     }
 
-    public static void startWarmUp(BoosCoolDown bCoolDown, Player player,
-                                   String regexCommand, String originalCommand, int warmUpSeconds) {
+    public static void startWarmUp(
+            final BoosCoolDown bCoolDown, final Player player,
+            String regexCommand, final String originalCommand, int warmUpSeconds) {
         regexCommand = regexCommand.toLowerCase();
-        int warmUpSecondsTem = warmUpSeconds;
+        final int warmUpSecondsTem = warmUpSeconds;
         long warmUpMinutes = (long) Math.floor(warmUpSeconds / 60.0);
-        long warmUpHours = (long) Math.floor(warmUpMinutes / 60.0);
+        final long warmUpHours = (long) Math.floor(warmUpMinutes / 60.0);
         if (!isWarmUpProcess(player, regexCommand)) {
             BoosWarmUpManager.removeWarmUpOK(player, regexCommand);
             String msg = BoosConfigManager.getWarmUpMessage();
-            StringBuilder stringBuilder = new StringBuilder();
+            final StringBuilder stringBuilder = new StringBuilder();
             msg = msg.replaceAll("&command&", originalCommand);
             if (warmUpSeconds >= 3600) {
-                stringBuilder.append(Long.toString(warmUpHours));
+                stringBuilder.append(warmUpHours);
                 stringBuilder.append(" ");
                 stringBuilder.append(BoosConfigManager.getUnitHoursMessage());
                 stringBuilder.append(", ");
@@ -115,7 +116,7 @@ public class BoosWarmUpManager {
             }
             if (warmUpSeconds >= 60) {
                 warmUpMinutes = warmUpMinutes - (warmUpHours * 60);
-                stringBuilder.append(Long.toString(warmUpMinutes));
+                stringBuilder.append(warmUpMinutes);
                 stringBuilder.append(" ");
                 stringBuilder.append(BoosConfigManager.getUnitMinutesMessage());
                 stringBuilder.append(", ");
@@ -135,8 +136,8 @@ public class BoosWarmUpManager {
 
             BoosChat.sendMessageToPlayer(player, msg);
 
-            Timer scheduler = new Timer();
-            BoosWarmUpTimer scheduleMe = new BoosWarmUpTimer(bCoolDown, player, regexCommand, originalCommand);
+            final Timer scheduler = new Timer();
+            final BoosWarmUpTimer scheduleMe = new BoosWarmUpTimer(bCoolDown, player, regexCommand, originalCommand);
             playercommands.put(player.getUniqueId() + "@" + regexCommand,
                     scheduleMe);
             scheduler.schedule(scheduleMe, warmUpSecondsTem * 1000);

@@ -7,9 +7,10 @@ import util.BoosChat;
 
 public class BoosXpCostManager {
 
-    private static boolean payXPForCommand(Player player,
-                                           String originalCommand, int xpPrice) {
-        int xp = player.getLevel();
+    private static boolean payXPForCommand(
+            final Player player,
+            final String originalCommand, final int xpPrice) {
+        final int xp = player.getLevel();
         Boolean trans = false;
         if (xp >= xpPrice) {
             player.setLevel(xp - xpPrice);
@@ -26,9 +27,10 @@ public class BoosXpCostManager {
         }
     }
 
-    public static void payXPForCommand(PlayerCommandPreprocessEvent event,
-                                       Player player, String regexCommand, String originalCommand,
-                                       int xpPrice) {
+    public static void payXPForCommand(
+            final PlayerCommandPreprocessEvent event,
+            final Player player, final String regexCommand, final String originalCommand,
+            final int xpPrice) {
         if (xpPrice > 0) {
             if (!player.hasPermission("booscooldowns.noxpcost")
                     && !player.hasPermission("booscooldowns.noxpcost."
@@ -42,11 +44,11 @@ public class BoosXpCostManager {
         }
     }
 
-    public static boolean has(Player player, int xpPrice) {
+    public static boolean has(final Player player, final int xpPrice) {
         if (xpPrice <= 0) {
             return true;
         }
-        int xp = player.getLevel();
+        final int xp = player.getLevel();
         return xp >= xpPrice;
     }
 }

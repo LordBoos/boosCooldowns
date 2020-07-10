@@ -25,7 +25,7 @@ public class BoosConfigManager {
     private static File confusersFile;
 
     @SuppressWarnings("static-access")
-    public BoosConfigManager(BoosCoolDown boosCoolDown) {
+    public BoosConfigManager(final BoosCoolDown boosCoolDown) {
         confFile = new File(boosCoolDown.getDataFolder(), "config.yml");
         if (confFile.exists()) {
             conf = new YamlConfiguration();
@@ -44,7 +44,7 @@ public class BoosConfigManager {
         } else {
             try {
                 confusersFile.createNewFile();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 e.printStackTrace();
                 BoosCoolDown.getLog().severe("[boosCooldowns] Could not save storage file!");
             }
@@ -52,22 +52,22 @@ public class BoosConfigManager {
     }
 
     public static void clear() {
-        ConfigurationSection userSection = confusers.getConfigurationSection("users");
+        final ConfigurationSection userSection = confusers.getConfigurationSection("users");
         if (userSection == null) {
             return;
         }
-        for (String user : userSection.getKeys(false)) {
-            ConfigurationSection cooldown = confusers.getConfigurationSection("users." + user + ".cooldown");
+        for (final String user : userSection.getKeys(false)) {
+            final ConfigurationSection cooldown = confusers.getConfigurationSection("users." + user + ".cooldown");
             if (cooldown != null) {
-                for (String key : cooldown.getKeys(false)) {
+                for (final String key : cooldown.getKeys(false)) {
                     confusers.set("users." + user + ".cooldown." + key, null);
                 }
             }
             confusers.set("users." + user + ".cooldown", null);
 
-            ConfigurationSection warmup = confusers.getConfigurationSection("users." + user + ".warmup");
+            final ConfigurationSection warmup = confusers.getConfigurationSection("users." + user + ".warmup");
             if (warmup != null) {
-                for (String key : warmup.getKeys(false)) {
+                for (final String key : warmup.getKeys(false)) {
                     confusers.set("users." + user + ".warmup." + key, null);
                 }
             }
@@ -79,8 +79,8 @@ public class BoosConfigManager {
         loadConfusers();
     }
 
-    public static void clearSomething(String co, UUID uuid) {
-        ConfigurationSection userSection = confusers.getConfigurationSection("users." + uuid + "." + co);
+    public static void clearSomething(final String co, final UUID uuid) {
+        final ConfigurationSection userSection = confusers.getConfigurationSection("users." + uuid + "." + co);
         if (userSection == null) {
             return;
         }
@@ -89,20 +89,20 @@ public class BoosConfigManager {
         loadConfusers();
     }
 
-    public static void clearSomething(String co, UUID uuid, String command) {
-        int pre2 = command.toLowerCase().hashCode();
+    public static void clearSomething(final String co, final UUID uuid, final String command) {
+        final int pre2 = command.toLowerCase().hashCode();
         confusers.set("users." + uuid + "." + co + "." + pre2, 0);
         saveConfusers();
         loadConfusers();
     }
 
-    static String getAlias(String message) {
+    static String getAlias(final String message) {
         return conf.getString("commands.aliases." + message);
     }
 
     public static Set<String> getAliases() {
         Set<String> aliases = null;
-        ConfigurationSection aliasesSection = conf.getConfigurationSection("commands.aliases");
+        final ConfigurationSection aliasesSection = conf.getConfigurationSection("commands.aliases");
         if (aliasesSection != null) {
             aliases = conf.getConfigurationSection("commands.aliases").getKeys(false);
         }
@@ -166,15 +166,15 @@ public class BoosConfigManager {
         return conf.getBoolean("options.options.clear_on_restart", false);
     }
 
-    static String getCommandBlockedMessage() {
+    public static String getCommandBlockedMessage() {
         return conf.getString("options.messages.limit_achieved", "&6You cannot use this command anymore!&f");
     }
 
-    private static String getCommandGroup(Player player) {
+    private static String getCommandGroup(final Player player) {
         String cmdGroup = "default";
-        Set<String> groups = getCommandGroups();
+        final Set<String> groups = getCommandGroups();
         if (groups != null) {
-            for (String group : groups) {
+            for (final String group : groups) {
                 if (player.hasPermission("booscooldowns." + group)) {
                     cmdGroup = group;
                 }
@@ -184,7 +184,7 @@ public class BoosConfigManager {
     }
 
     private static Set<String> getCommandGroups() {
-        ConfigurationSection groupsSection = conf.getConfigurationSection("commands.groups");
+        final ConfigurationSection groupsSection = conf.getConfigurationSection("commands.groups");
         Set<String> groups = null;
         if (groupsSection != null) {
             groups = groupsSection.getKeys(false);
@@ -196,10 +196,10 @@ public class BoosConfigManager {
         return conf.getBoolean("options.options.command_logging", false);
     }
 
-    public static Set<String> getCommands(Player player) {
-        String group = getCommandGroup(player);
+    public static Set<String> getCommands(final Player player) {
+        final String group = getCommandGroup(player);
         Set<String> commands = null;
-        ConfigurationSection commandsSection = conf.getConfigurationSection("commands.groups." + group);
+        final ConfigurationSection commandsSection = conf.getConfigurationSection("commands.groups." + group);
         if (commandsSection != null) {
             commands = commandsSection.getKeys(false);
         }
@@ -210,10 +210,10 @@ public class BoosConfigManager {
         return confusers;
     }
 
-    public static int getCoolDown(String regexCommand, Player player) {
-        int coolDown;
+    public static int getCoolDown(final String regexCommand, final Player player) {
+        final int coolDown;
         String coolDownString = "";
-        String group = getCommandGroup(player);
+        final String group = getCommandGroup(player);
         coolDownString = conf.getString("commands.groups." + group + "." + regexCommand + ".cooldown", "0");
         coolDown = parseTime(coolDownString);
         return coolDown;
@@ -227,8 +227,8 @@ public class BoosConfigManager {
         return conf.getString("options.messages.cooling_down", "&6Wait&e &seconds& seconds&6 before you can use command&e &command& &6again.&f");
     }
 
-    static Set<String> getCooldowns(Player player) {
-        String cool = getCommandGroup(player);
+    static Set<String> getCooldowns(final Player player) {
+        final String cool = getCommandGroup(player);
         return conf.getConfigurationSection("commands.groups." + cool).getKeys(false);
     }
 
@@ -241,29 +241,29 @@ public class BoosConfigManager {
         return conf.getString("options.messages.interact_blocked_during_warmup", "&6You can't do this when command is warming-up!&f");
     }
 
-    public static List<String> getItemCostLore(String regexCommand, Player player) {
+    public static List<String> getItemCostLore(final String regexCommand, final Player player) {
         return conf.getStringList("commands.groups." + getCommandGroup(player) + "." + regexCommand + ".itemcost.lore");
     }
 
-    public static List<String> getItemCostEnchants(String regexCommand, Player player) {
+    public static List<String> getItemCostEnchants(final String regexCommand, final Player player) {
         return conf.getStringList("commands.groups." + getCommandGroup(player) + "." + regexCommand + ".itemcost.enchants");
     }
 
-    public static String getItemCostName(String regexCommand, Player player) {
+    public static String getItemCostName(final String regexCommand, final Player player) {
         return conf.getString("commands.groups." + getCommandGroup(player) + "." + regexCommand + ".itemcost.name", "");
     }
 
-    public static String getItemCostItem(String regexCommand, Player player) {
+    public static String getItemCostItem(final String regexCommand, final Player player) {
         return conf.getString("commands.groups." + getCommandGroup(player) + "." + regexCommand + ".itemcost.item", "");
     }
 
-    public static int getItemCostCount(String regexCommand, Player player) {
+    public static int getItemCostCount(final String regexCommand, final Player player) {
         return conf.getInt("commands.groups." + getCommandGroup(player) + "." + regexCommand + ".itemcost.count", 0);
     }
 
-    public static int getLimit(String regexCommand, Player player) {
-        int limit;
-        String group = getCommandGroup(player);
+    public static int getLimit(final String regexCommand, final Player player) {
+        final int limit;
+        final String group = getCommandGroup(player);
         limit = conf.getInt("commands.groups." + group + "." + regexCommand + ".limit", -1);
         return limit;
     }
@@ -282,27 +282,27 @@ public class BoosConfigManager {
     }
 
     static Set<String> getAllPlayers() {
-        ConfigurationSection users = confusers.getConfigurationSection("users");
+        final ConfigurationSection users = confusers.getConfigurationSection("users");
         return users.getKeys(false);
     }
 
-    static List<String> getSharedCooldowns(String pre, Player player) {
-        List<String> sharedCooldowns;
-        String group = getCommandGroup(player);
+    static List<String> getSharedCooldowns(final String pre, final Player player) {
+        final List<String> sharedCooldowns;
+        final String group = getCommandGroup(player);
         sharedCooldowns = conf.getStringList("commands.groups." + group + "." + pre + ".shared_cooldown");
         return sharedCooldowns;
     }
 
-    public static List<String> getSharedLimits(String pre, Player player) {
-        List<String> sharedLimits;
-        String group = getCommandGroup(player);
+    public static List<String> getSharedLimits(final String pre, final Player player) {
+        final List<String> sharedLimits;
+        final String group = getCommandGroup(player);
         sharedLimits = conf.getStringList("commands.groups." + group + "." + pre + ".shared_limit");
         return sharedLimits;
     }
 
-    public static String getMessage(String regexCommand, Player player) {
+    public static String getMessage(final String regexCommand, final Player player) {
         String message = "";
-        String group = getCommandGroup(player);
+        final String group = getCommandGroup(player);
         message = conf.getString("commands.groups." + group + "." + regexCommand + ".message", "");
         return message;
     }
@@ -315,8 +315,8 @@ public class BoosConfigManager {
         return conf.getString("options.messages.paid_for_command", "Price of &command& was %s and you now have %s");
     }
 
-    static List<String> getPotionEffects(String regexCommand, Player player) {
-        String group = getCommandGroup(player);
+    static List<String> getPotionEffects(final String regexCommand, final Player player) {
+        final String group = getCommandGroup(player);
         return conf.getStringList("commands.groups." + group + "." + regexCommand + ".potion");
     }
 
@@ -324,9 +324,9 @@ public class BoosConfigManager {
         return conf.getBoolean("options.options.cancel_potions_on_warmup_cancel", false);
     }
 
-    public static double getPrice(String regexCommand, Player player) {
-        double price;
-        String group = getCommandGroup(player);
+    public static double getPrice(final String regexCommand, final Player player) {
+        final double price;
+        final String group = getCommandGroup(player);
         price = conf.getDouble("commands.groups." + group + "." + regexCommand + ".price", 0.0);
         return price;
     }
@@ -359,10 +359,10 @@ public class BoosConfigManager {
         return conf.getString("options.units.seconds", "seconds");
     }
 
-    public static int getWarmUp(String regexCommand, Player player) {
-        int warmUp;
+    public static int getWarmUp(final String regexCommand, final Player player) {
+        final int warmUp;
         String warmUpString = "";
-        String group = getCommandGroup(player);
+        final String group = getCommandGroup(player);
         warmUpString = conf.getString("commands.groups." + group + "." + regexCommand + ".warmup", "0");
         warmUp = parseTime(warmUpString);
         return warmUp;
@@ -391,13 +391,13 @@ public class BoosConfigManager {
     public static void load() {
         try {
             conf.load(confFile);
-        } catch (FileNotFoundException e) {
+        } catch (final FileNotFoundException e) {
             e.printStackTrace();
             BoosCoolDown.getLog().severe("[boosCooldowns] Configuration file not found!");
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
             BoosCoolDown.getLog().severe("[boosCooldowns] Could not read configuration file!");
-        } catch (InvalidConfigurationException e) {
+        } catch (final InvalidConfigurationException e) {
             e.printStackTrace();
             BoosCoolDown.getLog().severe("[boosCooldowns] Configuration file is invalid!");
         }
@@ -406,13 +406,13 @@ public class BoosConfigManager {
     public static void loadConfusers() {
         try {
             confusers.load(confusersFile);
-        } catch (FileNotFoundException e) {
+        } catch (final FileNotFoundException e) {
             e.printStackTrace();
             BoosCoolDown.getLog().severe("[boosCooldowns] Storage file not found!");
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
             BoosCoolDown.getLog().severe("[boosCooldowns] Could not read storage file!");
-        } catch (InvalidConfigurationException e) {
+        } catch (final InvalidConfigurationException e) {
             e.printStackTrace();
             BoosCoolDown.getLog().severe("[boosCooldowns] Storage file is invalid!");
         }
@@ -427,35 +427,35 @@ public class BoosConfigManager {
         try {
             confFile.createNewFile();
             confusers.save(confusersFile);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
             BoosCoolDown.getLog().severe("[boosCooldowns] Could not save storage file!");
         }
     }
 
-    public static void setAddToConfigFile(String group, String command, String what, String value) {
+    public static void setAddToConfigFile(String group, String command, final String what, final String value) {
         group = group.toLowerCase();
         command = command.toLowerCase();
-        int value2;
+        final int value2;
         try {
             value2 = Integer.parseInt(value);
             reload();
             conf.set("commands.groups." + group + "." + command + "." + what, value2);
-        } catch (NumberFormatException e1) {
+        } catch (final NumberFormatException e1) {
             reload();
             conf.set("commands.groups." + group + "." + command + "." + what, value);
         }
         try {
             conf.save(confFile);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             BoosCoolDown.getLog().severe("[boosCooldowns] Could not save configuration file!");
 
         }
         reload();
     }
 
-    public static void toggleConfirmations(Player player) {
-        Boolean def = confusers.getBoolean("users." + player.getUniqueId() + ".confirmations", getConfirmCommandEnabled(player));
+    public static void toggleConfirmations(final Player player) {
+        final Boolean def = confusers.getBoolean("users." + player.getUniqueId() + ".confirmations", getConfirmCommandEnabled(player));
         confusers.set("users." + player.getUniqueId() + ".confirmations", !def);
         if (def) {
             BoosChat.sendMessageToPlayer(player, "&6[boosCooldowns]&e " + getConfirmToggleMessageFalse());
@@ -466,7 +466,7 @@ public class BoosConfigManager {
         loadConfusers();
     }
 
-    public static Boolean getConfirmationsPlayer(Player player) {
+    public static Boolean getConfirmationsPlayer(final Player player) {
         return (Boolean) confusers.get("users." + player.getUniqueId() + ".confirmations", null);
     }
 
@@ -479,7 +479,7 @@ public class BoosConfigManager {
     }
 
     public static String getInsufficientItemsMessage() {
-        return conf.getString("options.messages.insufficient_items", "&6You have not enough items!&e &command& &6needs &e%s");
+        return conf.getString("options.messages.insufficient_items", "&6You have not enough items!&e &command& &6needs");
     }
 
     public static boolean getItemCostEnabled() {
@@ -490,9 +490,9 @@ public class BoosConfigManager {
         return conf.getBoolean("options.options.player_points_prices_enabled", true);
     }
 
-    public static int getPlayerPointsPrice(String regexCommand, Player player) {
-        int price;
-        String group = getCommandGroup(player);
+    public static int getPlayerPointsPrice(final String regexCommand, final Player player) {
+        final int price;
+        final String group = getCommandGroup(player);
         price = conf.getInt("commands.groups." + group + "." + regexCommand + ".playerpoints", 0);
         return price;
     }
@@ -501,16 +501,16 @@ public class BoosConfigManager {
         return conf.getString("options.messages.paid_xp_for_command", "&6Price of&e &command& &6was &e%s");
     }
 
-    public static int getXpPrice(String regexCommand, Player player) {
-        int price;
-        String group = getCommandGroup(player);
+    public static int getXpPrice(final String regexCommand, final Player player) {
+        final int price;
+        final String group = getCommandGroup(player);
         price = conf.getInt("commands.groups." + group + "." + regexCommand + ".xpcost", 0);
         return price;
     }
 
-    public static int getXpRequirement(String regexCommand, Player player) {
-        int price;
-        String group = getCommandGroup(player);
+    public static int getXpRequirement(final String regexCommand, final Player player) {
+        final int price;
+        final String group = getCommandGroup(player);
         price = conf.getInt("commands.groups." + group + "." + regexCommand + ".xprequirement", 0);
         return price;
     }
@@ -535,10 +535,10 @@ public class BoosConfigManager {
         return conf.getString("options.messages.invalid_command_syntax", "&6You are not allowed to use command syntax /<pluginname>:<command>!");
     }
 
-    static long getLimitResetDelay(String regexCommand, Player player) {
-        long limitreset;
+    static long getLimitResetDelay(final String regexCommand, final Player player) {
+        final long limitreset;
         String limitResetString = "";
-        String group = getCommandGroup(player);
+        final String group = getCommandGroup(player);
         limitResetString = conf.getString("commands.groups." + group + "." + regexCommand + ".limit_reset_delay", "0");
         limitreset = parseTime(limitResetString);
         return limitreset;
@@ -549,11 +549,11 @@ public class BoosConfigManager {
                 "&6Wait&e &seconds& &unit&&6 before your limit for command&e &command& &6is reset.&f");
     }
 
-    static void clearSomething2(String co, String uuid, int hashedCommand) {
+    static void clearSomething2(final String co, final String uuid, final int hashedCommand) {
         confusers.set("users." + uuid + "." + co + "." + hashedCommand, 0);
     }
 
-    public static long getLimitResetDelayGlobal(String command) {
+    public static long getLimitResetDelayGlobal(final String command) {
         long delay = 0;
         String delayString = "";
         delayString = conf.getString("global." + command + ".limit_reset_delay", "0");
@@ -565,15 +565,15 @@ public class BoosConfigManager {
         return conf.getConfigurationSection("global").getKeys(false);
     }
 
-    private static int parseTime(String time) {
-        String[] timeString = time.split(" ", 2);
+    private static int parseTime(final String time) {
+        final String[] timeString = time.split(" ", 2);
         if (timeString[0].equals("cancel")) {
             return -65535;
         }
-        int timeNumber = Integer.valueOf(timeString[0]);
+        final int timeNumber = Integer.valueOf(timeString[0]);
         int timeMultiplier = 1;
         if (timeString.length > 1) {
-            String timeUnit = timeString[1];
+            final String timeUnit = timeString[1];
             switch (timeUnit) {
                 case "minute":
                 case "minutes":
@@ -607,13 +607,13 @@ public class BoosConfigManager {
         return conf.getString("options.messages.limit_reset_now", "&6Reseting limits for command&e &command& &6now.&f");
     }
 
-    public static String getPermission(Player player, String regexCommad) {
-        String group = getCommandGroup(player);
+    public static String getPermission(final Player player, final String regexCommad) {
+        final String group = getCommandGroup(player);
         return conf.getString("commands.groups." + group + "." + regexCommad + ".permission");
     }
 
-    public static String getPermissionMessage(Player player, String regexCommad) {
-        String group = getCommandGroup(player);
+    public static String getPermissionMessage(final Player player, final String regexCommad) {
+        final String group = getCommandGroup(player);
         return conf.getString("commands.groups." + group + "." + regexCommad + ".denied_message");
     }
 
@@ -674,8 +674,8 @@ public class BoosConfigManager {
         return conf.getBoolean("options.options.syntax_blocker_enabled", true);
     }
 
-    public static boolean getConfirmCommandEnabled(Player player) {
-        Boolean playersChoice = getConfirmationsPlayer(player);
+    public static boolean getConfirmCommandEnabled(final Player player) {
+        final Boolean playersChoice = getConfirmationsPlayer(player);
         if (playersChoice != null) {
             return playersChoice;
         } else {

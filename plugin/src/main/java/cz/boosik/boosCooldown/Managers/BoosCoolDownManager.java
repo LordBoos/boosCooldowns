@@ -12,68 +12,66 @@ import util.BoosChat;
 
 public class BoosCoolDownManager {
 
-    static void cancelCooldown(Player player, String regexCommand) {
-        int pre2 = regexCommand.toLowerCase().hashCode();
+    static void cancelCooldown(final Player player, final String regexCommand) {
+        final int pre2 = regexCommand.toLowerCase().hashCode();
         BoosConfigManager.getConfusers().set(
                 "users." + player.getUniqueId() + ".cooldown." + pre2, null);
     }
 
-    public static boolean isCoolingdown(Player player, String regexCommand, int time) {
-        Date lastTime = getTime(player, regexCommand);
+    public static boolean isCoolingdown(final Player player, final String regexCommand, final int time) {
+        final Date lastTime = getTime(player, regexCommand);
         if (lastTime == null) {
             return false;
         }
-        Calendar calcurrTime = Calendar.getInstance();
+        final Calendar calcurrTime = Calendar.getInstance();
         calcurrTime.setTime(getCurrTime());
-        Calendar callastTime = Calendar.getInstance();
+        final Calendar callastTime = Calendar.getInstance();
         callastTime.setTime(lastTime);
-        long secondsBetween = secondsBetween(callastTime, calcurrTime);
-        if ((secondsBetween > time) || secondsBetween == 0) {
-            return false;
-        }
-        return true;
+        final long secondsBetween = secondsBetween(callastTime, calcurrTime);
+        return (secondsBetween <= time) && secondsBetween != 0;
     }
 
-    private static boolean cd(Player player, String regexCommand,
-                              String originalCommand, int coolDownSeconds) {
-        Date lastTime = getTime(player, regexCommand);
-        List<String> linkGroup = BoosConfigManager.getSharedCooldowns(
+    private static boolean cd(
+            final Player player, final String regexCommand,
+            final String originalCommand, final int coolDownSeconds) {
+        final Date lastTime = getTime(player, regexCommand);
+        final List<String> linkGroup = BoosConfigManager.getSharedCooldowns(
                 regexCommand, player);
         if (lastTime == null) {
             if (linkGroup.isEmpty()) {
                 setTime(player, regexCommand);
             } else {
                 setTime(player, regexCommand);
-                for (String a : linkGroup) {
+                for (final String a : linkGroup) {
                     setTime(player, a);
                 }
             }
             return false;
         } else {
-            Calendar calcurrTime = Calendar.getInstance();
+            final Calendar calcurrTime = Calendar.getInstance();
             calcurrTime.setTime(getCurrTime());
-            Calendar callastTime = Calendar.getInstance();
+            final Calendar callastTime = Calendar.getInstance();
             callastTime.setTime(lastTime);
-            long secondsBetween = secondsBetween(callastTime, calcurrTime);
+            final long secondsBetween = secondsBetween(callastTime, calcurrTime);
             long waitSeconds = coolDownSeconds - secondsBetween;
             long waitMinutes = (long) Math.floor(waitSeconds / 60.0);
-            long waitHours = (long) Math.floor(waitMinutes / 60.0);
+            final long waitHours = (long) Math.floor(waitMinutes / 60.0);
             if (secondsBetween > coolDownSeconds) {
                 if (linkGroup.isEmpty()) {
                     setTime(player, regexCommand);
                 } else {
                     setTime(player, regexCommand);
-                    for (String a : linkGroup) {
+                    for (final String a : linkGroup) {
                         setTime(player, a);
                     }
                 }
                 return false;
             } else {
                 String msg = BoosConfigManager.getCoolDownMessage();
-                StringBuilder stringBuilder = new StringBuilder();
+                final StringBuilder stringBuilder = new StringBuilder();
                 msg = msg.replaceAll("&command&", originalCommand);
                 if (waitSeconds >= 3600) {
-                    stringBuilder.append(Long.toString(waitHours));
+                    stringBuilder.append(waitHours);
                     stringBuilder.append(" ");
                     stringBuilder.append(BoosConfigManager.getUnitHoursMessage());
                     stringBuilder.append(", ");
@@ -81,7 +79,7 @@ public class BoosCoolDownManager {
                 }
                 if (waitSeconds >= 60) {
                     waitMinutes = waitMinutes - (waitHours * 60);
-                    stringBuilder.append(Long.toString(waitMinutes));
+                    stringBuilder.append(waitMinutes);
                     stringBuilder.append(" ");
                     stringBuilder.append(BoosConfigManager.getUnitMinutesMessage());
                     stringBuilder.append(", ");
@@ -105,8 +103,9 @@ public class BoosCoolDownManager {
         }
     }
 
-    public static boolean coolDown(Player player, String regexCommand,
-                                   String originalCommand, int time) {
+    public static boolean coolDown(
+            final Player player, String regexCommand,
+            final String originalCommand, final int time) {
         regexCommand = regexCommand.toLowerCase();
         return time > 0 && !player.hasPermission("booscooldowns.nocooldown") && !player.hasPermission("booscooldowns.nocooldown." + originalCommand) && cd(
                 player,
@@ -117,63 +116,64 @@ public class BoosCoolDownManager {
 
     private static Date getCurrTime() {
         String currTime = "";
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        final Calendar cal = Calendar.getInstance();
+        final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
         currTime = sdf.format(cal.getTime());
         Date time = null;
 
         try {
             time = sdf.parse(currTime);
             return time;
-        } catch (ParseException e) {
+        } catch (final ParseException e) {
             return null;
         }
     }
 
-    private static Date getTime(Player player, String regexCommand) {
-        int pre2 = regexCommand.toLowerCase().hashCode();
+    private static Date getTime(final Player player, final String regexCommand) {
+        final int pre2 = regexCommand.toLowerCase().hashCode();
         String confTime = "";
         confTime = BoosConfigManager.getConfusers().getString(
                 "users." + player.getUniqueId() + ".cooldown." + pre2, null);
 
         if (confTime != null && !confTime.equals("")) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+            final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
             Date lastDate = null;
 
             try {
                 lastDate = sdf.parse(confTime);
                 return lastDate;
-            } catch (ParseException e) {
+            } catch (final ParseException e) {
                 return null;
             }
         }
         return null;
     }
 
-    public static boolean checkCoolDownOK(Player player, String regexCommand,
-                                          String originalCommand, int time) {
+    public static boolean checkCoolDownOK(
+            final Player player, String regexCommand,
+            final String originalCommand, final int time) {
         regexCommand = regexCommand.toLowerCase();
         if (time > 0) {
-            Date lastTime = getTime(player, regexCommand);
+            final Date lastTime = getTime(player, regexCommand);
             if (lastTime == null) {
                 return true;
             } else {
-                Calendar calcurrTime = Calendar.getInstance();
+                final Calendar calcurrTime = Calendar.getInstance();
                 calcurrTime.setTime(getCurrTime());
-                Calendar callastTime = Calendar.getInstance();
+                final Calendar callastTime = Calendar.getInstance();
                 callastTime.setTime(lastTime);
-                long secondsBetween = secondsBetween(callastTime, calcurrTime);
+                final long secondsBetween = secondsBetween(callastTime, calcurrTime);
                 long waitSeconds = time - secondsBetween;
                 long waitMinutes = (long) Math.floor(waitSeconds / 60.0);
-                long waitHours = (long) Math.floor(waitMinutes / 60.0);
+                final long waitHours = (long) Math.floor(waitMinutes / 60.0);
                 if (secondsBetween > time) {
                     return true;
                 } else {
                     String msg = BoosConfigManager.getCoolDownMessage();
-                    StringBuilder stringBuilder = new StringBuilder();
+                    final StringBuilder stringBuilder = new StringBuilder();
                     msg = msg.replaceAll("&command&", originalCommand);
                     if (waitSeconds >= 3600) {
-                        stringBuilder.append(Long.toString(waitHours));
+                        stringBuilder.append(waitHours);
                         stringBuilder.append(" ");
                         stringBuilder.append(BoosConfigManager.getUnitHoursMessage());
                         stringBuilder.append(", ");
@@ -181,7 +181,7 @@ public class BoosCoolDownManager {
                     }
                     if (waitSeconds >= 60) {
                         waitMinutes = waitMinutes - (waitHours * 60);
-                        stringBuilder.append(Long.toString(waitMinutes));
+                        stringBuilder.append(waitMinutes);
                         stringBuilder.append(" ");
                         stringBuilder.append(BoosConfigManager.getUnitMinutesMessage());
                         stringBuilder.append(", ");
@@ -207,27 +207,27 @@ public class BoosCoolDownManager {
         return true;
     }
 
-    private static long secondsBetween(Calendar startDate, Calendar endDate) {
+    private static long secondsBetween(final Calendar startDate, final Calendar endDate) {
         long secondsBetween = 0;
         secondsBetween = (endDate.getTimeInMillis() - startDate
                 .getTimeInMillis()) / 1000;
         return secondsBetween;
     }
 
-    private static void setTime(Player player, String regexCommand) {
-        int pre2 = regexCommand.toLowerCase().hashCode();
+    private static void setTime(final Player player, final String regexCommand) {
+        final int pre2 = regexCommand.toLowerCase().hashCode();
         String currTime = "";
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        final Calendar cal = Calendar.getInstance();
+        final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
         currTime = sdf.format(cal.getTime());
         BoosConfigManager.getConfusers()
                 .set("users." + player.getUniqueId() + ".cooldown." + pre2,
                         currTime);
     }
 
-    public static void startAllCooldowns(Player player, String message) {
-        for (String a : BoosConfigManager.getCooldowns(player)) {
-            int cooldownTime = BoosConfigManager.getCoolDown(a, player);
+    public static void startAllCooldowns(final Player player, final String message) {
+        for (final String a : BoosConfigManager.getCooldowns(player)) {
+            final int cooldownTime = BoosConfigManager.getCoolDown(a, player);
             coolDown(player, a, message, cooldownTime);
         }
 

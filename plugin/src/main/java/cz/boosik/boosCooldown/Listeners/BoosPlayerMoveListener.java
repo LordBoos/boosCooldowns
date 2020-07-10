@@ -14,12 +14,12 @@ public class BoosPlayerMoveListener implements Listener {
     private int tempTimer = 0;
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    private void onPlayerMove(PlayerMoveEvent event) {
+    private void onPlayerMove(final PlayerMoveEvent event) {
 
         if (tempTimer < 10) {
             tempTimer = tempTimer + 1;
         } else {
-            Player player = event.getPlayer();
+            final Player player = event.getPlayer();
             if (player != null
                     && !player.hasPermission("booscooldowns.nocancel.move")) {
                 if (BoosWarmUpManager.hasWarmUps(player) && (event.getFrom().getX() != event.getTo().getX() || event.getFrom().getZ() != event
