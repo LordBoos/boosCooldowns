@@ -1,5 +1,11 @@
 package com.coloredcarrot.mcapi.json;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import cz.boosik.boosCooldown.BoosCoolDown;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
+
 /**
  * All rights reserved.
  *
@@ -45,17 +51,24 @@ public class JSONComponent
 
         super.generate();
 
-        generatedJSON = generatedJSON.substring(0, generatedJSON.length() - 1);
+        JsonObject json = new JsonParser().parse(generatedJSON).getAsJsonObject();
 
         if (hoverAction != null) {
-            generatedJSON += ",\"hoverEvent\":{\"action\":\"" + hoverAction.getActionName() + "\",\"value\":\"" + hoverAction.getValueString() + "}";
+
+            JsonObject jsonHover = new JsonObject();
+            jsonHover.addProperty("action", hoverAction.getActionName());
+            jsonHover.addProperty("value", hoverAction.getValueString());
+            json.add("hoverEvent", jsonHover);
         }
 
         if (clickAction != null) {
-            generatedJSON += ",\"clickEvent\":{\"action\":\"" + clickAction.getActionName() + "\",\"value\":" + clickAction.getValueString() + "}";
+            JsonObject jsonClick = new JsonObject();
+            jsonClick.addProperty("action", clickAction.getActionName());
+            jsonClick.addProperty("value", clickAction.getValueString());
+            json.add("clickEvent", jsonClick);
         }
 
-        generatedJSON += "}";
+        generatedJSON = json.toString();
 
         return this;
 

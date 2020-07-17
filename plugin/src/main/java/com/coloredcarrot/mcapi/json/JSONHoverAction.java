@@ -2,8 +2,12 @@ package com.coloredcarrot.mcapi.json;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import cz.boosik.boosCooldown.BoosCoolDown;
 
 /**
@@ -136,7 +140,7 @@ public interface JSONHoverAction<T> {
 
         @Override
         public String getValueString() {
-            return value + "\"";
+            return value;
         }
 
         @Override
@@ -248,50 +252,53 @@ public interface JSONHoverAction<T> {
 
         @Override
         public String getValueString() {
-            final String material = value.getData().getItemType().toString().toLowerCase();
-            String value2 = "{id:\\\"minecraft:" + material + "\\\",Damage:" + value.getDurability() + ",Count:" + value.getAmount() + ",tag:{";
+            final String material = value.getType().toString().toLowerCase();
+            final ItemMeta itemMeta = value.getItemMeta();
+            final Integer damage = itemMeta instanceof Damageable ? ((Damageable) itemMeta).getDamage() : null;
 
-            if (value.getItemMeta().hasEnchants()) {
-                value2 += "Enchantments:[";
-                int i = 0;
-                final int size = value.getItemMeta().getEnchants().keySet().size();
-                for (final Enchantment ench : value.getItemMeta().getEnchants().keySet()) {
-                    if (i + 1 == size) {
-                        value2 += "{lvl:" + value.getItemMeta().getEnchants().get(ench) + ",id:\\\"" + ench.getKey() + "\\\"}";
-                    } else {
-                        value2 += "{lvl:" + value.getItemMeta().getEnchants().get(ench) + ",id:\\\"" + ench.getKey() + "\\\"},";
-                    }
-                    i++;
-                }
-                value2 += "],";
-            }
+            JsonObject json = new JsonObject();
+            json.addProperty("id", "minecraft:"+material);
+            json.addProperty("Damage", damage);
+            json.addProperty("Count", value.getAmount());
 
-            value2 += "display:{Name:\\\"" + (value
-                    .getItemMeta()
-                    .getDisplayName() != null && value
-                    .getItemMeta()
-                    .getDisplayName() != "" ? value
-                    .getItemMeta()
-                    .getDisplayName() : toTitleCase(value.getType().toString().toLowerCase())) + "\\\"";
+            JsonObject jsonTag = new JsonObject();
 
-            if (value.getItemMeta().hasLore()) {
-                value2 += ",Lore:[";
-                for (final String lore : value.getItemMeta().getLore()) {
-                    value2 = value2 + (value.getItemMeta().getLore().size() == 1 || value
-                            .getItemMeta()
-                            .getLore()
-                            .get(value
-                                    .getItemMeta()
-                                    .getLore()
-                                    .size() - 1) == lore ? ("\\\"" + lore + "\\\"") : ("\\\"" + lore + "\\\","));
+            JsonObject jsonDisplay = new JsonObject();
+            JsonObject jsonName = new JsonObject();
+            jsonName.addProperty("text", itemMeta.getDisplayName() != null && !itemMeta.getDisplayName().equals("") ? itemMeta
+                    .getDisplayName() : toTitleCase(value.getType().toString().toLowerCase()));
+            jsonDisplay.addProperty("Name", jsonName.toString());
+
+            if (itemMeta.hasLore()) {
+                JsonArray jsonLore = new JsonArray();
+
+                for (final String lore : itemMeta.getLore()) {
+                    JsonObject jsonLoreItem = new JsonObject();
+                    jsonLoreItem.addProperty("text", lore);
+                    jsonLore.add(jsonLoreItem.toString());
                 }
 
-                value2 += "]";
+                jsonDisplay.add("Lore", jsonLore);
             }
 
-            value2 += "}}}\"";
+            jsonTag.add("display", jsonDisplay);
 
-            return value2;
+            if (itemMeta.hasEnchants()) {
+                JsonArray jsonEnchantments = new JsonArray();
+
+                for (final Enchantment ench : itemMeta.getEnchants().keySet()) {
+                    JsonObject enchantment = new JsonObject();
+                    enchantment.addProperty("lvl", itemMeta.getEnchants().get(ench));
+                    enchantment.addProperty("id", ench.getKey().toString());
+                    jsonEnchantments.add(enchantment);
+                }
+
+                jsonTag.add("Enchantments", jsonEnchantments);
+            }
+
+            json.add("tag", jsonTag);
+
+            return json.toString();
         }
 
         @Override

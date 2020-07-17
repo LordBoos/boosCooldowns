@@ -14,6 +14,7 @@ import com.coloredcarrot.mcapi.json.JSON;
 import com.coloredcarrot.mcapi.json.JSONColor;
 import com.coloredcarrot.mcapi.json.JSONComponent;
 import com.coloredcarrot.mcapi.json.JSONHoverAction;
+import cz.boosik.boosCooldown.BoosCoolDown;
 import util.BoosChat;
 
 public class BoosItemCostManager {
@@ -74,7 +75,7 @@ public class BoosItemCostManager {
     }
 
     public static ItemStack createItemStack(final String item, final int count, final String name, final List<String> lore, final List<String> enchants) {
-        final ItemStack itemStack = new ItemStack(Material.getMaterial(item), count);
+        final ItemStack itemStack = new ItemStack(Material.valueOf(item), count);
         final ItemMeta itemMeta = itemStack.getItemMeta();
         if (name != null) {
             itemMeta.setDisplayName(name);

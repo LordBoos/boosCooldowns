@@ -81,7 +81,7 @@ public interface JSONClickAction<T> {
 
         @Override
         public String getValueString() {
-            return "\"" + value + "\"";
+            return value;
         }
 
         @Override
@@ -130,7 +130,7 @@ public interface JSONClickAction<T> {
 
         @Override
         public String getValueString() {
-            return "\"" + value + "\"";
+            return value;
         }
 
         @Override
@@ -179,7 +179,7 @@ public interface JSONClickAction<T> {
 
         @Override
         public String getValueString() {
-            return ("\"" + value + "\"").replace(" ", "%20");
+            return (value).replace(" ", "%20");
         }
 
         @Override
