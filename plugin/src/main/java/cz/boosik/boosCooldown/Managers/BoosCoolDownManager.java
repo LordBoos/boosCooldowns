@@ -23,11 +23,7 @@ public class BoosCoolDownManager {
         if (lastTime == null) {
             return false;
         }
-        final Calendar calcurrTime = Calendar.getInstance();
-        calcurrTime.setTime(getCurrTime());
-        final Calendar callastTime = Calendar.getInstance();
-        callastTime.setTime(lastTime);
-        final long secondsBetween = secondsBetween(callastTime, calcurrTime);
+        final long secondsBetween = getSecondsBetween(lastTime);
         return (secondsBetween <= time) && secondsBetween != 0;
     }
 
@@ -48,11 +44,7 @@ public class BoosCoolDownManager {
             }
             return false;
         } else {
-            final Calendar calcurrTime = Calendar.getInstance();
-            calcurrTime.setTime(getCurrTime());
-            final Calendar callastTime = Calendar.getInstance();
-            callastTime.setTime(lastTime);
-            final long secondsBetween = secondsBetween(callastTime, calcurrTime);
+            final long secondsBetween = getSecondsBetween(lastTime);
             long waitSeconds = coolDownSeconds - secondsBetween;
             long waitMinutes = (long) Math.floor(waitSeconds / 60.0);
             final long waitHours = (long) Math.floor(waitMinutes / 60.0);
@@ -129,7 +121,7 @@ public class BoosCoolDownManager {
         }
     }
 
-    private static Date getTime(final Player player, final String regexCommand) {
+    public static Date getTime(final Player player, final String regexCommand) {
         final int pre2 = regexCommand.toLowerCase().hashCode();
         String confTime = "";
         confTime = BoosConfigManager.getConfusers().getString(
@@ -158,53 +150,61 @@ public class BoosCoolDownManager {
             if (lastTime == null) {
                 return true;
             } else {
-                final Calendar calcurrTime = Calendar.getInstance();
-                calcurrTime.setTime(getCurrTime());
-                final Calendar callastTime = Calendar.getInstance();
-                callastTime.setTime(lastTime);
-                final long secondsBetween = secondsBetween(callastTime, calcurrTime);
-                long waitSeconds = time - secondsBetween;
-                long waitMinutes = (long) Math.floor(waitSeconds / 60.0);
-                final long waitHours = (long) Math.floor(waitMinutes / 60.0);
+                final long secondsBetween = getSecondsBetween(lastTime);
                 if (secondsBetween > time) {
                     return true;
                 } else {
                     String msg = BoosConfigManager.getCoolDownMessage();
-                    final StringBuilder stringBuilder = new StringBuilder();
-                    msg = msg.replaceAll("&command&", originalCommand);
-                    if (waitSeconds >= 3600) {
-                        stringBuilder.append(waitHours);
-                        stringBuilder.append(" ");
-                        stringBuilder.append(BoosConfigManager.getUnitHoursMessage());
-                        stringBuilder.append(", ");
-                        waitSeconds = waitSeconds - (waitHours * 3600);
-                    }
-                    if (waitSeconds >= 60) {
-                        waitMinutes = waitMinutes - (waitHours * 60);
-                        stringBuilder.append(waitMinutes);
-                        stringBuilder.append(" ");
-                        stringBuilder.append(BoosConfigManager.getUnitMinutesMessage());
-                        stringBuilder.append(", ");
-                        waitSeconds = waitSeconds - (waitMinutes * 60);
-                    }
-                    String secs = Long.toString(waitSeconds);
-                    if (secs.equals("0")) {
-                        secs = "1";
-                    }
-                    stringBuilder.append(secs);
-                    stringBuilder.append(" ");
-                    stringBuilder.append(BoosConfigManager.getUnitSecondsMessage());
-
-                    msg = msg.replaceAll("&seconds&", stringBuilder.toString());
-                    msg = msg.replaceAll("&unit&", "");
-                    msg = msg.replaceAll(" +", " ");
-
+                    msg = getFormatedCooldownMessage(originalCommand, time, secondsBetween, msg);
                     BoosChat.sendMessageToPlayer(player, msg);
                     return false;
                 }
             }
         }
         return true;
+    }
+
+    public static String getFormatedCooldownMessage(final String originalCommand, final int time, final long secondsBetween, String msg) {
+        long waitSeconds = time - secondsBetween;
+        long waitMinutes = (long) Math.floor(waitSeconds / 60.0);
+        final long waitHours = (long) Math.floor(waitMinutes / 60.0);
+        final StringBuilder stringBuilder = new StringBuilder();
+        msg = msg.replaceAll("&command&", originalCommand);
+        if (waitSeconds >= 3600) {
+            stringBuilder.append(waitHours);
+            stringBuilder.append(" ");
+            stringBuilder.append(BoosConfigManager.getUnitHoursMessage());
+            stringBuilder.append(", ");
+            waitSeconds = waitSeconds - (waitHours * 3600);
+        }
+        if (waitSeconds >= 60) {
+            waitMinutes = waitMinutes - (waitHours * 60);
+            stringBuilder.append(waitMinutes);
+            stringBuilder.append(" ");
+            stringBuilder.append(BoosConfigManager.getUnitMinutesMessage());
+            stringBuilder.append(", ");
+            waitSeconds = waitSeconds - (waitMinutes * 60);
+        }
+        String secs = Long.toString(waitSeconds);
+        if (secs.equals("0")) {
+            secs = "1";
+        }
+        stringBuilder.append(secs);
+        stringBuilder.append(" ");
+        stringBuilder.append(BoosConfigManager.getUnitSecondsMessage());
+
+        msg = msg.replaceAll("&seconds&", stringBuilder.toString());
+        msg = msg.replaceAll("&unit&", "");
+        msg = msg.replaceAll(" +", " ");
+        return msg;
+    }
+
+    public static long getSecondsBetween(final Date lastTime) {
+        final Calendar calcurrTime = Calendar.getInstance();
+        calcurrTime.setTime(getCurrTime());
+        final Calendar callastTime = Calendar.getInstance();
+        callastTime.setTime(lastTime);
+        return secondsBetween(callastTime, calcurrTime);
     }
 
     private static long secondsBetween(final Calendar startDate, final Calendar endDate) {

@@ -64,6 +64,8 @@ options:
       gamemode.&f'
     cooling_down: '&6Wait&e &seconds& &unit&&6 before you can use command&e &command&
       &6again.&f'
+    cooldown_check: '&6Command&e &command& &6is still on cooldown. It will be available again in&e &seconds& &unit&.&f'
+    check_cooldown_ok: '&6Command&e &command& &6is available.'
     warming_up: '&6Wait&e &seconds& &unit&&6 before command&e &command& &6has warmed
       up.&f'
     warmup_already_started: '&6Warm-Up process for&e &command& &6has already started.&f'

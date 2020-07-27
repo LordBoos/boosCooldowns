@@ -227,6 +227,14 @@ public class BoosConfigManager {
         return conf.getString("options.messages.cooling_down", "&6Wait&e &seconds& seconds&6 before you can use command&e &command& &6again.&f");
     }
 
+    public static String getCheckCoolDownMessage() {
+        return conf.getString("options.messages.check_cooldown", "&6Command&e &command& &6is still on cooldown. It will be available again in&e &seconds& &unit&.&f");
+    }
+
+    public static String getCheckCoolDownOkMessage() {
+        return conf.getString("options.messages.check_cooldown_ok", "&6Command&e &command& &6is available.");
+    }
+
     static Set<String> getCooldowns(final Player player) {
         final String cool = getCommandGroup(player);
         return conf.getConfigurationSection("commands.groups." + cool).getKeys(false);

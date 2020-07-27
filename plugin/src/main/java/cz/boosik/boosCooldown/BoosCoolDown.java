@@ -35,6 +35,7 @@ import cz.boosik.boosCooldown.Listeners.BoosPlayerToggleSprintListener;
 import cz.boosik.boosCooldown.Listeners.BoosSignChangeListener;
 import cz.boosik.boosCooldown.Listeners.BoosSignInteractListener;
 import cz.boosik.boosCooldown.Managers.BoosConfigManager;
+import cz.boosik.boosCooldown.Managers.BoosCoolDownManager;
 import cz.boosik.boosCooldown.Managers.BoosLimitManager;
 import cz.boosik.boosCooldown.Runnables.BoosGlobalLimitResetRunnable;
 import net.milkbowl.vault.Vault;
@@ -209,6 +210,25 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
                     return true;
                 }
             } else if (args.length == 2) {
+                if (sender.hasPermission("booscooldowns.check.cooldown") && args[0].equalsIgnoreCase("checkcooldown")) {
+                    final String regexCommand = BoosCoolDownListener.getRegexCommand(args[1], BoosConfigManager.getCommands((Player)sender));
+                    if (BoosCoolDownManager.getTime((Player) sender, regexCommand) == null) {
+                        BoosChat.sendMessageToCommandSender(sender, BoosConfigManager.getCheckCoolDownOkMessage().replaceAll("&command&",
+                                args[1]));
+                    } else {
+                        final long secondsBetween = BoosCoolDownManager.getSecondsBetween(BoosCoolDownManager.getTime((Player) sender, regexCommand));
+                        final int coolDown = BoosConfigManager.getCoolDown(regexCommand, (Player) sender);
+                        if (secondsBetween > coolDown) {
+                            BoosChat.sendMessageToCommandSender(sender, BoosConfigManager.getCheckCoolDownOkMessage().replaceAll("&command&",
+                                    args[1]));
+                        } else {
+                            BoosChat.sendMessageToCommandSender(sender,
+                                    BoosCoolDownManager.getFormatedCooldownMessage(args[1], coolDown, secondsBetween,
+                                            BoosConfigManager.getCheckCoolDownMessage()));
+                        }
+                    }
+                    return true;
+                }
                 final String jmeno = args[1];
                 final Player player = Bukkit.getPlayerExact(jmeno);
                 final UUID uuid = player.getUniqueId();

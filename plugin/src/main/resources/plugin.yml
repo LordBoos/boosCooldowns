@@ -1,6 +1,6 @@
 name: boosCooldowns
 main: cz.boosik.boosCooldown.BoosCoolDown
-version: 3.17.0
+version: 3.17.1
 api-version: 1.13
 authors: [LordBoos (boosik)]
 softdepend: [Vault, PlayerPoints]
@@ -115,3 +115,6 @@ permissions:
     booscooldowns.signs.server.place:
         description: Player can place/create boosCooldowns signs (marked as server on second line). !!WARNING!! With this permission, player can create sign with commands that are run as if used from console!
         default: false
+    booscooldowns.check.cooldown:
+        description: Player can use "/booscooldowns checkcooldown [command]" to check if a command is still on cooldown or not.
+        default: true

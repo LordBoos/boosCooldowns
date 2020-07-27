@@ -251,47 +251,41 @@ public class BoosCoolDownListener implements Listener {
             event.setMessage(originalCommand);
         }
         if (on && commands != null) {
-            for (final String group : commands) {
-                final String group2 = group.replace("*", ".*");
-                if (originalCommand.matches("(?i)" + group2)) {
-                    regexCommad = group;
-                    if (BoosConfigManager.getWarmupEnabled()) {
-                        warmupTime = BoosConfigManager.getWarmUp(regexCommad,
-                                player);
-                    }
-                    if (BoosConfigManager.getCooldownEnabled()) {
-                        cooldownTime = BoosConfigManager.getCoolDown(
-                                regexCommad, player);
-                    }
-                    if (BoosConfigManager.getPriceEnabled()) {
-                        price = BoosConfigManager.getPrice(regexCommad, player);
-                    }
-                    if (BoosConfigManager.getXpPriceEnabled()) {
-                        xpPrice = BoosConfigManager.getXpPrice(regexCommad,
-                                player);
-                        xpRequirement = BoosConfigManager.getXpRequirement(regexCommad, player);
-                    }
-                    if (BoosConfigManager.getPlayerPointsEnabled()) {
-                        playerPoints = BoosConfigManager.getPlayerPointsPrice(regexCommad,
-                                player);
-                    }
-                    if (BoosConfigManager.getItemCostEnabled()) {
-                        item = BoosConfigManager.getItemCostItem(regexCommad,
-                                player);
-                        name = BoosConfigManager.getItemCostName(regexCommad,
-                                player);
-                        lore = BoosConfigManager.getItemCostLore(regexCommad,
-                                player);
-                        count = BoosConfigManager.getItemCostCount(regexCommad,
-                                player);
-                        enchants = BoosConfigManager.getItemCostEnchants(regexCommad,
-                                player);
-                    }
-                    if (BoosConfigManager.getLimitEnabled()) {
-                        limit = BoosConfigManager.getLimit(regexCommad, player);
-                    }
-                    break;
-                }
+            regexCommad = getRegexCommand(originalCommand, commands);
+            if (BoosConfigManager.getWarmupEnabled()) {
+                warmupTime = BoosConfigManager.getWarmUp(regexCommad,
+                        player);
+            }
+            if (BoosConfigManager.getCooldownEnabled()) {
+                cooldownTime = BoosConfigManager.getCoolDown(
+                        regexCommad, player);
+            }
+            if (BoosConfigManager.getPriceEnabled()) {
+                price = BoosConfigManager.getPrice(regexCommad, player);
+            }
+            if (BoosConfigManager.getXpPriceEnabled()) {
+                xpPrice = BoosConfigManager.getXpPrice(regexCommad,
+                        player);
+                xpRequirement = BoosConfigManager.getXpRequirement(regexCommad, player);
+            }
+            if (BoosConfigManager.getPlayerPointsEnabled()) {
+                playerPoints = BoosConfigManager.getPlayerPointsPrice(regexCommad,
+                        player);
+            }
+            if (BoosConfigManager.getItemCostEnabled()) {
+                item = BoosConfigManager.getItemCostItem(regexCommad,
+                        player);
+                name = BoosConfigManager.getItemCostName(regexCommad,
+                        player);
+                lore = BoosConfigManager.getItemCostLore(regexCommad,
+                        player);
+                count = BoosConfigManager.getItemCostCount(regexCommad,
+                        player);
+                enchants = BoosConfigManager.getItemCostEnchants(regexCommad,
+                        player);
+            }
+            if (BoosConfigManager.getLimitEnabled()) {
+                limit = BoosConfigManager.getLimit(regexCommad, player);
             }
             if (!BoosConfigManager.getConfirmCommandEnabled(player) || (commandQueue
                     .containsKey(uuid + "@" + originalCommand) && commandQueue.get(uuid + "@" + originalCommand))) {
@@ -376,6 +370,16 @@ public class BoosCoolDownListener implements Listener {
         }
         originalCommand = originalCommand.replace("SdollarS", "$");
         event.setMessage(originalCommand);
+    }
+
+    public static String getRegexCommand(final String originalCommand, final Set<String> commands) {
+        for (final String group : commands) {
+            final String group2 = group.replace("*", ".*");
+            if (originalCommand.matches("(?i)" + group2)) {
+                return group;
+            }
+        }
+        return originalCommand;
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
