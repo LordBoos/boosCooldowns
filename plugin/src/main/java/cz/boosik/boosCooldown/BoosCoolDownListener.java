@@ -181,6 +181,9 @@ public class BoosCoolDownListener implements Listener {
                 BoosCoolDown.commandLogger(player.getName(), originalCommand);
             }
         }
+        if (BoosConfigManager.getCancelCommand(regexCommad, player)) {
+            event.setCancelled(true);
+        }
         for (final String key : commandQueue.keySet()) {
             if (key.startsWith(String.valueOf(player.getUniqueId()))) {
                 commandQueue.remove(key);

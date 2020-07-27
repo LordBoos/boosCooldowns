@@ -229,6 +229,9 @@ commands:
       /testxpreq:
         #this command needs player to have 30 experience levels to be used, but does not take experience levels from player
         xprequirement: 30
+      /cancelledComandWithMessage:
+        message: "This command will be cancelled and will not return 'Invalid command' message to player"
+        cancel_command: true
     #this group will only work for players that have booscooldowns.vip permission (player can only have one group at a time and no inheritance is possible atm
     vip:
       /command *:

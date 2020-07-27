@@ -307,6 +307,11 @@ public class BoosConfigManager {
         return message;
     }
 
+    public static Boolean getCancelCommand(final String regexCommand, final Player player) {
+        final String group = getCommandGroup(player);
+        return conf.getBoolean("commands.groups." + group + "." + regexCommand + ".cancel_command", false);
+    }
+
     static String getPaidErrorMessage() {
         return conf.getString("options.messages.paid_error", "An error has occured: %s");
     }
