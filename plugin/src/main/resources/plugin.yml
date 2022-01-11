@@ -1,6 +1,6 @@
 name: boosCooldowns
 main: cz.boosik.boosCooldown.BoosCoolDown
-version: 3.17.1
+version: 3.17.2
 api-version: 1.13
 authors: [LordBoos (boosik)]
 softdepend: [Vault, PlayerPoints]
@@ -12,6 +12,9 @@ commands:
     usage: §6[boosCooldowns] §eInvalid command or access denied!
     aliases: bcd
 permissions:
+    booscooldowns.syntaxblockerexception:
+        description: Player wont be affected by syntax blocker (player will be able to use command format /pluginname:command).
+        default: false
     booscooldowns.exception:
         description: Player wont be affected by plugin at all (no warmups, no cooldowns, no prices, no limits, no aliases).
         default: false

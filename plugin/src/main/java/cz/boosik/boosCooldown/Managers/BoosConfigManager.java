@@ -90,7 +90,7 @@ public class BoosConfigManager {
     }
 
     public static void clearSomething(final String co, final UUID uuid, final String command) {
-        final int pre2 = command.toLowerCase().hashCode();
+        final int pre2 = command.replace("_", " ").toLowerCase().hashCode();
         confusers.set("users." + uuid + "." + co + "." + pre2, 0);
         saveConfusers();
         loadConfusers();
