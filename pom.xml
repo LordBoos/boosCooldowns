@@ -11,22 +11,18 @@
     <packaging>pom</packaging>
 	<url>http://maven.apache.org</url>
 	<properties>
-		<boosCooldowns.version>3.17.2</boosCooldowns.version>
+		<boosCooldowns.version>3.17.4</boosCooldowns.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<minecraft.version>1.18.1</minecraft.version>
+		<minecraft.version>1.19</minecraft.version>
 		<bukkit.version>R0.1</bukkit.version>
 	</properties>
 	<pluginRepositories>
 		<pluginRepository>
 			<id>maven2-repository.dev.java.net</id>
 			<name>Java.net Repository for Maven</name>
-			<url>http://download.java.net/maven/2/</url>
+			<url>https://download.java.net/maven/2/</url>
 			<layout>default</layout>
-		</pluginRepository>
-		<pluginRepository>
-			<id>bukkit-plugins</id>
-			<url>http://repo.bukkit.org/content/groups/public/</url>
 		</pluginRepository>
 	</pluginRepositories>
 	<repositories>
@@ -36,16 +32,12 @@
 			<url>https://repo.dakanilabs.com/repository/maven-public/</url>
 		</repository>
 		<repository>
-			<id>bukkit-repo</id>
-			<url>http://repo.bukkit.org/content/groups/public/</url>
-		</repository>
-		<repository>
 			<id>vault-repo</id>
-			<url>http://nexus.hc.to/content/repositories/pub_releases</url>
+			<url>https://nexus.hc.to/content/repositories/pub_releases</url>
 		</repository>
 		<repository>
 			<id>spigot-repo-old</id>
-			<url>http://repo.md-5.net/content/repositories/snapshots/</url>
+			<url>https://repo.md-5.net/content/repositories/snapshots/</url>
 		</repository>
 		<repository>
 			<id>spigot-repo</id>
@@ -53,7 +45,7 @@
 		</repository>
         <repository>
             <id>elmakers-spigot-repo</id>
-            <url>http://maven.elmakers.com/repository/</url>
+            <url>https://maven.elmakers.com/repository/</url>
         </repository>
 	</repositories>
 </project>

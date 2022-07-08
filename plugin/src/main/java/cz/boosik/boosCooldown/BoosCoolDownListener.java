@@ -390,7 +390,7 @@ public class BoosCoolDownListener implements Listener {
             for (final String key : commandQueue.keySet()) {
                 final String[] keyList = key.split("@");
                 if (keyList[0].equals(String.valueOf(uuid))) {
-                    if (event.getMessage().equalsIgnoreCase(BoosConfigManager.getConfirmCommandMessage())) {
+                    if (event.getMessage().contains(BoosConfigManager.getConfirmCommandMessage())) {
                         commandQueue.put(key, true);
                         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                             @Override
