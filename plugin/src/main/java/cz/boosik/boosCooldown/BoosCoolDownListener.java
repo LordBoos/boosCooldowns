@@ -213,6 +213,17 @@ public class BoosCoolDownListener implements Listener {
             for (final String key : commandQueue.keySet()) {
                 final String[] keyList = key.split("@");
                 if (keyList[0].equals(String.valueOf(uuid))) {
+                    if (event.getMessage().contains(BoosConfigManager.getConfirmCommandMessage())) {
+                        commandQueue.put(key, true);
+                        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                            @Override
+                            public void run() {
+                                player.chat(keyList[1]);
+                            }
+                        });
+                        event.setCancelled(true);
+                        return;
+                    }
                     if (!keyList[1].equals(event.getMessage())) {
                         commandQueue.remove(key);
                         String commandCancelMessage = BoosConfigManager.getCommandCanceledMessage();
