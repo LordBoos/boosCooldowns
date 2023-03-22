@@ -342,7 +342,7 @@ public class BoosCoolDownListener implements Listener {
                         BoosChat.sendMessageToPlayer(player, "    " + limitMessage);
                     }
                     final String yesString = BoosConfigManager.getConfirmCommandMessage();
-                    final JSONClickAction yesClick = new JSONClickAction.RunCommand(yesString);
+                    final JSONClickAction yesClick = new JSONClickAction.SuggestCommand(yesString);
                     final JSONHoverAction yesHover = new JSONHoverAction.ShowStringText(BoosConfigManager.getConfirmCommandHint());
                     final JSONComponent yes = new JSONComponent("    " + yesString);
                     yes.setColor(JSONColor.GREEN).setBold(true);
@@ -351,7 +351,7 @@ public class BoosCoolDownListener implements Listener {
                     yes.send(player);
 
                     final String noString = BoosConfigManager.getCancelCommandMessage();
-                    final JSONClickAction noClick = new JSONClickAction.RunCommand(noString);
+                    final JSONClickAction noClick = new JSONClickAction.SuggestCommand(noString);
                     final JSONHoverAction noHover = new JSONHoverAction.ShowStringText(BoosConfigManager.getCancelCommandHint());
                     final JSONComponent no = new JSONComponent("    " + noString);
                     no.setColor(JSONColor.RED).setBold(true);
