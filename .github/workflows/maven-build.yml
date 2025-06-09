@@ -5,8 +5,6 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-  schedule:
-    - cron: '0 2 1 * *'
 
 jobs:
   build:
@@ -23,13 +21,21 @@ jobs:
           java-version: '21'
           cache: maven
 
-      - name: Build with Maven
+      - name: Extract Maven version
+        id: get_version
         run: |
-          mvn --batch-mode verify
+          echo "version=$(mvn -q -Dexec.executable=echo \
+               -Dexec.args='${project.version}' \
+               --non-recursive exec:exec)" >> $GITHUB_OUTPUT
 
-      - name: Upload build artifacts
-        if: success()
-        uses: actions/upload-artifact@v4
+      - name: Build with Maven
+        run: mvn -B package -DskipTests
+
+      - name: Create & Publish Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: BoosCooldowns-JAR
-          path: jar/target/boosCooldowns.jar
+          tag_name: v${{ steps.get_version.outputs.version }}
+          body: boosCooldowns v${{ steps.get_version.outputs.version }} release
+          files: jar/target/boosCooldowns.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
