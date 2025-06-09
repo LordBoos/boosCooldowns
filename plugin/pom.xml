@@ -28,7 +28,7 @@
         <dependency>
             <groupId>org.black_ixx</groupId>
             <artifactId>PlayerPoints</artifactId>
-            <version>3.3.3-SNAPSHOT</version>
+            <version>3.3.2</version>
         </dependency>
     </dependencies>
     <build>
