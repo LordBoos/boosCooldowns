@@ -16,11 +16,11 @@ jobs:
       - name: 🧾 Checkout repo
         uses: actions/checkout@v4
 
-      - name: Set up Java 17 & cache Maven
+      - name: Set up Java 21 & cache Maven
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: '21'
           cache: maven
 
       - name: Build with Maven
