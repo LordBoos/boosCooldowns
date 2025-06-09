@@ -1,51 +1,51 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>cz.boosik</groupId>
-	<artifactId>boosCooldowns</artifactId>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>cz.boosik</groupId>
+    <artifactId>boosCooldowns</artifactId>
     <version>${boosCooldowns.version}</version>
     <modules>
         <module>plugin</module>
         <module>jar</module>
-	</modules>
+    </modules>
     <packaging>pom</packaging>
-	<url>http://maven.apache.org</url>
-	<properties>
-		<boosCooldowns.version>3.17.6</boosCooldowns.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<minecraft.version>1.20.1</minecraft.version>
-		<bukkit.version>R0.1</bukkit.version>
-	</properties>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>maven2-repository.dev.java.net</id>
-			<name>Java.net Repository for Maven</name>
-			<url>https://download.java.net/maven/2/</url>
-			<layout>default</layout>
-		</pluginRepository>
-	</pluginRepositories>
-	<repositories>
-		<repository>
-			<id>dakani</id>
-			<name>Dakani Nexus Repo</name>
-			<url>https://repo.dakanilabs.com/repository/maven-public/</url>
-		</repository>
-		<repository>
-			<id>vault-repo</id>
-			<url>https://nexus.hc.to/content/repositories/pub_releases</url>
-		</repository>
-		<repository>
-			<id>spigot-repo-old</id>
-			<url>https://repo.md-5.net/content/repositories/snapshots/</url>
-		</repository>
-		<repository>
-			<id>spigot-repo</id>
-			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-		</repository>
+    <url>http://maven.apache.org</url>
+    <properties>
+        <boosCooldowns.version>3.17.7</boosCooldowns.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <minecraft.version>1.21.5</minecraft.version>
+        <bukkit.version>R0.1</bukkit.version>
+    </properties>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven2-repository.dev.java.net</id>
+            <name>Java.net Repository for Maven</name>
+            <url>https://download.java.net/maven/2/</url>
+            <layout>default</layout>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <repositories>
+        <repository>
+            <id>rosewood-repo</id>
+            <url>https://repo.rosewooddev.io/repository/public/</url>
+        </repository>
+        <repository>
+            <id>vault-repo</id>
+            <url>https://nexus.hc.to/content/repositories/pub_releases</url>
+        </repository>
+        <repository>
+            <id>spigot-repo-old</id>
+            <url>https://repo.md-5.net/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
         <repository>
             <id>elmakers-spigot-repo</id>
             <url>https://maven.elmakers.com/repository/</url>
         </repository>
-	</repositories>
+    </repositories>
 </project>

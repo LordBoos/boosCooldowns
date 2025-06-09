@@ -1,5 +1,7 @@
 options:
   options:
+    #should the plugin be disabled for ops?
+    disabled_for_ops: true
     #should warmups be enabled?
     warmups_enabled: true
     #should cooldowns be enabled?
@@ -46,6 +48,8 @@ options:
     command_signs: false
     #should syntax blocker (blocks usage of commands with syntax /pluginname:command) be enabled?
     syntax_blocker_enabled: true
+    #should syntax blocker be disabled for ops?
+    disable_syntax_blocker_for_ops: false
     #should command confirmations (when command has price, xp price or itemcost) be enabled?
     command_confirmation: true
   units:

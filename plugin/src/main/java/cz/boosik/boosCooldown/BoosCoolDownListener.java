@@ -195,7 +195,7 @@ public class BoosCoolDownListener implements Listener {
     private void onPlayerCommandPreprocess(final PlayerCommandPreprocessEvent event) {
         final Player player = event.getPlayer();
         final UUID uuid = player.getUniqueId();
-        if (BoosConfigManager.getSyntaxBlocker() && !player.isOp() && !player.hasPermission("booscooldowns.syntaxblockerexception")) {
+        if (BoosConfigManager.getSyntaxBlocker() && BoosCoolDown.isSyntaxBlockerOnForPlayer(player)) {
             if (event.getMessage().contains(":")) {
                 final Pattern p = Pattern.compile("^/([a-zA-Z0-9_]+):");
                 final Matcher m = p.matcher(event.getMessage());

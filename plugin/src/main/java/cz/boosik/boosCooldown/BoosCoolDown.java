@@ -68,8 +68,22 @@ public class BoosCoolDown extends JavaPlugin implements Runnable {
     }
 
     static boolean isPluginOnForPlayer(final Player player) {
-        final boolean on;
-        on = !player.hasPermission("booscooldowns.exception") && !player.isOp();
+        boolean on;
+        final boolean disabledForOpsEnabled = BoosConfigManager.getDisabledForOpsEnabled();
+        on = !player.hasPermission("booscooldowns.exception");
+        if (disabledForOpsEnabled) {
+            on = on && !player.isOp();
+        }
+        return on;
+    }
+
+    static boolean isSyntaxBlockerOnForPlayer(final Player player) {
+        boolean on;
+        final boolean disabledForOpsEnabled = BoosConfigManager.getSyntaxBlockerDisabledForOpsEnabled();
+        on = !player.hasPermission("booscooldowns.syntaxblockerexception");
+        if (disabledForOpsEnabled) {
+            on = on && !player.isOp();
+        }
         return on;
     }
 

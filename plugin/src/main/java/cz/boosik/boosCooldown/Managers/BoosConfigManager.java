@@ -696,6 +696,14 @@ public class BoosConfigManager {
         }
     }
 
+    public static boolean getDisabledForOpsEnabled() {
+        return conf.getBoolean("options.options.disabled_for_ops", true);
+    }
+
+    public static boolean getSyntaxBlockerDisabledForOpsEnabled() {
+        return conf.getBoolean("options.options.disable_syntax_blocker_for_ops", true);
+    }
+
     public static String getPlayerPointsForCommandMessage() {
         return conf.getString("options.messages.paid_player_points_for_command", "Price of &command& was %s PlayerPoints and you now have %s" +
                 " PlayerPoints");
