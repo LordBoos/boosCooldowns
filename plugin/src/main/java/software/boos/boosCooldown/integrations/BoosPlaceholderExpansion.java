@@ -3,7 +3,6 @@ package software.boos.boosCooldown.integrations;
 import software.boos.boosCooldown.BoosCoolDown;
 import software.boos.boosCooldown.model.CommandData;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -108,8 +107,7 @@ public final class BoosPlaceholderExpansion extends PlaceholderExpansion {
         return (seconds / 3600) + "h " + ((seconds % 3600) / 60) + "m";
     }
 
-    public static void registerIfAvailable(BoosCoolDown plugin) {
-        if (!Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) return;
+    public static void registerWith(BoosCoolDown plugin) {
         try {
             new BoosPlaceholderExpansion(plugin).register();
             plugin.getLogger().info("[boosCooldowns] PlaceholderAPI expansion registered (%boos_*%).");

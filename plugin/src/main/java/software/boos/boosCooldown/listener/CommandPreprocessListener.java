@@ -325,6 +325,7 @@ public final class CommandPreprocessListener implements Listener {
 
     private boolean isPluginOnForPlayer(Player player) {
         if (player.hasPermission("booscooldowns.exception")) return false;
+        if (player.hasPermission("booscooldowns.norestriction")) return true;
         return !config.isDisabledForOps() || !player.isOp();
     }
 

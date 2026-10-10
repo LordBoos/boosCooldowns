@@ -3,10 +3,15 @@ package software.boos.boosCooldown.service;
 import software.boos.boosCooldown.config.PluginConfig;
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class AliasService {
+
+    private static final Pattern PLACEHOLDER = Pattern.compile("\\$(player|world|\\*|\\d+)");
+    private static final Pattern WHITESPACE = Pattern.compile("\\s+");
 
     private final PluginConfig config;
 
@@ -33,7 +38,8 @@ public final class AliasService {
         for (String aliasKey : aliases) {
             if (!aliasKey.contains("*")) continue;
             String keyNormalized = aliasKey.toLowerCase();
-            String prefix = keyNormalized.substring(0, keyNormalized.indexOf('*')).trim();
+            // Keep the space before '*': "/w *" must not match "/warp" (3.x matched "/w .+").
+            String prefix = keyNormalized.substring(0, keyNormalized.indexOf('*'));
             if (lower.startsWith(prefix)) {
                 String remainder = rawCommand.substring(prefix.length()).trim();
                 String[] args = remainder.isEmpty() ? new String[0] : remainder.split("\\s+");
@@ -43,17 +49,29 @@ public final class AliasService {
         return null;
     }
 
+    /**
+     * Fills the template in one pass, so placeholder text inside the player's
+     * arguments is never substituted. {@code $*} is the arguments after the
+     * highest {@code $N} the template uses: "/msg $*" gets all of them,
+     * "/me $1 $2 $*" the third onward (as 3.x did).
+     */
     private String substitute(String template, Player player, String[] args) {
         if (template == null) return null;
-        String result = template;
-        result = result.replace("$player", player.getName());
-        result = result.replace("$world", player.getWorld().getName());
-        result = result.replace("$*", String.join(" ", args));
-        for (int i = 0; i < args.length; i++) {
-            result = result.replace("$" + (i + 1), args[i]);
-        }
-        result = result.replaceAll("\\$\\d+", "");
-        result = Pattern.compile("\\s+").matcher(result).replaceAll(" ").trim();
-        return result;
+        int restFrom = PLACEHOLDER.matcher(template).results()
+                .map(m -> m.group(1))
+                .filter(g -> Character.isDigit(g.charAt(0)))
+                .mapToInt(Integer::parseInt)
+                .max().orElse(0);
+        String rest = String.join(" ", Arrays.copyOfRange(args, Math.min(restFrom, args.length), args.length));
+        String result = PLACEHOLDER.matcher(template).replaceAll(m -> Matcher.quoteReplacement(switch (m.group(1)) {
+            case "player" -> player.getName();
+            case "world" -> player.getWorld().getName();
+            case "*" -> rest;
+            default -> {
+                int i = Integer.parseInt(m.group(1));
+                yield i >= 1 && i <= args.length ? args[i - 1] : "";
+            }
+        }));
+        return WHITESPACE.matcher(result).replaceAll(" ").trim();
     }
 }

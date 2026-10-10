@@ -24,6 +24,9 @@ options:
     #should debug logging be enabled?
     debug: false
     #should the plugin be disabled for ops?
+    #ops with booscooldowns.norestriction are not skipped: they get aliases, the syntax
+    #blocker (unless disable_syntax_blocker_for_ops) and the apply_rules_to_prefixed_syntax
+    #rewrite, but no cooldowns, warmups, prices or limits.
     disabled_for_ops: true
     #should warmups be enabled?
     warmups_enabled: true

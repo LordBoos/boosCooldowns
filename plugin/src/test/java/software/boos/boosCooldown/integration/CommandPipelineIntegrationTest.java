@@ -151,6 +151,36 @@ class CommandPipelineIntegrationTest {
     }
 
     @Test
+    void norestrictionOpGetsAliasesButSkipsRules() {
+        plugin.pluginConfig().raw().set("commands.aliases./scut", "/stonecutter");
+        configureCommand("/stonecutter", "cooldown", "60 seconds");
+        PlayerMock op = server.addPlayer("Owner");
+        op.setOp(true);
+        op.addAttachment(plugin, "booscooldowns.norestriction", true);
+
+        PlayerCommandPreprocessEvent first = fireCommand(op, "/scut");
+        assertEquals("/stonecutter", first.getMessage());
+        waitForAsync();
+        PlayerCommandPreprocessEvent second = fireCommand(op, "/scut");
+        assertFalse(second.isCancelled(), "norestriction must skip the cooldown");
+    }
+
+    @Test
+    void plainOpAndExceptionGetNoAliases() {
+        plugin.pluginConfig().raw().set("commands.aliases./scut", "/stonecutter");
+        plugin.pluginConfig().save();
+        plugin.reloadPluginConfig();
+        PlayerMock op = server.addPlayer("PlainOp");
+        op.setOp(true);
+        PlayerMock exempt = addPlayer("Exempt");
+        exempt.addAttachment(plugin, "booscooldowns.exception", true);
+        exempt.addAttachment(plugin, "booscooldowns.norestriction", true);
+
+        assertEquals("/scut", fireCommand(op, "/scut").getMessage());
+        assertEquals("/scut", fireCommand(exempt, "/scut").getMessage());
+    }
+
+    @Test
     void perCommandPermissionDeniesWithCustomMessage() {
         configureCommand("/vip", "permission", "myplugin.vip");
         configureCommand("/vip", "denied_message", "&cNot a VIP");

@@ -187,7 +187,10 @@ public class BoosCoolDown extends JavaPlugin {
         this.eventTriggerService.registerAll();
 
         BoosCooldownAPI.initialize(services);
-        BoosPlaceholderExpansion.registerIfAvailable(this);
+        // Checked here, not in the expansion: loading that class needs PlaceholderAPI's superclass.
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            BoosPlaceholderExpansion.registerWith(this);
+        }
 
         initializeMetrics(databaseConfig);
 
