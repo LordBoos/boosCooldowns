@@ -2,12 +2,21 @@ package software.boos.boosCooldown.config;
 
 import software.boos.boosCooldown.util.TimeFormatter;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -15,10 +24,15 @@ import java.util.logging.Level;
 
 public class PluginConfig {
 
+    /** Top-level sections whose missing keys are filled from the bundled file; the rest is user-owned. */
+    private static final List<String> PLUGIN_OWNED_SECTIONS = List.of("options", "database");
+    private static final DateTimeFormatter BACKUP_STAMP = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+
     private final JavaPlugin plugin;
     private final String fileName;
     private File file;
     private YamlConfiguration config;
+    private boolean loadFailed;
 
     public PluginConfig(JavaPlugin plugin, String fileName) {
         this.plugin = plugin;
@@ -38,11 +52,110 @@ public class PluginConfig {
             }
             plugin.saveResource(fileName, false);
         }
-        config = YamlConfiguration.loadConfiguration(file);
+        config = new YamlConfiguration();
+        try {
+            config.load(file);
+            loadFailed = false;
+        } catch (IOException | InvalidConfigurationException e) {
+            loadFailed = true;
+            moveAsideAndLoadDefault(e);
+            return;
+        }
+        addMissingPluginOptions();
+    }
+
+    private void moveAsideAndLoadDefault(Exception loadError) {
+        File backup = backupFile(".invalid.bak");
+        try {
+            Files.move(file.toPath(), backup.toPath());
+        } catch (IOException e) {
+            loadError.addSuppressed(e);
+            plugin.getLogger().log(Level.SEVERE, "Cannot load " + fileName
+                    + " and could not move it aside; it will not be written until it loads", loadError);
+            return;
+        }
+        plugin.getLogger().log(Level.SEVERE, "Cannot load " + fileName + "; moved it to " + backup.getName()
+                + " and loaded the default config. Fix the backup and copy it back", loadError);
+        plugin.saveResource(fileName, false);
+        config = new YamlConfiguration();
+        try {
+            config.load(file);
+            loadFailed = false;
+        } catch (IOException | InvalidConfigurationException e) {
+            plugin.getLogger().log(Level.SEVERE, "Cannot load the default " + fileName, e);
+        }
+    }
+
+    /** A backup name for {@link #file} that is not taken yet, e.g. {@code config.yml.2026-10-13_14-05-09.bak}. */
+    private File backupFile(String extension) {
+        String stamp = LocalDateTime.now().format(BACKUP_STAMP);
+        File backup = new File(file.getParentFile(), fileName + "." + stamp + extension);
+        for (int i = 1; backup.exists(); i++) {
+            backup = new File(file.getParentFile(), fileName + "." + stamp + "-" + i + extension);
+        }
+        return backup;
+    }
+
+    /**
+     * Copies options the bundled file has under {@link #PLUGIN_OWNED_SECTIONS} but the loaded
+     * file lacks, with their comments, then backs up and saves the file if anything was added.
+     */
+    private void addMissingPluginOptions() {
+        YamlConfiguration bundled;
+        try (InputStream in = plugin.getResource(fileName)) {
+            if (in == null) {
+                return;
+            }
+            try (Reader reader = new InputStreamReader(in, StandardCharsets.UTF_8)) {
+                bundled = YamlConfiguration.loadConfiguration(reader);
+            }
+        } catch (IOException e) {
+            plugin.getLogger().log(Level.WARNING, "Could not read bundled " + fileName, e);
+            return;
+        }
+
+        List<String> added = new ArrayList<>();
+        for (String path : bundled.getKeys(true)) {
+            if (!PLUGIN_OWNED_SECTIONS.contains(path.split("\\.", 2)[0]) || config.contains(path)) {
+                continue;
+            }
+            int lastDot = path.lastIndexOf('.');
+            // A user scalar where the bundled file has a section must not be replaced by one.
+            if (lastDot >= 0 && !config.isConfigurationSection(path.substring(0, lastDot))) {
+                continue;
+            }
+            if (bundled.isConfigurationSection(path)) {
+                config.createSection(path);
+            } else {
+                config.set(path, bundled.get(path));
+                added.add(path);
+            }
+            config.setComments(path, bundled.getComments(path));
+            config.setInlineComments(path, bundled.getInlineComments(path));
+        }
+        if (added.isEmpty()) {
+            return;
+        }
+
+        File backup = backupFile(".bak");
+        try {
+            Files.copy(file.toPath(), backup.toPath());
+        } catch (IOException e) {
+            plugin.getLogger().log(Level.SEVERE, "Could not back up " + fileName + "; not saving the added options", e);
+            return;
+        }
+        if (save()) {
+            plugin.getLogger().info("Added missing options to " + fileName + " (backup: " + backup.getName() + "): "
+                    + String.join(", ", added));
+        }
     }
 
     public boolean save() {
         if (config == null || file == null) {
+            return false;
+        }
+        if (loadFailed) {
+            plugin.getLogger().severe("Not saving " + fileName + ": it failed to load, saving would overwrite it");
             return false;
         }
         try {
