@@ -14,7 +14,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,12 +42,16 @@ class PluginConfigTest {
                 /h: /home
             """;
 
+    private static final Pattern BACKUP =
+            Pattern.compile("config\\.yml\\.\\d{4}-\\d\\d-\\d\\d_\\d\\d-\\d\\d-\\d\\d(-\\d+)?\\.bak");
+    private static final Pattern INVALID_BACKUP =
+            Pattern.compile("config\\.yml\\.\\d{4}-\\d\\d-\\d\\d_\\d\\d-\\d\\d-\\d\\d(-\\d+)?\\.invalid\\.bak");
+
     @TempDir
     Path dataFolder;
 
     private JavaPlugin plugin;
     private Path configFile;
-    private Path backupFile;
 
     @BeforeEach
     void setUp() {
@@ -53,8 +59,26 @@ class PluginConfigTest {
         Mockito.when(plugin.getDataFolder()).thenReturn(dataFolder.toFile());
         Mockito.when(plugin.getLogger()).thenReturn(Logger.getLogger("PluginConfigTest"));
         Mockito.when(plugin.getResource("config.yml")).thenAnswer(inv -> bundledConfig());
+        Mockito.doAnswer(inv -> {
+            try (InputStream in = bundledConfig()) {
+                Files.copy(in, configFile);
+            }
+            return null;
+        }).when(plugin).saveResource("config.yml", false);
         configFile = dataFolder.resolve("config.yml");
-        backupFile = dataFolder.resolve("config.yml.bak");
+    }
+
+    private List<Path> backups() throws IOException {
+        try (Stream<Path> files = Files.list(dataFolder)) {
+            return files.filter(f -> f.getFileName().toString().endsWith(".bak")).sorted().toList();
+        }
+    }
+
+    private Path onlyBackup(Pattern name) throws IOException {
+        List<Path> backups = backups();
+        assertEquals(1, backups.size(), backups.toString());
+        assertTrue(name.matcher(backups.get(0).getFileName().toString()).matches(), backups.toString());
+        return backups.get(0);
     }
 
     private static InputStream bundledConfig() {
@@ -88,13 +112,61 @@ class PluginConfigTest {
         assertEquals(Set.of("/home"), saved.getConfigurationSection("commands.groups.default").getKeys(false));
         assertFalse(saved.contains("global"));
 
-        assertArrayEquals(original, Files.readAllBytes(backupFile));
+        Path backup = onlyBackup(BACKUP);
+        assertArrayEquals(original, Files.readAllBytes(backup));
 
         byte[] upgraded = Files.readAllBytes(configFile);
-        Files.delete(backupFile);
         new PluginConfig(plugin, "config.yml");
         assertArrayEquals(upgraded, Files.readAllBytes(configFile));
-        assertFalse(Files.exists(backupFile), "second load must not rewrite the backup");
+        assertEquals(List.of(backup), backups(), "second load must not back up again");
+    }
+
+    @Test
+    void laterMigrationKeepsEarlierBackup() throws IOException {
+        Files.writeString(configFile, OLD_CONFIG, StandardCharsets.UTF_8);
+        new PluginConfig(plugin, "config.yml");
+        String firstBackup = Files.readString(onlyBackup(BACKUP));
+
+        YamlConfiguration edited = YamlConfiguration.loadConfiguration(configFile.toFile());
+        edited.set("database.pool-size", null);
+        edited.save(configFile.toFile());
+        String beforeSecond = Files.readString(configFile);
+
+        new PluginConfig(plugin, "config.yml");
+
+        List<Path> backups = backups();
+        assertEquals(2, backups.size());
+        for (Path backup : backups) {
+            assertTrue(BACKUP.matcher(backup.getFileName().toString()).matches(), backup.toString());
+        }
+        assertEquals(Set.of(firstBackup, beforeSecond),
+                Set.of(Files.readString(backups.get(0)), Files.readString(backups.get(1))));
+    }
+
+    @Test
+    void invalidYamlIsMovedAsideAndDefaultLoaded() throws IOException {
+        Files.writeString(configFile, """
+                options:
+                  options:
+                    debug: false
+                commands:
+                  groups:
+                    default:
+                      /home:
+                        cooldown: 30
+                  aliases:
+                    /h: "/home
+                """, StandardCharsets.UTF_8);
+        byte[] original = Files.readAllBytes(configFile);
+
+        PluginConfig config = new PluginConfig(plugin, "config.yml");
+
+        assertArrayEquals(original, Files.readAllBytes(onlyBackup(INVALID_BACKUP)));
+        try (InputStream in = bundledConfig()) {
+            assertArrayEquals(in.readAllBytes(), Files.readAllBytes(configFile));
+        }
+        assertEquals("sqlite", config.getString("database.type", null));
+        assertTrue(config.save());
     }
 
     @Test
@@ -107,6 +179,6 @@ class PluginConfigTest {
         new PluginConfig(plugin, "config.yml");
 
         assertArrayEquals(original, Files.readAllBytes(configFile));
-        assertFalse(Files.exists(backupFile));
+        assertEquals(List.of(), backups());
     }
 }
